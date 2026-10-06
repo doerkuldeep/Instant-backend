@@ -5,9 +5,9 @@ export interface AppError extends Error {
   details?: unknown;
 }
 
-export interface AppErrorConstructor {
-  new (message: string, statusCode?: number, code?: string, details?: unknown): AppError;
+export interface AppErrorFn {
   (message: string, statusCode?: number, code?: string, details?: unknown): AppError;
+  new (message: string, statusCode?: number, code?: string, details?: unknown): AppError;
   prototype: AppError;
 }
 
@@ -35,4 +35,5 @@ function createAppError(
 createAppError.prototype = Object.create(Error.prototype);
 createAppError.prototype.constructor = createAppError;
 
-export const AppError = createAppError as unknown as AppErrorConstructor;
+export const AppError = createAppError as unknown as AppErrorFn;
+export const appError = AppError;
