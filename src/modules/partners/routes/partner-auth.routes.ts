@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { partnerAuthController } from '../controllers/partner-auth.controller';
+import {
+  sendOtp,
+  verifyOtp,
+  resendOtp,
+  refreshToken,
+  logout,
+} from '../controllers/partner-auth.controller';
 import {
   partnerRefreshTokenSchema,
   partnerSendOtpSchema,
@@ -17,35 +23,34 @@ router.post(
   '/send-otp',
   authLimiter,
   validate({ body: partnerSendOtpSchema }),
-  asyncHandler(partnerAuthController.sendOtp.bind(partnerAuthController)),
+  asyncHandler(sendOtp),
 );
 
 router.post(
   '/verify-otp',
   authLimiter,
   validate({ body: partnerVerifyOtpSchema }),
-  asyncHandler(partnerAuthController.verifyOtp.bind(partnerAuthController)),
+  asyncHandler(verifyOtp),
 );
 
 router.post(
   '/resend-otp',
   authLimiter,
   validate({ body: partnerResendOtpSchema }),
-  asyncHandler(partnerAuthController.resendOtp.bind(partnerAuthController)),
+  asyncHandler(resendOtp),
 );
 
 // Session Management Endpoints
-
 router.post(
   '/refresh',
   validate({ body: partnerRefreshTokenSchema }),
-  asyncHandler(partnerAuthController.refreshToken.bind(partnerAuthController)),
+  asyncHandler(refreshToken),
 );
 
 router.post(
   '/logout',
   validate({ body: partnerRefreshTokenSchema }),
-  asyncHandler(partnerAuthController.logout.bind(partnerAuthController)),
+  asyncHandler(logout),
 );
 
 export const partnerAuthRoutes = router;

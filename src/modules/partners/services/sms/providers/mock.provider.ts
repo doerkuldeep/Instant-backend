@@ -1,12 +1,7 @@
-import { ISmsProvider, SmsSendResult } from '../sms.types';
+import { ISmsProvider, SmsSendResult, SentMessageRecord } from '../sms.types';
 import { logger } from '../../../../../config/logger';
 
-export interface SentMessageRecord {
-  to: string;
-  message: string;
-  sentAt: Date;
-  messageId: string;
-}
+export { SentMessageRecord } from '../sms.types';
 
 export class MockSmsProvider implements ISmsProvider {
   readonly name = 'mock';

@@ -1,17 +1,6 @@
-import { UserResponseDto } from '../../users/types/user.types';
-import { AuthTokens } from '../../../shared/utils/tokens';
-
-export interface PartnerAuthResult {
-  partner: UserResponseDto;
-  tokens: AuthTokens;
-  isNewPartner?: boolean;
-}
-
-export interface SendOtpResult {
-  phone: string;
-  expiresInSeconds: number;
-  message: string;
-}
+export * from './partner-auth.types';
+export * from './partner-otp.types';
+export * from './sms.types';
 
 export interface PartnerStatusResponseDto {
   status: string;
