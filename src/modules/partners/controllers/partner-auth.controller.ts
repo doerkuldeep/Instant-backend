@@ -4,9 +4,56 @@ import {
   PartnerRegisterInput,
   PartnerLoginInput,
   PartnerRefreshTokenInput,
+  PartnerSendOtpInput,
+  PartnerVerifyOtpInput,
+  PartnerResendOtpInput,
 } from '../schemas/partner-auth.schema';
 
 export class PartnerAuthController {
+  /**
+   * POST /api/partner/auth/send-otp
+   */
+  async sendOtp(req: Request, res: Response): Promise<void> {
+    const input = req.body as PartnerSendOtpInput;
+    const result = await partnerAuthService.sendOtp(input);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result,
+    });
+  }
+
+  /**
+   * POST /api/partner/auth/verify-otp
+   */
+  async verifyOtp(req: Request, res: Response): Promise<void> {
+    const input = req.body as PartnerVerifyOtpInput;
+    const result = await partnerAuthService.verifyOtp(input);
+
+    res.status(200).json({
+      success: true,
+      message: result.isNewPartner
+        ? 'Partner registered and verified successfully'
+        : 'Partner authenticated successfully',
+      data: result,
+    });
+  }
+
+  /**
+   * POST /api/partner/auth/resend-otp
+   */
+  async resendOtp(req: Request, res: Response): Promise<void> {
+    const input = req.body as PartnerResendOtpInput;
+    const result = await partnerAuthService.resendOtp(input);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: result,
+    });
+  }
+
   async register(req: Request, res: Response): Promise<void> {
     const input = req.body as PartnerRegisterInput;
     const result = await partnerAuthService.register(input);

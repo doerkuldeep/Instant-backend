@@ -7,6 +7,7 @@ export class UsersMapper {
     return {
       id: user.id,
       email: user.email,
+      phone: user.phone,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
@@ -16,11 +17,14 @@ export class UsersMapper {
       partnerProfile: user.partnerProfile
         ? {
             id: user.partnerProfile.id,
+            phone: user.partnerProfile.phone,
             companyName: user.partnerProfile.companyName,
             businessRegNumber: user.partnerProfile.businessRegNumber,
             businessCategory: user.partnerProfile.businessCategory,
             status: user.partnerProfile.status,
             commissionRate: user.partnerProfile.commissionRate,
+            referralCode: user.partnerProfile.referralCode,
+            referredById: user.partnerProfile.referredById,
             verifiedAt: user.partnerProfile.verifiedAt,
             createdAt: user.partnerProfile.createdAt,
             updatedAt: user.partnerProfile.updatedAt,

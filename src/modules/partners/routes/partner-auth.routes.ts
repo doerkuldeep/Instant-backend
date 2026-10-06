@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { partnerAuthController } from '../controllers/partner-auth.controller';
 import {
-  partnerRegisterSchema,
-  partnerLoginSchema,
   partnerRefreshTokenSchema,
+  partnerSendOtpSchema,
+  partnerVerifyOtpSchema,
+  partnerResendOtpSchema,
 } from '../schemas/partner-auth.schema';
 import { validate } from '../../../shared/middlewares/validate';
 import { asyncHandler } from '../../../shared/utils/async-handler';
@@ -11,19 +12,29 @@ import { authLimiter } from '../../../shared/middlewares/rate-limit';
 
 const router = Router();
 
+// OTP Authentication Endpoints
 router.post(
-  '/register',
+  '/send-otp',
   authLimiter,
-  validate({ body: partnerRegisterSchema }),
-  asyncHandler(partnerAuthController.register.bind(partnerAuthController)),
+  validate({ body: partnerSendOtpSchema }),
+  asyncHandler(partnerAuthController.sendOtp.bind(partnerAuthController)),
 );
 
 router.post(
-  '/login',
+  '/verify-otp',
   authLimiter,
-  validate({ body: partnerLoginSchema }),
-  asyncHandler(partnerAuthController.login.bind(partnerAuthController)),
+  validate({ body: partnerVerifyOtpSchema }),
+  asyncHandler(partnerAuthController.verifyOtp.bind(partnerAuthController)),
 );
+
+router.post(
+  '/resend-otp',
+  authLimiter,
+  validate({ body: partnerResendOtpSchema }),
+  asyncHandler(partnerAuthController.resendOtp.bind(partnerAuthController)),
+);
+
+// Session Management Endpoints
 
 router.post(
   '/refresh',

@@ -62,6 +62,20 @@ export class UsersRepository {
     });
   }
 
+  async findByPhone(phone: string): Promise<UserWithPartner | null> {
+    return prisma.user.findFirst({
+      where: {
+        OR: [
+          { phone },
+          { partnerProfile: { phone } },
+        ],
+      },
+      include: {
+        partnerProfile: true,
+      },
+    });
+  }
+
   async findMany(filter: UserFindFilter, skip: number, take: number): Promise<UserWithPartner[]> {
     const where = this.buildWhereClause(filter);
 

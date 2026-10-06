@@ -23,6 +23,7 @@ enum PartnerStatus {
 model User {
   id             String          @id @default(uuid())
   email          String          @unique
+  phone          String?         @unique
   passwordHash   String
   firstName      String?
   lastName       String?
@@ -34,24 +35,44 @@ model User {
   updatedAt      DateTime        @updatedAt
 
   @@index([email])
+  @@index([phone])
   @@index([role])
 }
 
 model PartnerProfile {
-  id                String        @id @default(uuid())
-  userId            String        @unique
-  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  companyName       String
+  id                String          @id @default(uuid())
+  userId            String          @unique
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone             String?         @unique
+  companyName       String          @default("")
   businessRegNumber String?
   businessCategory  String?
-  status            PartnerStatus @default(PENDING)
-  commissionRate    Float         @default(10.0)
+  status            PartnerStatus   @default(PENDING)
+  commissionRate    Float           @default(10.0)
+  referralCode      String?         @unique
+  referredById      String?
+  referredBy        PartnerProfile? @relation("PartnerReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals         PartnerProfile[] @relation("PartnerReferrals")
   verifiedAt        DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   @@index([companyName])
   @@index([status])
+  @@index([phone])
+  @@index([referralCode])
+}
+
+model PartnerOtp {
+  id        String   @id @default(uuid())
+  phone     String   @unique
+  otpHash   String
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([phone])
 }
 
 model RefreshToken {

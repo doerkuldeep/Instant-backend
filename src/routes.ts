@@ -35,6 +35,11 @@ v1Router.use('/auth', authRoutes);
 v1Router.use('/users', usersRoutes);
 v1Router.use('/admin', adminRoutes);
 v1Router.use('/partners', partnersRoutes);
+v1Router.use('/partner', partnersRoutes);
+
+// Direct /api/partner and /api/partners aliases
+router.use('/api/partner', partnersRoutes);
+router.use('/api/partners', partnersRoutes);
 
 router.use('/api/v1', v1Router);
 
