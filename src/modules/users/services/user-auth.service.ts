@@ -3,7 +3,7 @@ import { prisma } from '../../../database/prisma';
 import { usersRepository } from '../repositories/users.repository';
 import { partnersRepository } from '../../partners/repositories/partners.repository';
 import { userOtpRepository } from '../repositories/user-otp.repository';
-import { smsService } from '../../partners/services/sms/sms.service';
+import { smsService } from '../../../shared/services/sms';
 import { UsersMapper } from '../users.mapper';
 import {
   UserRegisterInput,
@@ -174,7 +174,7 @@ export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResu
     // Existing User Login Flow
     if (input.referralCode) {
       const codeUpper = input.referralCode.trim().toUpperCase();
-      if ((user as any).referralCode?.toUpperCase() === codeUpper) {
+      if (user.referralCode?.toUpperCase() === codeUpper) {
         throw new BadRequestError('Self-referral is not allowed');
       }
     }
@@ -189,7 +189,7 @@ export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResu
   const tokens = generateAuthTokens({
     sub: user.id,
     email: user.email,
-    phone: (user as any).phone,
+    phone: user.phone,
     role: user.role,
     partnerProfileId: user.partnerProfile?.id ?? null,
   });

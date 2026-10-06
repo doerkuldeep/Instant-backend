@@ -8,7 +8,7 @@ import {
   generateReferralCode,
 } from '../utils/otp.util';
 import { userOtpRepository } from '../repositories/user-otp.repository';
-import { mockSmsProvider } from '../../partners/services/sms/providers/mock.provider';
+import { mockSmsProvider, smsService } from '../../../shared/services/sms';
 import { userAuthService } from '../services/user-auth.service';
 import {
   userSendOtpSchema,
@@ -22,6 +22,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
   beforeEach(() => {
     userOtpRepository.clear();
     mockSmsProvider.clear();
+    smsService.setProvider(mockSmsProvider);
     usersRepository.clearInMemory();
     vi.restoreAllMocks();
   });

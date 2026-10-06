@@ -20,16 +20,19 @@ export class TwilioSmsProvider implements ISmsProvider {
   constructor(config?: TwilioConfig) {
     this.accountSid = config?.accountSid || process.env.TWILIO_ACCOUNT_SID || '';
     this.authToken = config?.authToken || process.env.TWILIO_AUTH_TOKEN || '';
-    this.fromNumber = config?.fromNumber || process.env.TWILIO_FROM_NUMBER || '';
+    this.fromNumber =
+      config?.fromNumber || process.env.TWILIO_FROM_NUMBER || process.env.TWILIO_PHONE_NUMBER || '';
   }
 
   async send(options: SendSmsOptions): Promise<SmsSendResult> {
     if (!this.accountSid || !this.authToken || !this.fromNumber) {
-      const err = 'Twilio SMS credentials missing (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER)';
+      const err =
+        'Twilio SMS credentials missing (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER/TWILIO_PHONE_NUMBER)';
       logger.error({ provider: this.name }, err);
       return {
         success: false,
         provider: this.name,
+        recipient: options.to,
         error: err,
       };
     }
@@ -70,6 +73,7 @@ export class TwilioSmsProvider implements ISmsProvider {
         success: true,
         messageId: data.sid,
         provider: this.name,
+        recipient: options.to,
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -77,8 +81,13 @@ export class TwilioSmsProvider implements ISmsProvider {
       return {
         success: false,
         provider: this.name,
+        recipient: options.to,
         error: errorMessage,
       };
     }
+  }
+
+  async sendSms(to: string, message: string): Promise<SmsSendResult> {
+    return this.send({ to, message });
   }
 }

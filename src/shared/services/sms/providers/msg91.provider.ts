@@ -120,6 +120,7 @@ export class Msg91SmsProvider implements ISmsProvider {
         success: true,
         messageId: data.request_id,
         provider: this.name,
+        recipient: options.to,
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -127,8 +128,13 @@ export class Msg91SmsProvider implements ISmsProvider {
       return {
         success: false,
         provider: this.name,
+        recipient: options.to,
         error: errorMessage,
       };
     }
+  }
+
+  async sendSms(to: string, message: string): Promise<SmsSendResult> {
+    return this.send({ to, message });
   }
 }

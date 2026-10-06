@@ -3,7 +3,7 @@ import { runInTransaction } from '../../../database/transaction';
 import { usersRepository } from '../../users/repositories/users.repository';
 import { partnersRepository } from '../repositories/partners.repository';
 import { partnerOtpRepository } from '../repositories/partner-otp.repository';
-import { smsService } from './sms/sms.service';
+import { smsService } from '../../../shared/services/sms';
 import { UsersMapper } from '../../users/users.mapper';
 import {
   PartnerRegisterInput,

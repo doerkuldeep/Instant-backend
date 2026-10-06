@@ -9,10 +9,12 @@ export interface SmsSendResult {
   success: boolean;
   messageId?: string;
   provider: string;
+  recipient?: string;
   error?: string;
 }
 
 export interface ISmsProvider {
   readonly name: string;
   send(options: SendSmsOptions): Promise<SmsSendResult>;
+  sendSms?(to: string, message: string): Promise<SmsSendResult>;
 }

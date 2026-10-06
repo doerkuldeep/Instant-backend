@@ -2,6 +2,9 @@ import { Role, PartnerStatus, User, PartnerProfile } from '@prisma/client';
 
 export type UserWithPartner = User & {
   partnerProfile: PartnerProfile | null;
+  phone?: string | null;
+  referralCode?: string | null;
+  referredById?: string | null;
 };
 
 export interface SafePartnerProfileDto {

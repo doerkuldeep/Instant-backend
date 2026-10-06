@@ -36,6 +36,11 @@ export class ConsoleSmsProvider implements ISmsProvider {
       success: true,
       messageId: fakeMessageId,
       provider: this.name,
+      recipient: options.to,
     };
+  }
+
+  async sendSms(to: string, message: string): Promise<SmsSendResult> {
+    return this.send({ to, message });
   }
 }
