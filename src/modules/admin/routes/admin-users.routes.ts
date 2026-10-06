@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { adminUsersController } from '../controllers/admin-users.controller';
+import {
+  listUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from '../controllers/admin-users.controller';
 import {
   adminListUsersQuerySchema,
   adminUserIdParamSchema,
@@ -13,25 +18,25 @@ const router = Router();
 router.get(
   '/',
   validate({ query: adminListUsersQuerySchema }),
-  asyncHandler(adminUsersController.listUsers.bind(adminUsersController)),
+  asyncHandler(listUsers),
 );
 
 router.get(
   '/:id',
   validate({ params: adminUserIdParamSchema }),
-  asyncHandler(adminUsersController.getUserById.bind(adminUsersController)),
+  asyncHandler(getUserById),
 );
 
 router.patch(
   '/:id',
   validate({ params: adminUserIdParamSchema, body: adminUpdateUserSchema }),
-  asyncHandler(adminUsersController.updateUser.bind(adminUsersController)),
+  asyncHandler(updateUser),
 );
 
 router.delete(
   '/:id',
   validate({ params: adminUserIdParamSchema }),
-  asyncHandler(adminUsersController.deleteUser.bind(adminUsersController)),
+  asyncHandler(deleteUser),
 );
 
 export const adminUsersRoutes = router;

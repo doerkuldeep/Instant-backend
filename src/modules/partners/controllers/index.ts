@@ -1,2 +1,2 @@
 export { partnerAuthController } from './partner-auth.controller';
-export * from './partner-profile.controller';
+export { partnerProfileController } from './partner-profile.controller';

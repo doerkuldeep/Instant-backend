@@ -27,6 +27,8 @@ export interface UserResponseDto {
   lastName: string | null;
   role: Role;
   isActive: boolean;
+  referralCode?: string | null;
+  referredById?: string | null;
   partnerProfile: SafePartnerProfileDto | null;
   createdAt: Date;
   updatedAt: Date;

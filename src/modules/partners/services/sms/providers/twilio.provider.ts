@@ -1,69 +1,71 @@
 import { ISmsProvider, SmsSendResult } from '../sms.types';
 import { logger } from '../../../../../config/logger';
 
-export class TwilioSmsProvider implements ISmsProvider {
-  readonly name = 'twilio';
-  private accountSid: string | undefined;
-  private authToken: string | undefined;
-  private fromNumber: string | undefined;
+export async function sendTwilioSms(to: string, message: string): Promise<SmsSendResult> {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const fromNumber = process.env.TWILIO_PHONE_NUMBER;
 
-  constructor() {
-    this.accountSid = process.env.TWILIO_ACCOUNT_SID;
-    this.authToken = process.env.TWILIO_AUTH_TOKEN;
-    this.fromNumber = process.env.TWILIO_PHONE_NUMBER;
+  if (!accountSid || !authToken || !fromNumber) {
+    logger.warn(
+      { to },
+      '[TwilioSmsProvider] Twilio credentials not configured; simulating SMS dispatch',
+    );
+    return {
+      success: true,
+      messageId: `simulated-twilio-${Date.now()}`,
+      provider: 'twilio',
+      recipient: to,
+    };
   }
 
-  async sendSms(to: string, message: string): Promise<SmsSendResult> {
-    if (!this.accountSid || !this.authToken || !this.fromNumber) {
-      logger.warn(
-        { to },
-        '[TwilioSmsProvider] Twilio credentials not configured; simulating SMS dispatch',
-      );
+  try {
+    const endpoint = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    const auth = Buffer.from(`${accountSid}:${authToken}`).toString('base64');
+    const body = new URLSearchParams({
+      To: to,
+      From: fromNumber,
+      Body: message,
+    });
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    const data = (await response.json()) as { sid?: string; message?: string };
+    if (!response.ok) {
+      logger.error({ status: response.status, data }, '[TwilioSmsProvider] Twilio API error');
       return {
-        success: true,
-        messageId: `simulated-twilio-${Date.now()}`,
-        provider: this.name,
+        success: false,
+        error: data.message || `Twilio HTTP error ${response.status}`,
+        provider: 'twilio',
         recipient: to,
       };
     }
 
-    try {
-      const endpoint = `https://api.twilio.com/2010-04-01/Accounts/${this.accountSid}/Messages.json`;
-      const auth = Buffer.from(`${this.accountSid}:${this.authToken}`).toString('base64');
-      const body = new URLSearchParams({
-        To: to,
-        From: this.fromNumber,
-        Body: message,
-      });
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${auth}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body.toString(),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Twilio API error HTTP ${response.status}: ${errorText}`);
-      }
-
-      const data = (await response.json()) as { sid: string };
-      logger.info({ to, sid: data.sid }, '[TwilioSmsProvider] SMS sent successfully');
-
-      return {
-        success: true,
-        messageId: data.sid,
-        provider: this.name,
-        recipient: to,
-      };
-    } catch (error) {
-      logger.error({ error, to }, '[TwilioSmsProvider] Failed to send SMS via Twilio');
-      throw error;
-    }
+    return {
+      success: true,
+      messageId: data.sid || `twilio-${Date.now()}`,
+      provider: 'twilio',
+      recipient: to,
+    };
+  } catch (error) {
+    logger.error({ error }, '[TwilioSmsProvider] Network failure dispatching SMS');
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown network failure',
+      provider: 'twilio',
+      recipient: to,
+    };
   }
 }
 
-export const twilioSmsProvider = new TwilioSmsProvider();
+export const twilioSmsProvider: ISmsProvider = {
+  name: 'twilio',
+  sendSms: sendTwilioSms,
+};

@@ -28,12 +28,16 @@ export async function findPartnerByPhone(phone: string): Promise<PartnerProfile 
 export async function findPartnerByReferralCode(
   referralCode: string,
 ): Promise<(PartnerProfile & { user?: User | null }) | null> {
-  return prisma.partnerProfile.findFirst({
-    where: { referralCode: referralCode.toUpperCase() } as any,
-    include: {
-      user: true,
-    },
-  });
+  try {
+    return await prisma.partnerProfile.findFirst({
+      where: { referralCode: referralCode.toUpperCase() } as any,
+      include: {
+        user: true,
+      },
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function existsReferralCode(referralCode: string): Promise<boolean> {

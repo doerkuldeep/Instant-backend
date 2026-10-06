@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { adminAuthController } from '../controllers/admin-auth.controller';
+import {
+  login,
+  refreshToken,
+  logout,
+} from '../controllers/admin-auth.controller';
 import { adminLoginSchema, adminRefreshTokenSchema } from '../schemas/admin-auth.schema';
 import { validate } from '../../../shared/middlewares/validate';
 import { asyncHandler } from '../../../shared/utils/async-handler';
@@ -11,19 +15,19 @@ router.post(
   '/login',
   authLimiter,
   validate({ body: adminLoginSchema }),
-  asyncHandler(adminAuthController.login.bind(adminAuthController)),
+  asyncHandler(login),
 );
 
 router.post(
   '/refresh',
   validate({ body: adminRefreshTokenSchema }),
-  asyncHandler(adminAuthController.refreshToken.bind(adminAuthController)),
+  asyncHandler(refreshToken),
 );
 
 router.post(
   '/logout',
   validate({ body: adminRefreshTokenSchema }),
-  asyncHandler(adminAuthController.logout.bind(adminAuthController)),
+  asyncHandler(logout),
 );
 
 export const adminAuthRoutes = router;

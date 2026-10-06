@@ -1,4 +1,4 @@
-export * from './admin-auth.controller';
-export * from './admin-users.controller';
-export * from './admin-partners.controller';
-export * from './admin-stats.controller';
+export { adminAuthController } from './admin-auth.controller';
+export { adminUsersController } from './admin-users.controller';
+export { adminPartnersController } from './admin-partners.controller';
+export { adminStatsController } from './admin-stats.controller';

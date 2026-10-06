@@ -1,1 +1,1 @@
-export * from './admin.repository';
+export { adminRepository } from './admin.repository';

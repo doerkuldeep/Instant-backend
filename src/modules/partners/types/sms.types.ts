@@ -3,6 +3,7 @@ export interface SmsSendResult {
   messageId?: string;
   provider: string;
   recipient: string;
+  error?: string;
 }
 
 export interface ISmsProvider {

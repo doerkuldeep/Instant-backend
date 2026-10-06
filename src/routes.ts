@@ -33,11 +33,14 @@ router.get('/health', async (_req, res) => {
 const v1Router = Router();
 v1Router.use('/auth', authRoutes);
 v1Router.use('/users', usersRoutes);
+v1Router.use('/user', usersRoutes);
 v1Router.use('/admin', adminRoutes);
 v1Router.use('/partners', partnersRoutes);
 v1Router.use('/partner', partnersRoutes);
 
-// Direct /api/partner and /api/partners aliases
+// Direct /api/user, /api/users, /api/partner, and /api/partners aliases
+router.use('/api/user', usersRoutes);
+router.use('/api/users', usersRoutes);
 router.use('/api/partner', partnersRoutes);
 router.use('/api/partners', partnersRoutes);
 

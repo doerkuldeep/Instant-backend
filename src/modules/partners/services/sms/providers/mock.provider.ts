@@ -3,41 +3,48 @@ import { logger } from '../../../../../config/logger';
 
 export { SentMessageRecord } from '../sms.types';
 
-export class MockSmsProvider implements ISmsProvider {
-  readonly name = 'mock';
-  private sentMessages: SentMessageRecord[] = [];
+let sentMessages: SentMessageRecord[] = [];
 
-  async sendSms(to: string, message: string): Promise<SmsSendResult> {
-    const messageId = `mock-msg-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-    const record: SentMessageRecord = {
-      to,
-      message,
-      sentAt: new Date(),
-      messageId,
-    };
-    this.sentMessages.push(record);
+export async function sendSms(to: string, message: string): Promise<SmsSendResult> {
+  const messageId = `mock-msg-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  const record: SentMessageRecord = {
+    to,
+    message,
+    sentAt: new Date(),
+    messageId,
+  };
+  sentMessages.push(record);
 
-    logger.info({ to, messageId, message }, '[MockSmsProvider] SMS sent successfully');
+  logger.info({ to, messageId, message }, '[MockSmsProvider] SMS sent successfully');
 
-    return {
-      success: true,
-      messageId,
-      provider: this.name,
-      recipient: to,
-    };
-  }
-
-  getSentMessages(): SentMessageRecord[] {
-    return [...this.sentMessages];
-  }
-
-  getLastMessageFor(phone: string): SentMessageRecord | undefined {
-    return [...this.sentMessages].reverse().find((m) => m.to === phone);
-  }
-
-  clear(): void {
-    this.sentMessages = [];
-  }
+  return {
+    success: true,
+    messageId,
+    provider: 'mock',
+    recipient: to,
+  };
 }
 
-export const mockSmsProvider = new MockSmsProvider();
+export function getSentMessages(): SentMessageRecord[] {
+  return [...sentMessages];
+}
+
+export function getLastMessageFor(phone: string): SentMessageRecord | undefined {
+  return [...sentMessages].reverse().find((m) => m.to === phone);
+}
+
+export function clear(): void {
+  sentMessages = [];
+}
+
+export const mockSmsProvider: ISmsProvider & {
+  getSentMessages: () => SentMessageRecord[];
+  getLastMessageFor: (phone: string) => SentMessageRecord | undefined;
+  clear: () => void;
+} = {
+  name: 'mock',
+  sendSms,
+  getSentMessages,
+  getLastMessageFor,
+  clear,
+};

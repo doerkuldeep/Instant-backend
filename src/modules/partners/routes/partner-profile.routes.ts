@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { Role } from '@prisma/client';
-import { partnerProfileController } from '../controllers/partner-profile.controller';
+import {
+  getProfile,
+  updateProfile,
+  getStatus,
+} from '../controllers/partner-profile.controller';
 import { updatePartnerProfileSchema } from '../schemas/partner-profile.schema';
 import { authenticate, authorize } from '../../../shared/middlewares/authenticate';
 import { validate } from '../../../shared/middlewares/validate';
@@ -13,18 +17,18 @@ router.use(authenticate, authorize(Role.PARTNER));
 
 router.get(
   '/profile',
-  asyncHandler(partnerProfileController.getProfile.bind(partnerProfileController)),
+  asyncHandler(getProfile),
 );
 
 router.patch(
   '/profile',
   validate({ body: updatePartnerProfileSchema }),
-  asyncHandler(partnerProfileController.updateProfile.bind(partnerProfileController)),
+  asyncHandler(updateProfile),
 );
 
 router.get(
   '/status',
-  asyncHandler(partnerProfileController.getStatus.bind(partnerProfileController)),
+  asyncHandler(getStatus),
 );
 
 export const partnerProfileRoutes = router;
