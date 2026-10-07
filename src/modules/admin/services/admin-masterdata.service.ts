@@ -10,12 +10,18 @@ import {
 import {
   CategoryDto,
   MachineDto,
-  CategoryWithMachinesDto,
+  CategoryRecord,
+  MachineRecord,
   MasterDataOverviewDto,
   MasterDataStatsDto,
+  CategoryUpdateData,
+  MachineUpdateData,
 } from '../types/admin-masterdata.types';
 import { NotFoundError, ConflictError, BadRequestError } from '../../../shared/errors/http-errors';
-import { Category, Machine, Prisma } from '@prisma/client';
+
+type CategoryUpdateInput = CategoryUpdateData;
+type MachineUpdateInput = MachineUpdateData;
+
 
 export function slugify(text: string): string {
   return text
@@ -26,47 +32,82 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-function mapCategoryToDto(category: Category & { _count?: { machines: number } }): CategoryDto {
+// DRY Image Extraction Helper
+interface ImageFieldsInput {
+  imageUrl?: string | null;
+  bannerUrl?: string | null;
+  banner?: string | null;
+  mobileImageUrl?: string | null;
+  mobileImage?: string | null;
+  webImageUrl?: string | null;
+  webImage?: string | null;
+}
+
+function extractImageFields(input: ImageFieldsInput) {
   return {
-    id: category.id,
-    name: category.name,
-    slug: category.slug,
-    description: category.description,
-    iconUrl: category.iconUrl,
-    imageUrl: category.imageUrl,
-    bannerUrl: category.bannerUrl,
-    mobileImageUrl: category.mobileImageUrl,
-    webImageUrl: category.webImageUrl,
-    isActive: category.isActive,
-    displayOrder: category.displayOrder,
-    machinesCount: category._count?.machines,
-    createdAt: category.createdAt.toISOString(),
-    updatedAt: category.updatedAt.toISOString(),
+    imageUrl: input.imageUrl,
+    bannerUrl: input.bannerUrl !== undefined ? input.bannerUrl : input.banner,
+    mobileImageUrl: input.mobileImageUrl !== undefined ? input.mobileImageUrl : input.mobileImage,
+    webImageUrl: input.webImageUrl !== undefined ? input.webImageUrl : input.webImage,
   };
 }
 
-function mapMachineToDto(
-  machine: Machine & {
-    category?: { id: string; name: string; slug: string };
-  },
-): MachineDto {
+// DRY Base Entity DTO Mapper
+interface BaseMasterDataEntity {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+  bannerUrl: string | null;
+  mobileImageUrl: string | null;
+  webImageUrl: string | null;
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+function mapBaseMasterDataFields(entity: BaseMasterDataEntity) {
   return {
-    id: machine.id,
+    id: entity.id,
+    name: entity.name,
+    slug: entity.slug,
+    description: entity.description,
+    imageUrl: entity.imageUrl,
+    bannerUrl: entity.bannerUrl,
+    mobileImageUrl: entity.mobileImageUrl,
+    webImageUrl: entity.webImageUrl,
+    isActive: entity.isActive,
+    displayOrder: entity.displayOrder,
+    createdAt: entity.createdAt.toISOString(),
+    updatedAt: entity.updatedAt.toISOString(),
+  };
+}
+
+function mapCategoryToDto(category: CategoryRecord): CategoryDto {
+  return {
+    ...mapBaseMasterDataFields(category),
+    iconUrl: category.iconUrl,
+    machinesCount: category._count?.machines,
+  };
+}
+
+function mapMachineToDto(machine: MachineRecord): MachineDto {
+  return {
+    ...mapBaseMasterDataFields(machine),
     categoryId: machine.categoryId,
     category: machine.category,
-    name: machine.name,
-    slug: machine.slug,
-    description: machine.description,
-    imageUrl: machine.imageUrl,
-    bannerUrl: machine.bannerUrl,
-    mobileImageUrl: machine.mobileImageUrl,
-    webImageUrl: machine.webImageUrl,
     specifications: (machine.specifications as Record<string, unknown>) || null,
-    isActive: machine.isActive,
-    displayOrder: machine.displayOrder,
-    createdAt: machine.createdAt.toISOString(),
-    updatedAt: machine.updatedAt.toISOString(),
   };
+}
+
+function resolveSlug(name: string, customSlug?: string | null): string {
+  const slug = customSlug || slugify(name);
+  if (!slug) {
+    throw new BadRequestError('Name produces an invalid empty slug');
+  }
+  return slug;
 }
 
 // ----------------- Category Operations -----------------
@@ -74,7 +115,7 @@ function mapMachineToDto(
 export async function listCategories(query: AdminListCategoriesQuery) {
   const result = await adminMasterDataRepository.findCategories(query);
   return {
-    data: result.categories.map(mapCategoryToDto),
+    data: result.categories.map((c) => mapCategoryToDto(c as CategoryRecord)),
     meta: {
       page: result.page,
       limit: result.limit,
@@ -84,27 +125,21 @@ export async function listCategories(query: AdminListCategoriesQuery) {
   };
 }
 
-export async function getCategoryById(
-  idOrSlug: string,
-): Promise<CategoryDto & { machines?: MachineDto[] }> {
+export async function getCategoryById(idOrSlug: string): Promise<CategoryDto & { machines?: MachineDto[] }> {
   const category = await adminMasterDataRepository.findCategoryByIdOrSlug(idOrSlug);
   if (!category) {
     throw new NotFoundError(`Category with identifier '${idOrSlug}' not found`);
   }
 
-  const dto: CategoryDto & { machines?: MachineDto[] } = mapCategoryToDto(category);
+  const dto: CategoryDto & { machines?: MachineDto[] } = mapCategoryToDto(category as CategoryRecord);
   if ('machines' in category && Array.isArray(category.machines)) {
-    dto.machines = category.machines.map((m: Machine) => mapMachineToDto(m));
+    dto.machines = category.machines.map((m) => mapMachineToDto(m as MachineRecord));
   }
   return dto;
 }
 
 export async function createCategory(input: AdminCreateCategoryInput): Promise<CategoryDto> {
-  const slug = input.slug || slugify(input.name);
-
-  if (!slug) {
-    throw new BadRequestError('Category name produces an invalid empty slug');
-  }
+  const slug = resolveSlug(input.name, input.slug);
 
   const existingSlug = await adminMasterDataRepository.findCategoryBySlug(slug);
   if (existingSlug) {
@@ -116,24 +151,19 @@ export async function createCategory(input: AdminCreateCategoryInput): Promise<C
     throw new ConflictError(`Category with name '${input.name}' already exists`);
   }
 
-  const bannerUrl = input.bannerUrl || input.banner;
-  const mobileImageUrl = input.mobileImageUrl || input.mobileImage;
-  const webImageUrl = input.webImageUrl || input.webImage;
+  const images = extractImageFields(input);
 
   const created = await adminMasterDataRepository.createCategory({
     name: input.name,
     slug,
     description: input.description,
     iconUrl: input.iconUrl,
-    imageUrl: input.imageUrl,
-    bannerUrl,
-    mobileImageUrl,
-    webImageUrl,
+    ...images,
     isActive: input.isActive ?? true,
-    displayOrder: input.displayOrder ?? 0,
+    displayOrder: typeof input.displayOrder === 'number' ? input.displayOrder : 0,
   });
 
-  return mapCategoryToDto(created);
+  return mapCategoryToDto(created as CategoryRecord);
 }
 
 export async function updateCategory(
@@ -145,7 +175,7 @@ export async function updateCategory(
     throw new NotFoundError(`Category with identifier '${idOrSlug}' not found`);
   }
 
-  const updateData: Prisma.CategoryUpdateInput = {};
+  const updateData: CategoryUpdateInput = {};
 
   if (input.name !== undefined) {
     if (input.name !== existing.name) {
@@ -158,7 +188,7 @@ export async function updateCategory(
   }
 
   if (input.slug !== undefined) {
-    const newSlug = input.slug || slugify(input.name || existing.name);
+    const newSlug = resolveSlug(input.name || existing.name, input.slug);
     if (newSlug !== existing.slug) {
       const slugConflict = await adminMasterDataRepository.findCategoryBySlug(newSlug);
       if (slugConflict && slugConflict.id !== existing.id) {
@@ -170,22 +200,20 @@ export async function updateCategory(
 
   if (input.description !== undefined) updateData.description = input.description;
   if (input.iconUrl !== undefined) updateData.iconUrl = input.iconUrl;
-  if (input.imageUrl !== undefined) updateData.imageUrl = input.imageUrl;
 
-  const banner = input.bannerUrl !== undefined ? input.bannerUrl : input.banner;
-  if (banner !== undefined) updateData.bannerUrl = banner;
-
-  const mobileImage = input.mobileImageUrl !== undefined ? input.mobileImageUrl : input.mobileImage;
-  if (mobileImage !== undefined) updateData.mobileImageUrl = mobileImage;
-
-  const webImage = input.webImageUrl !== undefined ? input.webImageUrl : input.webImage;
-  if (webImage !== undefined) updateData.webImageUrl = webImage;
+  const images = extractImageFields(input);
+  if (images.imageUrl !== undefined) updateData.imageUrl = images.imageUrl;
+  if (images.bannerUrl !== undefined) updateData.bannerUrl = images.bannerUrl;
+  if (images.mobileImageUrl !== undefined) updateData.mobileImageUrl = images.mobileImageUrl;
+  if (images.webImageUrl !== undefined) updateData.webImageUrl = images.webImageUrl;
 
   if (input.isActive !== undefined) updateData.isActive = input.isActive;
-  if (input.displayOrder !== undefined) updateData.displayOrder = input.displayOrder;
+  if (input.displayOrder !== undefined) {
+    updateData.displayOrder = typeof input.displayOrder === 'number' ? input.displayOrder : 0;
+  }
 
   const updated = await adminMasterDataRepository.updateCategory(existing.id, updateData);
-  return mapCategoryToDto(updated);
+  return mapCategoryToDto(updated as CategoryRecord);
 }
 
 export async function deleteCategory(idOrSlug: string): Promise<void> {
@@ -202,7 +230,7 @@ export async function deleteCategory(idOrSlug: string): Promise<void> {
 export async function listMachines(query: AdminListMachinesQuery) {
   const result = await adminMasterDataRepository.findMachines(query);
   return {
-    data: result.machines.map(mapMachineToDto),
+    data: result.machines.map((m) => mapMachineToDto(m as MachineRecord)),
     meta: {
       page: result.page,
       limit: result.limit,
@@ -217,7 +245,7 @@ export async function getMachineById(idOrSlug: string): Promise<MachineDto> {
   if (!machine) {
     throw new NotFoundError(`Machine with identifier '${idOrSlug}' not found`);
   }
-  return mapMachineToDto(machine);
+  return mapMachineToDto(machine as MachineRecord);
 }
 
 export async function createMachine(input: AdminCreateMachineInput): Promise<MachineDto> {
@@ -226,35 +254,27 @@ export async function createMachine(input: AdminCreateMachineInput): Promise<Mac
     throw new NotFoundError(`Category with ID '${input.categoryId}' does not exist`);
   }
 
-  const slug = input.slug || slugify(input.name);
-  if (!slug) {
-    throw new BadRequestError('Machine name produces an invalid empty slug');
-  }
+  const slug = resolveSlug(input.name, input.slug);
 
   const existingSlug = await adminMasterDataRepository.findMachineBySlug(slug);
   if (existingSlug) {
     throw new ConflictError(`Machine with slug '${slug}' already exists`);
   }
 
-  const bannerUrl = input.bannerUrl || input.banner;
-  const mobileImageUrl = input.mobileImageUrl || input.mobileImage;
-  const webImageUrl = input.webImageUrl || input.webImage;
+  const images = extractImageFields(input);
 
   const created = await adminMasterDataRepository.createMachine({
     category: { connect: { id: input.categoryId } },
     name: input.name,
     slug,
     description: input.description,
-    imageUrl: input.imageUrl,
-    bannerUrl,
-    mobileImageUrl,
-    webImageUrl,
-    specifications: (input.specifications as Prisma.InputJsonValue) ?? Prisma.JsonNull,
+    ...images,
+    specifications: (input.specifications as any) ?? null,
     isActive: input.isActive ?? true,
-    displayOrder: input.displayOrder ?? 0,
+    displayOrder: typeof input.displayOrder === 'number' ? input.displayOrder : 0,
   });
 
-  return mapMachineToDto(created);
+  return mapMachineToDto(created as MachineRecord);
 }
 
 export async function updateMachine(
@@ -266,7 +286,7 @@ export async function updateMachine(
     throw new NotFoundError(`Machine with identifier '${idOrSlug}' not found`);
   }
 
-  const updateData: Prisma.MachineUpdateInput = {};
+  const updateData: MachineUpdateInput = {};
 
   if (input.categoryId !== undefined) {
     const category = await adminMasterDataRepository.findCategoryById(input.categoryId);
@@ -281,7 +301,7 @@ export async function updateMachine(
   }
 
   if (input.slug !== undefined) {
-    const newSlug = input.slug || slugify(input.name || existing.name);
+    const newSlug = resolveSlug(input.name || existing.name, input.slug);
     if (newSlug !== existing.slug) {
       const slugConflict = await adminMasterDataRepository.findMachineBySlug(newSlug);
       if (slugConflict && slugConflict.id !== existing.id) {
@@ -292,25 +312,23 @@ export async function updateMachine(
   }
 
   if (input.description !== undefined) updateData.description = input.description;
-  if (input.imageUrl !== undefined) updateData.imageUrl = input.imageUrl;
 
-  const banner = input.bannerUrl !== undefined ? input.bannerUrl : input.banner;
-  if (banner !== undefined) updateData.bannerUrl = banner;
-
-  const mobileImage = input.mobileImageUrl !== undefined ? input.mobileImageUrl : input.mobileImage;
-  if (mobileImage !== undefined) updateData.mobileImageUrl = mobileImage;
-
-  const webImage = input.webImageUrl !== undefined ? input.webImageUrl : input.webImage;
-  if (webImage !== undefined) updateData.webImageUrl = webImage;
+  const images = extractImageFields(input);
+  if (images.imageUrl !== undefined) updateData.imageUrl = images.imageUrl;
+  if (images.bannerUrl !== undefined) updateData.bannerUrl = images.bannerUrl;
+  if (images.mobileImageUrl !== undefined) updateData.mobileImageUrl = images.mobileImageUrl;
+  if (images.webImageUrl !== undefined) updateData.webImageUrl = images.webImageUrl;
 
   if (input.specifications !== undefined) {
-    updateData.specifications = (input.specifications as Prisma.InputJsonValue) ?? Prisma.JsonNull;
+    updateData.specifications = (input.specifications as any) ?? null;
   }
   if (input.isActive !== undefined) updateData.isActive = input.isActive;
-  if (input.displayOrder !== undefined) updateData.displayOrder = input.displayOrder;
+  if (input.displayOrder !== undefined) {
+    updateData.displayOrder = typeof input.displayOrder === 'number' ? input.displayOrder : 0;
+  }
 
   const updated = await adminMasterDataRepository.updateMachine(existing.id, updateData);
-  return mapMachineToDto(updated);
+  return mapMachineToDto(updated as MachineRecord);
 }
 
 export async function deleteMachine(idOrSlug: string): Promise<void> {
@@ -329,9 +347,9 @@ export async function getMasterDataOverview(): Promise<MasterDataOverviewDto> {
   return {
     totalCategories: overview.totalCategories,
     totalMachines: overview.totalMachines,
-    categories: overview.categories.map((cat) => ({
-      ...mapCategoryToDto(cat),
-      machines: cat.machines.map(mapMachineToDto),
+    categories: overview.categories.map((cat: any) => ({
+      ...mapCategoryToDto(cat as CategoryRecord),
+      machines: (cat.machines || []).map((m: any) => mapMachineToDto(m as MachineRecord)),
     })),
   };
 }

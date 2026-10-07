@@ -4,35 +4,48 @@ import {
   AdminListCategoriesQuery,
   AdminListMachinesQuery,
 } from '../schemas/admin-masterdata.schema';
+import { parsePaginationParams } from '../../../shared/utils/pagination';
+import { CategoryUpdateData, MachineUpdateData } from '../types/admin-masterdata.types';
+
+const DEFAULT_CATEGORY_SORT_ORDER: Prisma.CategoryOrderByWithRelationInput[] = [
+  { displayOrder: 'asc' },
+  { name: 'asc' },
+];
+
+const DEFAULT_MACHINE_SORT_ORDER: Prisma.MachineOrderByWithRelationInput[] = [
+  { displayOrder: 'asc' },
+  { name: 'asc' },
+];
+
+export function isUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+export function buildTextSearchFilter(search?: string) {
+  if (!search) return undefined;
+  return [
+    { name: { contains: search, mode: 'insensitive' as const } },
+    { slug: { contains: search, mode: 'insensitive' as const } },
+    { description: { contains: search, mode: 'insensitive' as const } },
+  ];
+}
 
 export async function findCategories(query: AdminListCategoriesQuery) {
-  const { page = 1, limit = 20, search, isActive } = query;
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePaginationParams(query);
 
   const where: Prisma.CategoryWhereInput = {};
-
-  if (typeof isActive === 'boolean') {
-    where.isActive = isActive;
-  }
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { slug: { contains: search, mode: 'insensitive' } },
-      { description: { contains: search, mode: 'insensitive' } },
-    ];
-  }
+  if (typeof query.isActive === 'boolean') where.isActive = query.isActive;
+  const searchFilter = buildTextSearchFilter(query.search);
+  if (searchFilter) where.OR = searchFilter;
 
   const [categories, total] = await Promise.all([
     prisma.category.findMany({
       where,
       skip,
       take: limit,
-      orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+      orderBy: DEFAULT_CATEGORY_SORT_ORDER,
       include: {
-        _count: {
-          select: { machines: true },
-        },
+        _count: { select: { machines: true } },
       },
     }),
     prisma.category.count({ where }),
@@ -43,7 +56,7 @@ export async function findCategories(query: AdminListCategoriesQuery) {
     total,
     page,
     limit,
-    totalPages: Math.ceil(total / limit),
+    totalPages: Math.ceil(total / limit) || 1,
   };
 }
 
@@ -51,12 +64,8 @@ export async function findCategoryById(id: string) {
   return prisma.category.findUnique({
     where: { id },
     include: {
-      machines: {
-        orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
-      },
-      _count: {
-        select: { machines: true },
-      },
+      machines: { orderBy: DEFAULT_MACHINE_SORT_ORDER },
+      _count: { select: { machines: true } },
     },
   });
 }
@@ -65,19 +74,14 @@ export async function findCategoryBySlug(slug: string) {
   return prisma.category.findUnique({
     where: { slug },
     include: {
-      machines: {
-        orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
-      },
-      _count: {
-        select: { machines: true },
-      },
+      machines: { orderBy: DEFAULT_MACHINE_SORT_ORDER },
+      _count: { select: { machines: true } },
     },
   });
 }
 
 export async function findCategoryByIdOrSlug(idOrSlug: string) {
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
-  if (isUuid) {
+  if (isUuid(idOrSlug)) {
     const byId = await findCategoryById(idOrSlug);
     if (byId) return byId;
   }
@@ -85,72 +89,47 @@ export async function findCategoryByIdOrSlug(idOrSlug: string) {
 }
 
 export async function findCategoryByName(name: string) {
-  return prisma.category.findUnique({
-    where: { name },
-  });
+  return prisma.category.findUnique({ where: { name } });
 }
 
 export async function createCategory(data: Prisma.CategoryCreateInput) {
-  return prisma.category.create({
-    data,
-  });
+  return prisma.category.create({ data });
 }
 
-export async function updateCategory(id: string, data: Prisma.CategoryUpdateInput) {
+export async function updateCategory(id: string, data: CategoryUpdateData) {
   return prisma.category.update({
     where: { id },
-    data,
+    data: data as Prisma.CategoryUpdateInput,
     include: {
-      _count: {
-        select: { machines: true },
-      },
+      _count: { select: { machines: true } },
     },
   });
 }
 
 export async function deleteCategory(id: string) {
-  return prisma.category.delete({
-    where: { id },
-  });
+  return prisma.category.delete({ where: { id } });
 }
 
 export async function findMachines(query: AdminListMachinesQuery) {
-  const { page = 1, limit = 20, search, categoryId, categorySlug, isActive } = query;
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = parsePaginationParams(query);
 
   const where: Prisma.MachineWhereInput = {};
+  if (typeof query.isActive === 'boolean') where.isActive = query.isActive;
+  if (query.categoryId) where.categoryId = query.categoryId;
+  else if (query.categorySlug) where.category = { slug: query.categorySlug };
 
-  if (typeof isActive === 'boolean') {
-    where.isActive = isActive;
-  }
-
-  if (categoryId) {
-    where.categoryId = categoryId;
-  } else if (categorySlug) {
-    where.category = { slug: categorySlug };
-  }
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { slug: { contains: search, mode: 'insensitive' } },
-      { description: { contains: search, mode: 'insensitive' } },
-    ];
-  }
+  const searchFilter = buildTextSearchFilter(query.search);
+  if (searchFilter) where.OR = searchFilter;
 
   const [machines, total] = await Promise.all([
     prisma.machine.findMany({
       where,
       skip,
       take: limit,
-      orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+      orderBy: DEFAULT_MACHINE_SORT_ORDER,
       include: {
         category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
+          select: { id: true, name: true, slug: true },
         },
       },
     }),
@@ -162,7 +141,7 @@ export async function findMachines(query: AdminListMachinesQuery) {
     total,
     page,
     limit,
-    totalPages: Math.ceil(total / limit),
+    totalPages: Math.ceil(total / limit) || 1,
   };
 }
 
@@ -171,11 +150,7 @@ export async function findMachineById(id: string) {
     where: { id },
     include: {
       category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
+        select: { id: true, name: true, slug: true },
       },
     },
   });
@@ -186,19 +161,14 @@ export async function findMachineBySlug(slug: string) {
     where: { slug },
     include: {
       category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
+        select: { id: true, name: true, slug: true },
       },
     },
   });
 }
 
 export async function findMachineByIdOrSlug(idOrSlug: string) {
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
-  if (isUuid) {
+  if (isUuid(idOrSlug)) {
     const byId = await findMachineById(idOrSlug);
     if (byId) return byId;
   }
@@ -210,55 +180,46 @@ export async function createMachine(data: Prisma.MachineCreateInput) {
     data,
     include: {
       category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
+        select: { id: true, name: true, slug: true },
       },
     },
   });
 }
 
-export async function updateMachine(id: string, data: Prisma.MachineUpdateInput) {
+export async function updateMachine(id: string, data: MachineUpdateData) {
   return prisma.machine.update({
     where: { id },
-    data,
+    data: data as Prisma.MachineUpdateInput,
     include: {
       category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
+        select: { id: true, name: true, slug: true },
       },
     },
   });
 }
 
 export async function deleteMachine(id: string) {
-  return prisma.machine.delete({
-    where: { id },
-  });
+  return prisma.machine.delete({ where: { id } });
 }
 
 export async function getMasterDataOverview() {
   const categories = await prisma.category.findMany({
     where: { isActive: true },
-    orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+    orderBy: DEFAULT_CATEGORY_SORT_ORDER,
     include: {
       machines: {
         where: { isActive: true },
-        orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+        orderBy: DEFAULT_MACHINE_SORT_ORDER,
       },
-      _count: {
-        select: { machines: true },
-      },
+      _count: { select: { machines: true } },
     },
   });
 
   const totalCategories = categories.length;
-  const totalMachines = categories.reduce((acc, cat) => acc + cat.machines.length, 0);
+  let totalMachines = 0;
+  for (const cat of categories) {
+    totalMachines += cat.machines.length;
+  }
 
   return {
     totalCategories,

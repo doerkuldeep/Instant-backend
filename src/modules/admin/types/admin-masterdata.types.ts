@@ -1,3 +1,39 @@
+export interface CategoryRecord {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  iconUrl: string | null;
+  imageUrl: string | null;
+  bannerUrl: string | null;
+  mobileImageUrl: string | null;
+  webImageUrl: string | null;
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+  _count?: { machines: number };
+  machines?: MachineRecord[];
+}
+
+export interface MachineRecord {
+  id: string;
+  categoryId: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+  bannerUrl: string | null;
+  mobileImageUrl: string | null;
+  webImageUrl: string | null;
+  specifications: unknown;
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+  category?: { id: string; name: string; slug: string };
+}
+
 export interface CategoryDto {
   id: string;
   name: string;
@@ -37,7 +73,6 @@ export interface MachineDto {
   updatedAt: string;
 }
 
-
 export interface CategoryWithMachinesDto extends CategoryDto {
   machines: MachineDto[];
 }
@@ -56,3 +91,34 @@ export interface MasterDataStatsDto {
   activeMachines: number;
   inactiveMachines: number;
 }
+
+export interface CategoryUpdateData {
+  name?: string;
+  slug?: string;
+  description?: string | null;
+  iconUrl?: string | null;
+  imageUrl?: string | null;
+  bannerUrl?: string | null;
+  mobileImageUrl?: string | null;
+  webImageUrl?: string | null;
+  isActive?: boolean;
+  displayOrder?: number;
+}
+
+export interface MachineUpdateData {
+  categoryId?: string;
+  name?: string;
+  slug?: string;
+  description?: string | null;
+  imageUrl?: string | null;
+  bannerUrl?: string | null;
+  mobileImageUrl?: string | null;
+  webImageUrl?: string | null;
+  specifications?: unknown;
+  isActive?: boolean;
+  displayOrder?: number;
+  category?: {
+    connect?: { id: string };
+  };
+}
+

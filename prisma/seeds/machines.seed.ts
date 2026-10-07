@@ -31,9 +31,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Heavy machinery used for moving massive quantities of earth, grading soil, digging foundations, and trenching.',
     iconUrl: 'https://cdn.example.com/icons/earthmoving.svg',
     imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-    bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 1,
     machines: [
       {
@@ -42,9 +45,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy-duty tracked excavator for deep trenching, heavy excavation, and foundation preparation.',
         imageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12',
-        bannerUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           operatingWeightKg: 21500,
@@ -61,9 +67,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Versatile multi-purpose vehicle with front-end loader bucket and rear excavator arm, ideal for urban and utility projects.',
         imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f',
-        bannerUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           operatingWeightKg: 8500,
@@ -81,9 +90,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Powerful tracked crawler equipped with a heavy front push blade for clearing, leveling, and site grading.',
         imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-        bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           operatingWeightKg: 18200,
@@ -100,9 +112,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'High-capacity wheeled front loader for fast stockpiling, aggregate transfer, and truck loading.',
         imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b',
-        bannerUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           operatingWeightKg: 14500,
@@ -119,9 +134,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Compact, zero-turn agile utility machine supporting diverse attachments for demolition, grading, and material handling in tight spaces.',
         imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd',
-        bannerUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 5,
         specifications: {
           operatingWeightKg: 3600,
@@ -137,9 +155,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Precision grading machine fitted with a long adjustable center blade for high-precision roadway base finishing and ditch building.',
         imageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a',
-        bannerUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 6,
         specifications: {
           operatingWeightKg: 16500,
@@ -156,9 +177,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Compact crawler excavator with zero tail swing designed for residential construction, tight utility trenching, and landscaping.',
         imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
-        bannerUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 7,
         specifications: {
           operatingWeightKg: 3500,
@@ -175,9 +199,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Continuous chain/wheel trenching machine for underground pipeline laying, electrical conduit installation, and drainage channels.',
         imageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c',
-        bannerUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 8,
         specifications: {
           operatingWeightKg: 7800,
@@ -196,9 +223,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Cranes, telehandlers, manlifts, and high-altitude equipment for vertical hoisting and site logistics.',
     iconUrl: 'https://cdn.example.com/icons/lifting.svg',
     imageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122',
-    bannerUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 2,
     machines: [
       {
@@ -207,9 +237,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'All-terrain mobile telescopic crane capable of traveling on public roads and executing heavy lifting operations at high radii.',
         imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-        bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           maxLiftingCapacityTonnes: 50,
@@ -226,9 +259,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Tall stationary balance crane providing optimal lifting height and heavy load coverage across high-rise building projects.',
         imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f',
-        bannerUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           maxLiftingCapacityTonnes: 12,
@@ -244,9 +280,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy lattice boom crane mounted on crawler tracks for high load stability and pick-and-carry capability on unprepared ground.',
         imageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12',
-        bannerUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           maxLiftingCapacityTonnes: 100,
@@ -262,9 +301,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Telescopic handler merging rough-terrain forklift mobility with extended reach for multi-story material placement.',
         imageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866',
-        bannerUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           maxLiftingCapacityKg: 4000,
@@ -281,9 +323,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Mobile elevating work platform (cherry picker) with articulating joints to overcome obstacles at heights safely.',
         imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b',
-        bannerUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 5,
         specifications: {
           workingHeightM: 20.5,
@@ -299,9 +344,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Vertical aerial work platform offering a wide deck and high platform capacity for electrical, HVAC, and ceiling installations.',
         imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd',
-        bannerUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 6,
         specifications: {
           workingHeightM: 12,
@@ -317,9 +365,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy industrial forklift with high ground clearance and deep tread pneumatic tires for moving pallets and lumber on mud/gravel.',
         imageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c',
-        bannerUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 7,
         specifications: {
           liftCapacityKg: 5000,
@@ -338,9 +389,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Equipment dedicated to mixing, delivering, pumping, finishing, and compacting concrete and structural foundations.',
     iconUrl: 'https://cdn.example.com/icons/concrete.svg',
     imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-    bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 3,
     machines: [
       {
@@ -349,9 +403,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Commercial truck chassis equipped with a rotating mixing drum to transport ready-mix concrete without segregation.',
         imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-        bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           drumCapacityM3: 7,
@@ -368,9 +425,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'High-output concrete pump with multi-section articulated placing boom for rapid pours on high-rise columns and decks.',
         imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f',
-        bannerUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           boomReachVerticalM: 36,
@@ -386,9 +446,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Single smooth/padfoot drum roller generating high centrifugal force for compacting deep soil and aggregate subgrade layers.',
         imageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a',
-        bannerUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           operatingWeightTonnes: 11,
@@ -405,9 +468,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Double-drum vibrating roller with integrated water sprayers designed for smooth asphalt compaction and roadway resurfacing.',
         imageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866',
-        bannerUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           operatingWeightTonnes: 9.5,
@@ -424,9 +490,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Walk-behind compactor providing forward and reverse operation for compacting backfill in tight utility trenches and footings.',
         imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd',
-        bannerUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 5,
         specifications: {
           operatingWeightKg: 420,
@@ -442,9 +511,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Pre-wired, compact mobile plant designed to precisely weigh, dose, and mix aggregates, cement, and water at on-site locations.',
         imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f',
-        bannerUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 6,
         specifications: {
           capacityM3PerHour: 60,
@@ -463,9 +535,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Specialized machinery for asphalt laying, road profiling, cold milling, and highway surface construction.',
     iconUrl: 'https://cdn.example.com/icons/paving.svg',
     imageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a',
-    bannerUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 4,
     machines: [
       {
@@ -474,9 +549,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'High-precision tracked paver with heated screed for laying even bituminous asphalt layers on highways and airport runways.',
         imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-        bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           pavingWidthMaxM: 9.0,
@@ -493,9 +571,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Machine equipped with a rotating cutting drum to mill out deteriorated asphalt or concrete pavement down to specified depth.',
         imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-        bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           millingWidthMm: 2000,
@@ -512,9 +593,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Truck with insulated tank and computerized spray bar for spraying tack coat or prime coat emulsion at uniform pressure.',
         imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f',
-        bannerUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           tankCapacityL: 6000,
@@ -530,9 +614,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Multi-wheel rubber-tired compactor producing deep kneading action that seals voids and creates an impermeable asphalt surface.',
         imageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866',
-        bannerUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           operatingWeightTonnes: 24,
@@ -552,9 +639,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Machines engineered for rock breaking, reinforced concrete demolition, deep foundation piling, and horizontal boring.',
     iconUrl: 'https://cdn.example.com/icons/demolition.svg',
     imageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12',
-    bannerUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 5,
     machines: [
       {
@@ -563,9 +653,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy impact percussion hammer mounted on excavators for fracturing bedrock, concrete footings, and bridge piers.',
         imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-        bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           operatingWeightKg: 2800,
@@ -581,9 +674,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Large foundation drilling machine capable of drilling bored cast-in-place piles through clay, boulders, and rock strata.',
         imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-        bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           maxDrillingDepthM: 65,
@@ -600,9 +696,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Steerable trenchless drilling unit for installing utility pipes, telecom ducts, and gas lines beneath roads and rivers without surface excavation.',
         imageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c',
-        bannerUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           pullbackForceKN: 320,
@@ -619,9 +718,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Secondary demolition shear attachment that crushes reinforced concrete and separates rebar for recycling.',
         imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f',
-        bannerUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           operatingWeightKg: 2300,
@@ -640,9 +742,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Heavy site haulers, tippers, lowbed equipment trailers, and dust suppression tankers.',
     iconUrl: 'https://cdn.example.com/icons/transport.svg',
     imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b',
-    bannerUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 6,
     machines: [
       {
@@ -651,9 +756,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Multi-axle commercial tipper vehicle for transporting sand, aggregate, blasted rock, and excavated spoil.',
         imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-        bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           grossVehicleWeightTonnes: 35,
@@ -670,9 +778,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Rough-terrain hauler with center oscillating articulation hinge providing high traction through deep mud and unpaved grades.',
         imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6',
-        bannerUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           payloadCapacityTonnes: 40,
@@ -689,9 +800,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Site water truck with pneumatic water cannon and rear spray bar for haul road dust suppression and compaction moisture conditioning.',
         imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f',
-        bannerUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           tankCapacityLiters: 15000,
@@ -707,9 +821,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy-haul drop-deck trailer with hydraulic folding ramps designed to transport tracked excavators and dozers safely.',
         imageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c',
-        bannerUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           payloadCapacityTonnes: 60,
@@ -728,9 +845,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
       'Heavy-duty generators, air compressors, light towers, and dewatering pumps powering construction job sites.',
     iconUrl: 'https://cdn.example.com/icons/utilities.svg',
     imageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd',
-    bannerUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
-    mobileImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
-    webImageUrl: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80',
+    mobileImageUrl:
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80',
+    webImageUrl:
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
     displayOrder: 7,
     machines: [
       {
@@ -739,9 +859,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Soundproof containerized 3-phase diesel generating set delivering continuous prime power for high-demand site machinery.',
         imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f',
-        bannerUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 1,
         specifications: {
           primePowerKVA: 250,
@@ -758,9 +881,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Trailer-mounted diesel screw compressor for shotcreting, pneumatic jackhammers, sandblasting, and pipe pressure tests.',
         imageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866',
-        bannerUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 2,
         specifications: {
           freeAirDeliveryCfm: 750,
@@ -776,9 +902,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Trailer-mounted 9-meter telescopic mast with 4 high-efficiency LED floodlights ensuring 360-degree night work safety.',
         imageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122',
-        bannerUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 3,
         specifications: {
           mastHeightMaxM: 9.0,
@@ -795,9 +924,12 @@ export const CONSTRUCTION_CATEGORIES_AND_MACHINES: ConstructionCategorySeed[] = 
         description:
           'Heavy slurry/groundwater drainage pump with high chrome wear-resistant impeller for deep excavation pits and tunneling.',
         imageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755',
-        bannerUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
-        mobileImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
-        webImageUrl: 'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
+        bannerUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1920&q=80',
+        mobileImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=600&q=80',
+        webImageUrl:
+          'https://images.unsplash.com/photo-1579273166152-d725a4e2b755?auto=format&fit=crop&w=1200&q=80',
         displayOrder: 4,
         specifications: {
           flowRateM3PerHour: 120,

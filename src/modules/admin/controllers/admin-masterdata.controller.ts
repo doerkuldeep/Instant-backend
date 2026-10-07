@@ -9,6 +9,9 @@ import {
   AdminListMachinesQuery,
 } from '../schemas/admin-masterdata.schema';
 
+const getParamId = (req: Request): string =>
+  Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+
 // ----------------- Category Handlers -----------------
 
 export async function listCategories(req: Request, res: Response): Promise<void> {
@@ -23,8 +26,7 @@ export async function listCategories(req: Request, res: Response): Promise<void>
 }
 
 export async function getCategoryById(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const category = await adminMasterDataService.getCategoryById(identifier);
+  const category = await adminMasterDataService.getCategoryById(getParamId(req));
 
   res.status(200).json({
     success: true,
@@ -44,9 +46,8 @@ export async function createCategory(req: Request, res: Response): Promise<void>
 }
 
 export async function updateCategory(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const input = req.body as AdminUpdateCategoryInput;
-  const updated = await adminMasterDataService.updateCategory(identifier, input);
+  const updated = await adminMasterDataService.updateCategory(getParamId(req), input);
 
   res.status(200).json({
     success: true,
@@ -56,8 +57,7 @@ export async function updateCategory(req: Request, res: Response): Promise<void>
 }
 
 export async function deleteCategory(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  await adminMasterDataService.deleteCategory(identifier);
+  await adminMasterDataService.deleteCategory(getParamId(req));
 
   res.status(200).json({
     success: true,
@@ -79,8 +79,7 @@ export async function listMachines(req: Request, res: Response): Promise<void> {
 }
 
 export async function getMachineById(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const machine = await adminMasterDataService.getMachineById(identifier);
+  const machine = await adminMasterDataService.getMachineById(getParamId(req));
 
   res.status(200).json({
     success: true,
@@ -100,9 +99,8 @@ export async function createMachine(req: Request, res: Response): Promise<void> 
 }
 
 export async function updateMachine(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const input = req.body as AdminUpdateMachineInput;
-  const updated = await adminMasterDataService.updateMachine(identifier, input);
+  const updated = await adminMasterDataService.updateMachine(getParamId(req), input);
 
   res.status(200).json({
     success: true,
@@ -112,8 +110,7 @@ export async function updateMachine(req: Request, res: Response): Promise<void> 
 }
 
 export async function deleteMachine(req: Request, res: Response): Promise<void> {
-  const identifier = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  await adminMasterDataService.deleteMachine(identifier);
+  await adminMasterDataService.deleteMachine(getParamId(req));
 
   res.status(200).json({
     success: true,

@@ -1,6 +1,18 @@
 import { Router } from 'express';
-import { adminMasterDataController } from '../controllers/admin-masterdata.controller';
-import { validate } from '../../../shared/middlewares/validate';
+import {
+  listCategories,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  listMachines,
+  getMachineById,
+  createMachine,
+  updateMachine,
+  deleteMachine,
+  getMasterDataOverview,
+  getMasterDataStats,
+} from '../controllers/admin-masterdata.controller';
 import {
   adminListCategoriesQuerySchema,
   adminCategoryIdParamSchema,
@@ -11,82 +23,91 @@ import {
   adminCreateMachineSchema,
   adminUpdateMachineSchema,
 } from '../schemas/admin-masterdata.schema';
+import { validate } from '../../../shared/middlewares/validate';
+import { asyncHandler } from '../../../shared/utils/async-handler';
 
-// 1. Categories Sub-Router
+// ==========================================
+// 1. Categories Router
+// ==========================================
 const categoryRouter = Router();
 
 categoryRouter.get(
   '/',
   validate({ query: adminListCategoriesQuerySchema }),
-  adminMasterDataController.listCategories,
+  asyncHandler(listCategories),
 );
+
 categoryRouter.post(
   '/',
   validate({ body: adminCreateCategorySchema }),
-  adminMasterDataController.createCategory,
+  asyncHandler(createCategory),
 );
+
 categoryRouter.get(
   '/:id',
   validate({ params: adminCategoryIdParamSchema }),
-  adminMasterDataController.getCategoryById,
+  asyncHandler(getCategoryById),
 );
+
 categoryRouter.put(
   '/:id',
-  validate({
-    params: adminCategoryIdParamSchema,
-    body: adminUpdateCategorySchema,
-  }),
-  adminMasterDataController.updateCategory,
+  validate({ params: adminCategoryIdParamSchema, body: adminUpdateCategorySchema }),
+  asyncHandler(updateCategory),
 );
+
 categoryRouter.delete(
   '/:id',
   validate({ params: adminCategoryIdParamSchema }),
-  adminMasterDataController.deleteCategory,
+  asyncHandler(deleteCategory),
 );
 
-// 2. Machines Sub-Router
+// ==========================================
+// 2. Machines Router
+// ==========================================
 const machineRouter = Router();
 
 machineRouter.get(
   '/',
   validate({ query: adminListMachinesQuerySchema }),
-  adminMasterDataController.listMachines,
+  asyncHandler(listMachines),
 );
+
 machineRouter.post(
   '/',
   validate({ body: adminCreateMachineSchema }),
-  adminMasterDataController.createMachine,
+  asyncHandler(createMachine),
 );
+
 machineRouter.get(
   '/:id',
   validate({ params: adminMachineIdParamSchema }),
-  adminMasterDataController.getMachineById,
+  asyncHandler(getMachineById),
 );
+
 machineRouter.put(
   '/:id',
-  validate({
-    params: adminMachineIdParamSchema,
-    body: adminUpdateMachineSchema,
-  }),
-  adminMasterDataController.updateMachine,
+  validate({ params: adminMachineIdParamSchema, body: adminUpdateMachineSchema }),
+  asyncHandler(updateMachine),
 );
+
 machineRouter.delete(
   '/:id',
   validate({ params: adminMachineIdParamSchema }),
-  adminMasterDataController.deleteMachine,
+  asyncHandler(deleteMachine),
 );
 
-// 3. Combined Masterdata Router
+// ==========================================
+// 3. Combined Master Data Router
+// ==========================================
 const masterDataRouter = Router();
 
-// Overview & summary stats
-masterDataRouter.get('/overview', adminMasterDataController.getMasterDataOverview);
-masterDataRouter.get('/stats', adminMasterDataController.getMasterDataStats);
-masterDataRouter.get('/', adminMasterDataController.getMasterDataOverview);
+masterDataRouter.get('/overview', asyncHandler(getMasterDataOverview));
+masterDataRouter.get('/stats', asyncHandler(getMasterDataStats));
+masterDataRouter.get('/', asyncHandler(getMasterDataOverview));
 
-// Mount categories and machines
 masterDataRouter.use('/categories', categoryRouter);
 masterDataRouter.use('/machines', machineRouter);
 
 export { categoryRouter as adminCategoryRoutes, machineRouter as adminMachineRoutes };
 export const adminMasterDataRoutes = masterDataRouter;
+
