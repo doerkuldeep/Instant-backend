@@ -20,6 +20,31 @@ enum PartnerStatus {
   SUSPENDED
 }
 
+enum OnboardingStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum PoliceVerificationStatus {
+  NOT_SUBMITTED
+  PENDING_REVIEW
+  IN_PROGRESS
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum GovernmentIdType {
+  AADHAAR
+  PAN
+  PASSPORT
+  VOTER_ID
+  DRIVING_LICENSE
+}
+
 model User {
   id             String          @id @default(uuid())
   email          String          @unique
@@ -45,27 +70,107 @@ model User {
 }
 
 model PartnerProfile {
-  id                String          @id @default(uuid())
-  userId            String          @unique
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  phone             String?         @unique
-  companyName       String          @default("")
+  id                String             @id @default(uuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone             String?            @unique
+  companyName       String             @default("")
   businessRegNumber String?
   businessCategory  String?
-  status            PartnerStatus   @default(PENDING)
-  commissionRate    Float           @default(10.0)
-  referralCode      String?         @unique
+  status            PartnerStatus      @default(PENDING)
+  commissionRate    Float              @default(10.0)
+  referralCode      String?            @unique
   referredById      String?
-  referredBy        PartnerProfile? @relation("PartnerReferrals", fields: [referredById], references: [id], onDelete: SetNull)
-  referrals         PartnerProfile[] @relation("PartnerReferrals")
+  referredBy        PartnerProfile?    @relation("PartnerReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals         PartnerProfile[]   @relation("PartnerReferrals")
   verifiedAt        DateTime?
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  onboarding        PartnerOnboarding?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@index([companyName])
   @@index([status])
   @@index([phone])
   @@index([referralCode])
+}
+
+model PartnerOnboarding {
+  id                       String                   @id @default(uuid())
+  partnerProfileId         String                   @unique
+  partnerProfile           PartnerProfile           @relation(fields: [partnerProfileId], references: [id], onDelete: Cascade)
+
+  // Personal KYC Details
+  fullName                 String?
+  fatherOrSpouseName       String?
+  dob                      String?
+  gender                   String?
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
+
+  // Current Address & Jurisdiction
+  currentAddress           String?
+  currentLandmark          String?
+  currentCity              String?
+  currentState             String?
+  currentPincode           String?
+  residingSinceYear        Int?
+
+  // Permanent Address
+  isPermanentSameAsCurrent Boolean                  @default(false)
+  permanentAddress         String?
+  permanentLandmark        String?
+  permanentCity            String?
+  permanentState           String?
+  permanentPincode         String?
+
+  // Government ID Details
+  idType                   GovernmentIdType?
+  idNumber                 String?
+  idDocumentUrl            String?
+  idDocumentBackUrl        String?
+
+  // Police Verification Details
+  policeStationName        String?
+  policeStationDistrict    String?
+  policeStationState       String?
+  policeStationPincode     String?
+  pvcCertificateNumber     String?
+  pvcDocumentUrl           String?
+  pvcIssuedDate            DateTime?
+  pvcExpiryDate            DateTime?
+  hasCriminalRecord        Boolean                  @default(false)
+  criminalRecordDetails    String?
+  policeVerificationStatus PoliceVerificationStatus @default(NOT_SUBMITTED)
+  policeRemarks            String?
+  policeVerifiedAt         DateTime?
+  policeVerifiedBy         String?
+
+  // Bank Account Details for Payouts
+  bankAccountNumber        String?
+  bankIfscCode             String?
+  bankName                 String?
+  bankAccountHolderName    String?
+
+  // Optional Vehicle / Driving Details
+  vehicleType              String?
+  vehiclePlateNumber       String?
+  drivingLicenseNumber     String?
+  drivingLicenseUrl        String?
+
+  // Onboarding Overall State
+  status                   OnboardingStatus         @default(DRAFT)
+  submissionDate           DateTime?
+  rejectionReason          String?
+  reviewedBy               String?
+  reviewedAt               DateTime?
+
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+
+  @@index([partnerProfileId])
+  @@index([status])
+  @@index([policeVerificationStatus])
 }
 
 model PartnerOtp {

@@ -15,6 +15,10 @@ export function clearInMemory(): void {
   inMemoryUsers.clear();
 }
 
+export function saveUserInMemory(user: UserWithPartner): void {
+  inMemoryUsers.set(user.id, user);
+}
+
 function buildWhereClause(filter: UserFindFilter): Prisma.UserWhereInput {
   const where: Prisma.UserWhereInput = {};
 
@@ -60,8 +64,8 @@ export async function findById(id: string): Promise<UserWithPartner | null> {
         partnerProfile: true,
       },
     });
-    if (user) inMemoryUsers.set(user.id, user);
-    return user;
+    if (user) inMemoryUsers.set(user.id, user as UserWithPartner);
+    return (user as UserWithPartner) ?? null;
   } catch {
     return inMemoryUsers.get(id) ?? null;
   }
@@ -79,8 +83,8 @@ export async function findByEmail(email: string): Promise<UserWithPartner | null
         partnerProfile: true,
       },
     });
-    if (user) inMemoryUsers.set(user.id, user);
-    return user;
+    if (user) inMemoryUsers.set(user.id, user as UserWithPartner);
+    return (user as UserWithPartner) ?? null;
   } catch {
     return memUser ?? null;
   }
@@ -88,11 +92,11 @@ export async function findByEmail(email: string): Promise<UserWithPartner | null
 
 export async function findByPhone(phone: string): Promise<UserWithPartner | null> {
   const memUser = Array.from(inMemoryUsers.values()).find(
-    (u) => u.phone === phone || u.partnerProfile?.phone === phone,
+    (u) => (u as any).phone === phone || (u.partnerProfile as any)?.phone === phone,
   );
   if (memUser) return memUser;
   try {
-    const user = await prisma.user.findFirst({
+    const user = await (prisma.user as any).findFirst({
       where: {
         OR: [
           { phone },
@@ -103,8 +107,8 @@ export async function findByPhone(phone: string): Promise<UserWithPartner | null
         partnerProfile: true,
       },
     });
-    if (user) inMemoryUsers.set(user.id, user);
-    return user;
+    if (user) inMemoryUsers.set(user.id, user as UserWithPartner);
+    return (user as UserWithPartner) ?? null;
   } catch {
     return memUser ?? null;
   }
@@ -123,8 +127,8 @@ export async function findByReferralCode(referralCode: string): Promise<UserWith
         partnerProfile: true,
       },
     });
-    if (user) inMemoryUsers.set(user.id, user);
-    return user;
+    if (user) inMemoryUsers.set(user.id, user as UserWithPartner);
+    return (user as UserWithPartner) ?? null;
   } catch {
     return memUser ?? null;
   }
@@ -296,4 +300,5 @@ export const usersRepository = {
   updatePartnerStatus,
   delete: deleteUser,
   clearInMemory,
+  saveUserInMemory,
 };
