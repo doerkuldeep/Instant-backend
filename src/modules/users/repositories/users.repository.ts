@@ -98,10 +98,7 @@ export async function findByPhone(phone: string): Promise<UserWithPartner | null
   try {
     const user = await (prisma.user as any).findFirst({
       where: {
-        OR: [
-          { phone },
-          { partnerProfile: { phone } },
-        ],
+        OR: [{ phone }, { partnerProfile: { phone } }],
       },
       include: {
         partnerProfile: true,

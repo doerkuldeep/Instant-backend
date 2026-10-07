@@ -21,7 +21,7 @@ export interface PartnerOnboardingResponseDto {
   partnerProfileId: string;
   status: OnboardingStatus;
   checklist: OnboardingChecklist;
-  
+
   // Personal Details
   personalDetails: {
     fullName: string | null;

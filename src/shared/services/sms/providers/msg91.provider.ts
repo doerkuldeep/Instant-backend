@@ -60,7 +60,11 @@ export class Msg91SmsProvider implements ISmsProvider {
           body: JSON.stringify(payload),
         });
 
-        const data = (await response.json()) as { type?: string; message?: string; request_id?: string };
+        const data = (await response.json()) as {
+          type?: string;
+          message?: string;
+          request_id?: string;
+        };
 
         if (!response.ok || data.type === 'error') {
           const errMsg = data.message || `MSG91 Flow API error ${response.status}`;
@@ -72,7 +76,10 @@ export class Msg91SmsProvider implements ISmsProvider {
           };
         }
 
-        logger.info({ provider: this.name, requestId: data.request_id, to: options.to }, 'MSG91 SMS sent successfully');
+        logger.info(
+          { provider: this.name, requestId: data.request_id, to: options.to },
+          'MSG91 SMS sent successfully',
+        );
         return {
           success: true,
           messageId: data.request_id,
@@ -103,7 +110,11 @@ export class Msg91SmsProvider implements ISmsProvider {
         body: JSON.stringify(payload),
       });
 
-      const data = (await response.json()) as { type?: string; message?: string; request_id?: string };
+      const data = (await response.json()) as {
+        type?: string;
+        message?: string;
+        request_id?: string;
+      };
 
       if (!response.ok || data.type === 'error') {
         const errMsg = data.message || `MSG91 send SMS error ${response.status}`;
@@ -115,7 +126,10 @@ export class Msg91SmsProvider implements ISmsProvider {
         };
       }
 
-      logger.info({ provider: this.name, requestId: data.request_id, to: options.to }, 'MSG91 SMS sent successfully');
+      logger.info(
+        { provider: this.name, requestId: data.request_id, to: options.to },
+        'MSG91 SMS sent successfully',
+      );
       return {
         success: true,
         messageId: data.request_id,

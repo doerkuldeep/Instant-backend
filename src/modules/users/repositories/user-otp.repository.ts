@@ -52,7 +52,11 @@ export function recordOtpRequest(phone: string): void {
 /**
  * Save or overwrite an active OTP for a phone number with a 5-minute expiry.
  */
-export async function saveOtp(phone: string, otpHash: string, ttlMs = 5 * 60 * 1000): Promise<void> {
+export async function saveOtp(
+  phone: string,
+  otpHash: string,
+  ttlMs = 5 * 60 * 1000,
+): Promise<void> {
   const expiresAt = new Date(Date.now() + ttlMs);
 
   // Save in memory

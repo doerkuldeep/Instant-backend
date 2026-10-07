@@ -42,13 +42,12 @@ export function calculateChecklist(onboarding: PartnerOnboarding | null): Onboar
     onboarding.currentCity &&
     onboarding.currentState &&
     onboarding.currentPincode &&
-    (onboarding.isPermanentSameAsCurrent || (onboarding.permanentAddress && onboarding.permanentCity && onboarding.permanentState)),
+    (onboarding.isPermanentSameAsCurrent ||
+      (onboarding.permanentAddress && onboarding.permanentCity && onboarding.permanentState)),
   );
 
   const identityDetailsCompleted = Boolean(
-    onboarding.idType &&
-    onboarding.idNumber &&
-    onboarding.idDocumentUrl,
+    onboarding.idType && onboarding.idNumber && onboarding.idDocumentUrl,
   );
 
   const policeVerificationCompleted = Boolean(
@@ -165,7 +164,9 @@ export function toDto(onboarding: PartnerOnboarding): PartnerOnboardingResponseD
   };
 }
 
-export async function findByPartnerProfileId(partnerProfileId: string): Promise<PartnerOnboarding | null> {
+export async function findByPartnerProfileId(
+  partnerProfileId: string,
+): Promise<PartnerOnboarding | null> {
   if (inMemoryOnboardings.has(partnerProfileId)) {
     return inMemoryOnboardings.get(partnerProfileId)!;
   }
@@ -198,14 +199,16 @@ export async function upsertOnboarding(
     gender: data.gender ?? existing?.gender ?? null,
     emergencyContactName: data.emergencyContactName ?? existing?.emergencyContactName ?? null,
     emergencyContactPhone: data.emergencyContactPhone ?? existing?.emergencyContactPhone ?? null,
-    emergencyContactRelation: data.emergencyContactRelation ?? existing?.emergencyContactRelation ?? null,
+    emergencyContactRelation:
+      data.emergencyContactRelation ?? existing?.emergencyContactRelation ?? null,
     currentAddress: data.currentAddress ?? existing?.currentAddress ?? null,
     currentLandmark: data.currentLandmark ?? existing?.currentLandmark ?? null,
     currentCity: data.currentCity ?? existing?.currentCity ?? null,
     currentState: data.currentState ?? existing?.currentState ?? null,
     currentPincode: data.currentPincode ?? existing?.currentPincode ?? null,
     residingSinceYear: data.residingSinceYear ?? existing?.residingSinceYear ?? null,
-    isPermanentSameAsCurrent: data.isPermanentSameAsCurrent ?? existing?.isPermanentSameAsCurrent ?? false,
+    isPermanentSameAsCurrent:
+      data.isPermanentSameAsCurrent ?? existing?.isPermanentSameAsCurrent ?? false,
     permanentAddress: data.permanentAddress ?? existing?.permanentAddress ?? null,
     permanentLandmark: data.permanentLandmark ?? existing?.permanentLandmark ?? null,
     permanentCity: data.permanentCity ?? existing?.permanentCity ?? null,
@@ -225,7 +228,10 @@ export async function upsertOnboarding(
     pvcExpiryDate: data.pvcExpiryDate ?? existing?.pvcExpiryDate ?? null,
     hasCriminalRecord: data.hasCriminalRecord ?? existing?.hasCriminalRecord ?? false,
     criminalRecordDetails: data.criminalRecordDetails ?? existing?.criminalRecordDetails ?? null,
-    policeVerificationStatus: data.policeVerificationStatus ?? existing?.policeVerificationStatus ?? PoliceVerificationStatus.NOT_SUBMITTED,
+    policeVerificationStatus:
+      data.policeVerificationStatus ??
+      existing?.policeVerificationStatus ??
+      PoliceVerificationStatus.NOT_SUBMITTED,
     policeRemarks: data.policeRemarks ?? existing?.policeRemarks ?? null,
     policeVerifiedAt: data.policeVerifiedAt ?? existing?.policeVerifiedAt ?? null,
     policeVerifiedBy: data.policeVerifiedBy ?? existing?.policeVerifiedBy ?? null,

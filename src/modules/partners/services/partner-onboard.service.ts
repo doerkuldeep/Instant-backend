@@ -11,11 +11,7 @@ import {
   PartnerOnboardingResponseDto,
   PoliceVerificationDetailsDto,
 } from '../types/partner-onboard.types';
-import {
-  NotFoundError,
-  BadRequestError,
-  ForbiddenError,
-} from '../../../shared/errors/http-errors';
+import { NotFoundError, BadRequestError, ForbiddenError } from '../../../shared/errors/http-errors';
 import { logger } from '../../../config/logger';
 
 /**
@@ -70,7 +66,8 @@ export async function saveDraft(
     ...input,
     pvcIssuedDate: input.pvcIssuedDate ? new Date(input.pvcIssuedDate) : undefined,
     pvcExpiryDate: input.pvcExpiryDate ? new Date(input.pvcExpiryDate) : undefined,
-    status: existing?.status === OnboardingStatus.SUBMITTED ? existing.status : OnboardingStatus.DRAFT,
+    status:
+      existing?.status === OnboardingStatus.SUBMITTED ? existing.status : OnboardingStatus.DRAFT,
   };
 
   const updated = await partnerOnboardRepository.upsertOnboarding(partnerProfileId, payload);

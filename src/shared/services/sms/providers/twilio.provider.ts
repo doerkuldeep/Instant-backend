@@ -60,7 +60,10 @@ export class TwilioSmsProvider implements ISmsProvider {
 
       if (!response.ok) {
         const errorMsg = data.message || `Twilio HTTP error ${response.status}`;
-        logger.error({ provider: this.name, error: errorMsg, status: response.status }, 'Twilio SMS send failed');
+        logger.error(
+          { provider: this.name, error: errorMsg, status: response.status },
+          'Twilio SMS send failed',
+        );
         return {
           success: false,
           provider: this.name,
@@ -68,7 +71,10 @@ export class TwilioSmsProvider implements ISmsProvider {
         };
       }
 
-      logger.info({ provider: this.name, sid: data.sid, to: options.to }, 'Twilio SMS sent successfully');
+      logger.info(
+        { provider: this.name, sid: data.sid, to: options.to },
+        'Twilio SMS sent successfully',
+      );
       return {
         success: true,
         messageId: data.sid,

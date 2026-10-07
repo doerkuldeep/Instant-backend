@@ -9,7 +9,9 @@ import {
   PaginatedResult,
 } from '../../../shared/utils/pagination';
 
-export async function listUsers(query: AdminListUsersQuery): Promise<PaginatedResult<UserResponseDto>> {
+export async function listUsers(
+  query: AdminListUsersQuery,
+): Promise<PaginatedResult<UserResponseDto>> {
   const pagination = parsePaginationParams({ page: query.page, limit: query.limit });
   const filter: UserFindFilter = {
     role: query.role,

@@ -36,18 +36,9 @@ router.post(
   asyncHandler(registerPartner),
 );
 
-router.post(
-  '/login',
-  authRateLimiter,
-  validate({ body: loginSchema }),
-  asyncHandler(login),
-);
+router.post('/login', authRateLimiter, validate({ body: loginSchema }), asyncHandler(login));
 
-router.post(
-  '/refresh',
-  validate({ body: refreshTokenSchema }),
-  asyncHandler(refreshTokens),
-);
+router.post('/refresh', validate({ body: refreshTokenSchema }), asyncHandler(refreshTokens));
 
 router.post('/logout', asyncHandler(logout));
 

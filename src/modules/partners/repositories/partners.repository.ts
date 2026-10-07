@@ -7,7 +7,9 @@ export async function findPartnerByUserId(userId: string): Promise<PartnerProfil
   });
 }
 
-export async function findPartnerByCompanyName(companyName: string): Promise<PartnerProfile | null> {
+export async function findPartnerByCompanyName(
+  companyName: string,
+): Promise<PartnerProfile | null> {
   return prisma.partnerProfile.findFirst({
     where: { companyName: { equals: companyName, mode: 'insensitive' } },
   });

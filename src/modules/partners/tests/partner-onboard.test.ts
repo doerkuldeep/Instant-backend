@@ -150,7 +150,9 @@ describe('Partner Onboard & Police Verification Test Suite', () => {
       const parsed = submitOnboardSchema.safeParse(invalidPayload);
       expect(parsed.success).toBe(false);
       if (!parsed.success) {
-        expect(parsed.error.issues.some((issue) => issue.path.includes('pvcCertificateNumber'))).toBe(true);
+        expect(
+          parsed.error.issues.some((issue) => issue.path.includes('pvcCertificateNumber')),
+        ).toBe(true);
       }
     });
 
@@ -188,7 +190,9 @@ describe('Partner Onboard & Police Verification Test Suite', () => {
       const parsed = submitOnboardSchema.safeParse(payloadWithCriminalRecord);
       expect(parsed.success).toBe(false);
       if (!parsed.success) {
-        expect(parsed.error.issues.some((issue) => issue.path.includes('criminalRecordDetails'))).toBe(true);
+        expect(
+          parsed.error.issues.some((issue) => issue.path.includes('criminalRecordDetails')),
+        ).toBe(true);
       }
     });
 
@@ -423,7 +427,8 @@ describe('Partner Onboard & Police Verification Test Suite', () => {
 
       const reviewPayload = {
         status: 'VERIFIED',
-        remarks: 'Police clearance certificate verified with Koramangala police jurisdiction records',
+        remarks:
+          'Police clearance certificate verified with Koramangala police jurisdiction records',
       };
 
       const res = await request(app)

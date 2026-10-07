@@ -19,3 +19,5 @@ export interface SystemStatsDto {
     suspended: number;
   };
 }
+
+export * from './admin-masterdata.types';

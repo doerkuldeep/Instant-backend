@@ -25,7 +25,9 @@ describe('Global Shared Services', () => {
       const prevEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
       try {
-        expect(() => new ConsoleSmsProvider()).toThrow(/cannot be used in a production environment/);
+        expect(() => new ConsoleSmsProvider()).toThrow(
+          /cannot be used in a production environment/,
+        );
       } finally {
         process.env.NODE_ENV = prevEnv;
       }

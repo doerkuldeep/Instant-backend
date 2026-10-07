@@ -1,12 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
 import { app } from '../../../app';
-import {
-  generateSecureOtp,
-  hashOtp,
-  verifyOtpHash,
-  generateReferralCode,
-} from '../utils/otp.util';
+import { generateSecureOtp, hashOtp, verifyOtpHash, generateReferralCode } from '../utils/otp.util';
 import { partnerOtpRepository } from '../repositories/partner-otp.repository';
 import { mockSmsProvider, smsService } from '../../../shared/services/sms';
 import { partnerAuthService } from '../services/partner-auth.service';
@@ -166,22 +161,22 @@ describe('Partner OTP & Referral Auth Test Suite', () => {
 
       // 4 failed attempts
       for (let i = 1; i <= 4; i++) {
-        await expect(
-          partnerAuthService.verifyOtp({ phone, otp: '000000' }),
-        ).rejects.toThrow(/Invalid OTP/);
+        await expect(partnerAuthService.verifyOtp({ phone, otp: '000000' })).rejects.toThrow(
+          /Invalid OTP/,
+        );
         const stored = await partnerOtpRepository.getOtp(phone);
         expect(stored?.attempts).toBe(i);
       }
 
       // 5th failed attempt should invalidate the OTP
-      await expect(
-        partnerAuthService.verifyOtp({ phone, otp: '000000' }),
-      ).rejects.toThrow('Maximum OTP verification attempts exceeded. Please request a new OTP.');
+      await expect(partnerAuthService.verifyOtp({ phone, otp: '000000' })).rejects.toThrow(
+        'Maximum OTP verification attempts exceeded. Please request a new OTP.',
+      );
 
       // Subsequent attempt should show expired or invalid
-      await expect(
-        partnerAuthService.verifyOtp({ phone, otp: '000000' }),
-      ).rejects.toThrow('Invalid or expired OTP');
+      await expect(partnerAuthService.verifyOtp({ phone, otp: '000000' })).rejects.toThrow(
+        'Invalid or expired OTP',
+      );
     });
 
     it('should delete OTP upon successful verification (single-use)', async () => {
@@ -376,9 +371,7 @@ describe('Partner OTP & Referral Auth Test Suite', () => {
     });
 
     it('POST /api/partner/auth/send-otp: should reject invalid phone format with 422', async () => {
-      const res = await request(app)
-        .post('/api/partner/auth/send-otp')
-        .send({ phone: '12345' });
+      const res = await request(app).post('/api/partner/auth/send-otp').send({ phone: '12345' });
 
       expect(res.status).toBe(422);
       expect(res.body.success).toBe(false);

@@ -71,7 +71,10 @@ class SmsService {
   /**
    * Main dispatch method supporting both options object and (to, message) overload
    */
-  public async sendSms(optionsOrTo: SendSmsOptions | string, maybeMessage?: string): Promise<SmsSendResult> {
+  public async sendSms(
+    optionsOrTo: SendSmsOptions | string,
+    maybeMessage?: string,
+  ): Promise<SmsSendResult> {
     if (typeof optionsOrTo === 'string') {
       return this.activeProvider.send({ to: optionsOrTo, message: maybeMessage || '' });
     }
@@ -99,7 +102,10 @@ export const smsService = new SmsService();
  * Top-level convenience function matching the service specification:
  * sendSms({ to, message, templateId? }) or sendSms(to, message)
  */
-export async function sendSms(optionsOrTo: SendSmsOptions | string, maybeMessage?: string): Promise<SmsSendResult> {
+export async function sendSms(
+  optionsOrTo: SendSmsOptions | string,
+  maybeMessage?: string,
+): Promise<SmsSendResult> {
   return smsService.sendSms(optionsOrTo as any, maybeMessage);
 }
 

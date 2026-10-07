@@ -13,7 +13,10 @@ export async function getProfile(userId: string): Promise<UserResponseDto> {
   return toDto(user);
 }
 
-export async function updateProfile(userId: string, input: UpdateProfileInput): Promise<UserResponseDto> {
+export async function updateProfile(
+  userId: string,
+  input: UpdateProfileInput,
+): Promise<UserResponseDto> {
   const existing = await usersRepository.findById(userId);
   if (!existing) {
     throw new NotFoundError('User not found');

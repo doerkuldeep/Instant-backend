@@ -15,7 +15,10 @@ export interface DomainEventPayloadMap {
 
 const emitter = new EventEmitter();
 
-export function emitEvent<E extends DomainEvent>(event: E, payload: DomainEventPayloadMap[E]): boolean {
+export function emitEvent<E extends DomainEvent>(
+  event: E,
+  payload: DomainEventPayloadMap[E],
+): boolean {
   logger.debug({ event, payload }, 'Domain event emitted');
   return emitter.emit(event, payload);
 }

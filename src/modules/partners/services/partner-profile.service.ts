@@ -19,7 +19,10 @@ export async function getProfile(userId: string): Promise<UserResponseDto> {
   return toDto(user);
 }
 
-export async function updateProfile(userId: string, input: UpdatePartnerProfileInput): Promise<UserResponseDto> {
+export async function updateProfile(
+  userId: string,
+  input: UpdatePartnerProfileInput,
+): Promise<UserResponseDto> {
   const user = await usersRepository.findById(userId);
   if (!user) {
     throw new NotFoundError('Partner user not found');

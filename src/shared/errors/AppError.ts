@@ -18,7 +18,9 @@ function createAppError(
   code?: string,
   details?: unknown,
 ): AppError {
-  const instance = (this instanceof createAppError ? this : Object.create(createAppError.prototype)) as AppError;
+  const instance = (
+    this instanceof createAppError ? this : Object.create(createAppError.prototype)
+  ) as AppError;
   const err = new Error(message) as AppError;
   Object.setPrototypeOf(err, Object.getPrototypeOf(instance));
   err.name = 'AppError';

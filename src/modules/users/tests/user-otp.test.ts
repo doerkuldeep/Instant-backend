@@ -1,12 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
 import { app } from '../../../app';
-import {
-  generateSecureOtp,
-  hashOtp,
-  verifyOtpHash,
-  generateReferralCode,
-} from '../utils/otp.util';
+import { generateSecureOtp, hashOtp, verifyOtpHash, generateReferralCode } from '../utils/otp.util';
 import { userOtpRepository } from '../repositories/user-otp.repository';
 import { mockSmsProvider, smsService } from '../../../shared/services/sms';
 import { userAuthService } from '../services/user-auth.service';
@@ -101,9 +96,16 @@ describe('User OTP & Referral Auth Test Suite', () => {
     });
 
     it('should validate referral code length between 6 and 8 chars', () => {
-      expect(userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'ABC1234' }).success).toBe(true);
-      expect(userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'ABC' }).success).toBe(false);
-      expect(userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'TOOLONGA123' }).success).toBe(false);
+      expect(
+        userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'ABC1234' }).success,
+      ).toBe(true);
+      expect(
+        userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'ABC' }).success,
+      ).toBe(false);
+      expect(
+        userSendOtpSchema.safeParse({ phone: '+919876543210', referralCode: 'TOOLONGA123' })
+          .success,
+      ).toBe(false);
     });
   });
 
@@ -155,9 +157,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       // Save with negative TTL to simulate expired OTP
       await userOtpRepository.saveOtp(phone, hash, -1000);
 
-      await expect(
-        userAuthService.verifyOtp({ phone, otp }),
-      ).rejects.toThrow(BadRequestError);
+      await expect(userAuthService.verifyOtp({ phone, otp })).rejects.toThrow(BadRequestError);
 
       const storedAfter = await userOtpRepository.getOtp(phone);
       expect(storedAfter).toBeNull();
@@ -170,15 +170,15 @@ describe('User OTP & Referral Auth Test Suite', () => {
 
       // Attempts 1 to 4 should increment and return remaining attempts
       for (let i = 1; i <= 4; i++) {
-        await expect(
-          userAuthService.verifyOtp({ phone, otp: '000000' }),
-        ).rejects.toThrow(/remaining/);
+        await expect(userAuthService.verifyOtp({ phone, otp: '000000' })).rejects.toThrow(
+          /remaining/,
+        );
       }
 
       // 5th attempt should invalidate and delete OTP
-      await expect(
-        userAuthService.verifyOtp({ phone, otp: '000000' }),
-      ).rejects.toThrow(/Maximum OTP verification attempts exceeded/);
+      await expect(userAuthService.verifyOtp({ phone, otp: '000000' })).rejects.toThrow(
+        /Maximum OTP verification attempts exceeded/,
+      );
 
       const storedAfter = await userOtpRepository.getOtp(phone);
       expect(storedAfter).toBeNull();
@@ -210,7 +210,10 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const referrerPhone = '+919876543299';
       const referrerOtp = '999999';
       await userOtpRepository.saveOtp(referrerPhone, hashOtp(referrerOtp));
-      const referrerResult = await userAuthService.verifyOtp({ phone: referrerPhone, otp: referrerOtp });
+      const referrerResult = await userAuthService.verifyOtp({
+        phone: referrerPhone,
+        otp: referrerOtp,
+      });
       const referrerCode = referrerResult.user.referralCode!;
 
       const newPhone = '+919876543230';
@@ -289,9 +292,9 @@ describe('User OTP & Referral Auth Test Suite', () => {
 
       const otp2 = '222222';
       await userOtpRepository.saveOtp(phone, hashOtp(otp2));
-      await expect(
-        userAuthService.verifyOtp({ phone, otp: otp2 }),
-      ).rejects.toThrow('Account has been deactivated');
+      await expect(userAuthService.verifyOtp({ phone, otp: otp2 })).rejects.toThrow(
+        'Account has been deactivated',
+      );
     });
   });
 
@@ -324,9 +327,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
     it('POST /api/user/auth/verify-otp - happy path registers user and returns tokens', async () => {
       const phone = '+919876543302';
       // First send OTP
-      await request(app)
-        .post('/api/user/auth/send-otp')
-        .send({ phone });
+      await request(app).post('/api/user/auth/send-otp').send({ phone });
 
       const sentSms = mockSmsProvider.getLastMessageFor(phone);
       expect(sentSms).toBeDefined();
@@ -336,9 +337,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       expect(otpMatch).toBeDefined();
       const otp = otpMatch![0];
 
-      const verifyRes = await request(app)
-        .post('/api/user/auth/verify-otp')
-        .send({ phone, otp });
+      const verifyRes = await request(app).post('/api/user/auth/verify-otp').send({ phone, otp });
 
       expect(verifyRes.status).toBe(200);
       expect(verifyRes.body.success).toBe(true);
@@ -349,9 +348,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
 
     it('POST /api/user/auth/verify-otp - invalid OTP returns 400', async () => {
       const phone = '+919876543303';
-      await request(app)
-        .post('/api/user/auth/send-otp')
-        .send({ phone });
+      await request(app).post('/api/user/auth/send-otp').send({ phone });
 
       const res = await request(app)
         .post('/api/user/auth/verify-otp')
@@ -364,9 +361,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
 
     it('POST /api/user/auth/resend-otp - happy path resends code', async () => {
       const phone = '+919876543304';
-      const res = await request(app)
-        .post('/api/user/auth/resend-otp')
-        .send({ phone });
+      const res = await request(app).post('/api/user/auth/resend-otp').send({ phone });
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
@@ -382,9 +377,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const refreshToken = verifyRes.body.data.tokens.refreshToken;
 
       // Refresh
-      const refreshRes = await request(app)
-        .post('/api/user/auth/refresh')
-        .send({ refreshToken });
+      const refreshRes = await request(app).post('/api/user/auth/refresh').send({ refreshToken });
 
       expect(refreshRes.status).toBe(200);
       expect(refreshRes.body.data.tokens.accessToken).toBeDefined();

@@ -41,16 +41,8 @@ router.post(
 );
 
 // Session Management Endpoints
-router.post(
-  '/refresh',
-  validate({ body: partnerRefreshTokenSchema }),
-  asyncHandler(refreshToken),
-);
+router.post('/refresh', validate({ body: partnerRefreshTokenSchema }), asyncHandler(refreshToken));
 
-router.post(
-  '/logout',
-  validate({ body: partnerRefreshTokenSchema }),
-  asyncHandler(logout),
-);
+router.post('/logout', validate({ body: partnerRefreshTokenSchema }), asyncHandler(logout));
 
 export const partnerAuthRoutes = router;

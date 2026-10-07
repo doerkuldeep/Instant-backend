@@ -19,12 +19,7 @@ import { authLimiter } from '../../../shared/middlewares/rate-limit';
 const router = Router();
 
 // OTP Authentication Endpoints
-router.post(
-  '/send-otp',
-  authLimiter,
-  validate({ body: userSendOtpSchema }),
-  asyncHandler(sendOtp),
-);
+router.post('/send-otp', authLimiter, validate({ body: userSendOtpSchema }), asyncHandler(sendOtp));
 
 router.post(
   '/verify-otp',
@@ -41,16 +36,8 @@ router.post(
 );
 
 // Session Management Endpoints
-router.post(
-  '/refresh',
-  validate({ body: userRefreshTokenSchema }),
-  asyncHandler(refreshToken),
-);
+router.post('/refresh', validate({ body: userRefreshTokenSchema }), asyncHandler(refreshToken));
 
-router.post(
-  '/logout',
-  validate({ body: userRefreshTokenSchema }),
-  asyncHandler(logout),
-);
+router.post('/logout', validate({ body: userRefreshTokenSchema }), asyncHandler(logout));
 
 export const userAuthRoutes = router;

@@ -209,3 +209,46 @@ model RefreshToken {
   @@index([token])
   @@index([userId])
 }
+
+model Category {
+  id             String    @id @default(uuid())
+  name           String    @unique
+  slug           String    @unique
+  description    String?
+  iconUrl        String?
+  imageUrl       String?
+  bannerUrl      String?
+  mobileImageUrl String?
+  webImageUrl    String?
+  isActive       Boolean   @default(true)
+  displayOrder   Int       @default(0)
+  machines       Machine[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+}
+
+model Machine {
+  id             String    @id @default(uuid())
+  categoryId     String
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name           String
+  slug           String    @unique
+  description    String?
+  imageUrl       String?
+  bannerUrl      String?
+  mobileImageUrl String?
+  webImageUrl    String?
+  specifications Json?
+  isActive       Boolean   @default(true)
+  displayOrder   Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+  @@index([isActive])
+}
+

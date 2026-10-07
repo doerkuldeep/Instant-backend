@@ -26,7 +26,10 @@ export class MockSmsProvider implements ISmsProvider {
     };
     this.sentMessages.push(record);
 
-    logger.info({ to: options.to, messageId, message: options.message }, '[MockSmsProvider] SMS sent successfully');
+    logger.info(
+      { to: options.to, messageId, message: options.message },
+      '[MockSmsProvider] SMS sent successfully',
+    );
 
     return {
       success: true,

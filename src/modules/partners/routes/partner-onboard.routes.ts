@@ -29,36 +29,17 @@ router.get('/', asyncHandler(getOnboarding));
 router.get('/status', asyncHandler(getStatus));
 
 // 3. Save draft onboarding details incrementally
-router.patch(
-  '/',
-  validate({ body: saveDraftOnboardSchema }),
-  asyncHandler(saveDraft),
-);
+router.patch('/', validate({ body: saveDraftOnboardSchema }), asyncHandler(saveDraft));
 
-router.patch(
-  '/draft',
-  validate({ body: saveDraftOnboardSchema }),
-  asyncHandler(saveDraft),
-);
+router.patch('/draft', validate({ body: saveDraftOnboardSchema }), asyncHandler(saveDraft));
 
 // 4. Submit complete onboarding application with all KYC & police verification
-router.post(
-  '/',
-  validate({ body: submitOnboardSchema }),
-  asyncHandler(submitOnboarding),
-);
+router.post('/', validate({ body: submitOnboardSchema }), asyncHandler(submitOnboarding));
 
-router.post(
-  '/submit',
-  validate({ body: submitOnboardSchema }),
-  asyncHandler(submitOnboarding),
-);
+router.post('/submit', validate({ body: submitOnboardSchema }), asyncHandler(submitOnboarding));
 
 // 5. Police verification specific endpoints
-router.get(
-  '/police-verification',
-  asyncHandler(getPoliceVerification),
-);
+router.get('/police-verification', asyncHandler(getPoliceVerification));
 
 router.post(
   '/police-verification',

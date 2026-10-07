@@ -15,17 +15,9 @@ import { asyncHandler } from '../../../shared/utils/async-handler';
 
 const router = Router();
 
-router.get(
-  '/',
-  validate({ query: adminListUsersQuerySchema }),
-  asyncHandler(listUsers),
-);
+router.get('/', validate({ query: adminListUsersQuerySchema }), asyncHandler(listUsers));
 
-router.get(
-  '/:id',
-  validate({ params: adminUserIdParamSchema }),
-  asyncHandler(getUserById),
-);
+router.get('/:id', validate({ params: adminUserIdParamSchema }), asyncHandler(getUserById));
 
 router.patch(
   '/:id',
@@ -33,10 +25,6 @@ router.patch(
   asyncHandler(updateUser),
 );
 
-router.delete(
-  '/:id',
-  validate({ params: adminUserIdParamSchema }),
-  asyncHandler(deleteUser),
-);
+router.delete('/:id', validate({ params: adminUserIdParamSchema }), asyncHandler(deleteUser));
 
 export const adminUsersRoutes = router;

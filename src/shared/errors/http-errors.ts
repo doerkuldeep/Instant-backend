@@ -13,7 +13,9 @@ function createHttpError<T extends AppError = AppError>(
   defaultMessage: string,
 ): HttpErrorFn<T> {
   function makeHttpError(this: any, message = defaultMessage, details?: unknown): T {
-    const instance = (this instanceof makeHttpError ? this : Object.create(makeHttpError.prototype)) as T;
+    const instance = (
+      this instanceof makeHttpError ? this : Object.create(makeHttpError.prototype)
+    ) as T;
     const err = AppError.call(instance, message, statusCode, code, details) as T;
     Object.setPrototypeOf(err, makeHttpError.prototype);
     err.name = name;
@@ -97,4 +99,3 @@ export const conflict = ConflictError;
 export const validationError = ValidationError;
 export const internalError = InternalServerError;
 export const tooManyRequests = TooManyRequestsError;
-

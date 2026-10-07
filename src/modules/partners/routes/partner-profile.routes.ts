@@ -1,10 +1,6 @@
 import { Router } from 'express';
 import { Role } from '@prisma/client';
-import {
-  getProfile,
-  updateProfile,
-  getStatus,
-} from '../controllers/partner-profile.controller';
+import { getProfile, updateProfile, getStatus } from '../controllers/partner-profile.controller';
 import { updatePartnerProfileSchema } from '../schemas/partner-profile.schema';
 import { authenticate, authorize } from '../../../shared/middlewares/authenticate';
 import { validate } from '../../../shared/middlewares/validate';
@@ -15,10 +11,7 @@ const router = Router();
 // Partner profile operations require authentication and PARTNER role
 router.use(authenticate, authorize(Role.PARTNER));
 
-router.get(
-  '/profile',
-  asyncHandler(getProfile),
-);
+router.get('/profile', asyncHandler(getProfile));
 
 router.patch(
   '/profile',
@@ -26,9 +19,6 @@ router.patch(
   asyncHandler(updateProfile),
 );
 
-router.get(
-  '/status',
-  asyncHandler(getStatus),
-);
+router.get('/status', asyncHandler(getStatus));
 
 export const partnerProfileRoutes = router;
