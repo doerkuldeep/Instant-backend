@@ -29,27 +29,28 @@ describe('Admin Masterdata Module', () => {
   });
 
   describe('Construction Machinery Seed Data Integrity', () => {
-    it('should define all 7 core construction machinery categories', () => {
-      expect(CONSTRUCTION_CATEGORIES_AND_MACHINES).toHaveLength(7);
+    it('should define all 9 core construction machinery categories', () => {
+      expect(CONSTRUCTION_CATEGORIES_AND_MACHINES).toHaveLength(9);
 
       const categorySlugs = CONSTRUCTION_CATEGORIES_AND_MACHINES.map((c) => c.slug);
+      expect(categorySlugs).toContain('light-construction-tools');
       expect(categorySlugs).toContain('earthmoving-equipment');
-      expect(categorySlugs).toContain('lifting-and-material-handling');
+      expect(categorySlugs).toContain('cranes-and-lifting');
       expect(categorySlugs).toContain('concrete-and-compaction');
       expect(categorySlugs).toContain('road-construction-and-paving');
-      expect(categorySlugs).toContain('demolition-and-drilling');
-      expect(categorySlugs).toContain('hauling-and-transportation');
+      expect(categorySlugs).toContain('drilling-piling-demolition');
+      expect(categorySlugs).toContain('transport-and-hauling');
       expect(categorySlugs).toContain('power-and-utilities');
+      expect(categorySlugs).toContain('site-support-farm-others');
     });
 
-    it('should have valid machines with specifications in each category', () => {
+    it('should have valid machines with specifications and rental info in each category', () => {
       let totalMachines = 0;
       for (const category of CONSTRUCTION_CATEGORIES_AND_MACHINES) {
         expect(category.name).toBeTruthy();
         expect(category.slug).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-        expect(category.bannerUrl).toBeDefined();
-        expect(category.mobileImageUrl).toBeDefined();
-        expect(category.webImageUrl).toBeDefined();
+        expect(category.imageUrl).toBeDefined();
+        expect(category.iconUrl).toBeDefined();
         expect(category.machines.length).toBeGreaterThanOrEqual(4);
 
         for (const machine of category.machines) {
@@ -57,14 +58,20 @@ describe('Admin Masterdata Module', () => {
           expect(machine.name).toBeTruthy();
           expect(machine.slug).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
           expect(machine.description).toBeTruthy();
-          expect(machine.bannerUrl).toBeDefined();
-          expect(machine.mobileImageUrl).toBeDefined();
-          expect(machine.webImageUrl).toBeDefined();
+          expect(machine.imageUrl).toBeDefined();
           expect(machine.specifications).toBeDefined();
-          expect(Object.keys(machine.specifications).length).toBeGreaterThan(0);
+
+          const specs = machine.specifications as Record<string, any>;
+          expect(specs.segment).toBeDefined();
+          expect(['LIGHT', 'HEAVY', 'OTHER']).toContain(specs.segment);
+          expect(Array.isArray(specs.aliases)).toBe(true);
+          expect(Array.isArray(specs.useCases)).toBe(true);
+          expect(Array.isArray(specs.popularBrands)).toBe(true);
+          expect(specs.rental).toBeDefined();
+          expect(specs.rental.minBooking).toBeDefined();
         }
       }
-      expect(totalMachines).toBeGreaterThanOrEqual(25);
+      expect(totalMachines).toBeGreaterThanOrEqual(50);
     });
   });
 

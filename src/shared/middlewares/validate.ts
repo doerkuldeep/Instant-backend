@@ -15,10 +15,30 @@ export const validate = (schemas: RequestValidationSchema) => {
         req.body = await schemas.body.parseAsync(req.body);
       }
       if (schemas.query) {
-        req.query = (await schemas.query.parseAsync(req.query)) as Request['query'];
+        const parsedQuery = (await schemas.query.parseAsync(req.query)) as Request['query'];
+        try {
+          req.query = parsedQuery;
+        } catch {
+          Object.defineProperty(req, 'query', {
+            value: parsedQuery,
+            writable: true,
+            configurable: true,
+            enumerable: true,
+          });
+        }
       }
       if (schemas.params) {
-        req.params = (await schemas.params.parseAsync(req.params)) as Request['params'];
+        const parsedParams = (await schemas.params.parseAsync(req.params)) as Request['params'];
+        try {
+          req.params = parsedParams;
+        } catch {
+          Object.defineProperty(req, 'params', {
+            value: parsedParams,
+            writable: true,
+            configurable: true,
+            enumerable: true,
+          });
+        }
       }
       next();
     } catch (error) {

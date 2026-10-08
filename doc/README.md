@@ -25,3 +25,15 @@ Welcome to the API documentation for the project.
   * Complete request/response schemas
   * Happy path examples (First signup & returning login)
   * Worst case & edge case failure modes (validation, rate limit, expired OTP, attempt limits, referral logic, deactivated accounts)
+
+* [Machine & Category Rental Catalog API](machines-catalog.md)
+  * Endpoints:
+    * `GET /api/v1/categories` & `/api/categories`
+    * `GET /api/v1/categories/:idOrSlug` & `/api/categories/:idOrSlug`
+    * `GET /api/v1/machines` & `/api/machines` (search, segment, rate, fuel, brand filters)
+    * `GET /api/v1/machines/:idOrSlug` & `/api/machines/:idOrSlug`
+    * `GET /api/v1/machines/segments` & `/api/machines/segments`
+    * `GET /api/v1/machines/featured` & `/api/machines/featured`
+    * `GET /api/v1/machines/search/suggestions` & `/api/machines/search/suggestions`
+  * Comprehensive rental rate structures, specifications, and segment categorization (LIGHT, HEAVY, OTHER).
+
