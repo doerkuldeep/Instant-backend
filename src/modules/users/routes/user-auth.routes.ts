@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import { userAuthController } from '../controllers/user-auth.controller';
 import {
-  userRegisterSchema,
-  userLoginSchema,
+  sendOtp,
+  verifyOtp,
+  resendOtp,
+  refreshToken,
+  logout,
+} from '../controllers/user-auth.controller';
+import {
   userRefreshTokenSchema,
+  userSendOtpSchema,
+  userVerifyOtpSchema,
+  userResendOtpSchema,
 } from '../schemas/user-auth.schema';
 import { validate } from '../../../shared/middlewares/validate';
 import { asyncHandler } from '../../../shared/utils/async-handler';
@@ -11,30 +18,26 @@ import { authLimiter } from '../../../shared/middlewares/rate-limit';
 
 const router = Router();
 
+// OTP Authentication Endpoints
+router.post('/send-otp', authLimiter, validate({ body: userSendOtpSchema }), asyncHandler(sendOtp));
+
 router.post(
-  '/register',
+  '/verify-otp',
   authLimiter,
-  validate({ body: userRegisterSchema }),
-  asyncHandler(userAuthController.register.bind(userAuthController)),
+  validate({ body: userVerifyOtpSchema }),
+  asyncHandler(verifyOtp),
 );
 
 router.post(
-  '/login',
+  '/resend-otp',
   authLimiter,
-  validate({ body: userLoginSchema }),
-  asyncHandler(userAuthController.login.bind(userAuthController)),
+  validate({ body: userResendOtpSchema }),
+  asyncHandler(resendOtp),
 );
 
-router.post(
-  '/refresh',
-  validate({ body: userRefreshTokenSchema }),
-  asyncHandler(userAuthController.refreshToken.bind(userAuthController)),
-);
+// Session Management Endpoints
+router.post('/refresh', validate({ body: userRefreshTokenSchema }), asyncHandler(refreshToken));
 
-router.post(
-  '/logout',
-  validate({ body: userRefreshTokenSchema }),
-  asyncHandler(userAuthController.logout.bind(userAuthController)),
-);
+router.post('/logout', validate({ body: userRefreshTokenSchema }), asyncHandler(logout));
 
 export const userAuthRoutes = router;

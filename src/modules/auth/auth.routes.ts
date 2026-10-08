@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { authController } from './auth.controller';
+import {
+  registerUser,
+  registerPartner,
+  login,
+  refreshTokens,
+  logout,
+  changePassword,
+  getCurrentUser,
+} from './auth.controller';
 import {
   registerUserSchema,
   registerPartnerSchema,
@@ -18,38 +26,29 @@ router.post(
   '/register',
   authRateLimiter,
   validate({ body: registerUserSchema }),
-  asyncHandler(authController.registerUser.bind(authController)),
+  asyncHandler(registerUser),
 );
 
 router.post(
   '/register-partner',
   authRateLimiter,
   validate({ body: registerPartnerSchema }),
-  asyncHandler(authController.registerPartner.bind(authController)),
+  asyncHandler(registerPartner),
 );
 
-router.post(
-  '/login',
-  authRateLimiter,
-  validate({ body: loginSchema }),
-  asyncHandler(authController.login.bind(authController)),
-);
+router.post('/login', authRateLimiter, validate({ body: loginSchema }), asyncHandler(login));
 
-router.post(
-  '/refresh',
-  validate({ body: refreshTokenSchema }),
-  asyncHandler(authController.refreshTokens.bind(authController)),
-);
+router.post('/refresh', validate({ body: refreshTokenSchema }), asyncHandler(refreshTokens));
 
-router.post('/logout', asyncHandler(authController.logout.bind(authController)));
+router.post('/logout', asyncHandler(logout));
 
-router.get('/me', authenticate, asyncHandler(authController.getCurrentUser.bind(authController)));
+router.get('/me', authenticate, asyncHandler(getCurrentUser));
 
 router.post(
   '/change-password',
   authenticate,
   validate({ body: changePasswordSchema }),
-  asyncHandler(authController.changePassword.bind(authController)),
+  asyncHandler(changePassword),
 );
 
 export const authRoutes = router;

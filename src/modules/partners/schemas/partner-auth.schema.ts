@@ -24,6 +24,44 @@ export const partnerRefreshTokenSchema = z.object({
   refreshToken: z.string().min(1, 'Refresh token is required'),
 });
 
+export const partnerSendOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+  referralCode: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z0-9]{6,8}$/, 'Referral code must be 6-8 alphanumeric characters')
+    .optional(),
+});
+
+export const partnerVerifyOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+  otp: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, 'OTP must be exactly 6 digits'),
+  referralCode: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z0-9]{6,8}$/, 'Referral code must be 6-8 alphanumeric characters')
+    .optional(),
+});
+
+export const partnerResendOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+});
+
 export type PartnerRegisterInput = z.infer<typeof partnerRegisterSchema>;
 export type PartnerLoginInput = z.infer<typeof partnerLoginSchema>;
 export type PartnerRefreshTokenInput = z.infer<typeof partnerRefreshTokenSchema>;
+export type PartnerSendOtpInput = z.infer<typeof partnerSendOtpSchema>;
+export type PartnerVerifyOtpInput = z.infer<typeof partnerVerifyOtpSchema>;
+export type PartnerResendOtpInput = z.infer<typeof partnerResendOtpSchema>;

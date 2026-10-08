@@ -1,2 +1,2 @@
-export * from './user-auth.controller';
-export * from './user-profile.controller';
+export { userAuthController } from './user-auth.controller';
+export { userProfileController } from './user-profile.controller';

@@ -21,6 +21,44 @@ export const userRefreshTokenSchema = z.object({
   refreshToken: z.string().min(1, 'Refresh token is required'),
 });
 
+export const userSendOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+  referralCode: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z0-9]{6,8}$/, 'Referral code must be 6-8 alphanumeric characters')
+    .optional(),
+});
+
+export const userVerifyOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+  otp: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, 'OTP must be exactly 6 digits'),
+  referralCode: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z0-9]{6,8}$/, 'Referral code must be 6-8 alphanumeric characters')
+    .optional(),
+});
+
+export const userResendOtpSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Phone number must be in E.164 format (e.g. +919876543210)'),
+});
+
 export type UserRegisterInput = z.infer<typeof userRegisterSchema>;
 export type UserLoginInput = z.infer<typeof userLoginSchema>;
 export type UserRefreshTokenInput = z.infer<typeof userRefreshTokenSchema>;
+export type UserSendOtpInput = z.infer<typeof userSendOtpSchema>;
+export type UserVerifyOtpInput = z.infer<typeof userVerifyOtpSchema>;
+export type UserResendOtpInput = z.infer<typeof userResendOtpSchema>;

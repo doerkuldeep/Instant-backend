@@ -34,20 +34,18 @@ describe('API Integration Tests', () => {
     expect(res.body.error.code).toBe('UNAUTHORIZED');
   });
 
-  it('should validate user domain auth endpoint (/api/v1/users/auth/register)', async () => {
-    const res = await request(app).post('/api/v1/users/auth/register').send({
-      email: 'invalid-email',
-      password: '123',
+  it('should validate user domain auth endpoint (/api/v1/users/auth/send-otp)', async () => {
+    const res = await request(app).post('/api/v1/users/auth/send-otp').send({
+      phone: 'invalid-phone-number',
     });
     expect(res.status).toBe(422);
     expect(res.body.success).toBe(false);
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
   });
 
-  it('should validate partner domain auth endpoint (/api/v1/partners/auth/register)', async () => {
-    const res = await request(app).post('/api/v1/partners/auth/register').send({
-      email: 'invalid-partner-email',
-      password: '123',
+  it('should validate partner domain auth endpoint (/api/v1/partners/auth/send-otp)', async () => {
+    const res = await request(app).post('/api/v1/partners/auth/send-otp').send({
+      phone: 'invalid-phone-number',
     });
     expect(res.status).toBe(422);
     expect(res.body.success).toBe(false);

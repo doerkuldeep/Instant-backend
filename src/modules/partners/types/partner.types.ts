@@ -1,10 +1,6 @@
-import { UserResponseDto } from '../../users/types/user.types';
-import { AuthTokens } from '../../../shared/utils/tokens';
-
-export interface PartnerAuthResult {
-  partner: UserResponseDto;
-  tokens: AuthTokens;
-}
+export * from './partner-auth.types';
+export * from './partner-otp.types';
+export * from './partner-onboard.types';
 
 export interface PartnerStatusResponseDto {
   status: string;
