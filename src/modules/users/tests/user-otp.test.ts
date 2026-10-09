@@ -186,12 +186,27 @@ describe('User OTP & Referral Auth Test Suite', () => {
   });
 
   describe('5. User Creation & Referral Code Linking Flow', () => {
+    it('should reject signup when acceptedTerms is not true', async () => {
+      const phone = '+919876543219';
+      const otp = '112233';
+      await userOtpRepository.saveOtp(phone, hashOtp(otp));
+
+      await expect(userAuthService.verifyOtp({ phone, otp })).rejects.toThrow(
+        'Terms and conditions must be accepted to register as a user',
+      );
+
+      // Verify explicit false also rejects
+      await expect(
+        userAuthService.verifyOtp({ phone, otp, acceptedTerms: false }),
+      ).rejects.toThrow('Terms and conditions must be accepted to register as a user');
+    });
+
     it('should create new User with referral code on first signup', async () => {
       const phone = '+919876543220';
       const otp = '112233';
       await userOtpRepository.saveOtp(phone, hashOtp(otp));
 
-      const result = await userAuthService.verifyOtp({ phone, otp });
+      const result = await userAuthService.verifyOtp({ phone, otp, acceptedTerms: true });
 
       expect(result.isNewUser).toBe(true);
       expect(result.tokens).toBeDefined();
@@ -213,6 +228,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const referrerResult = await userAuthService.verifyOtp({
         phone: referrerPhone,
         otp: referrerOtp,
+        acceptedTerms: true,
       });
       const referrerCode = referrerResult.user.referralCode!;
 
@@ -224,6 +240,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
         phone: newPhone,
         otp: newOtp,
         referralCode: referrerCode,
+        acceptedTerms: true,
       });
 
       expect(result.isNewUser).toBe(true);
@@ -240,6 +257,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
           phone,
           otp,
           referralCode: 'NONEXIST',
+          acceptedTerms: true,
         }),
       ).rejects.toThrow('Invalid referral code');
 
@@ -252,7 +270,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const phone = '+919876543250';
       const otp = '121212';
       await userOtpRepository.saveOtp(phone, hashOtp(otp));
-      const firstResult = await userAuthService.verifyOtp({ phone, otp });
+      const firstResult = await userAuthService.verifyOtp({ phone, otp, acceptedTerms: true });
       const ownCode = firstResult.user.referralCode!;
 
       // Attempt verifying same phone with own code
@@ -262,6 +280,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
           phone,
           otp: '343434',
           referralCode: ownCode,
+          acceptedTerms: true,
         }),
       ).rejects.toThrow('Self-referral is not allowed');
     });
@@ -270,7 +289,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const phone = '+919876543260';
       const otp1 = '111111';
       await userOtpRepository.saveOtp(phone, hashOtp(otp1));
-      await userAuthService.verifyOtp({ phone, otp: otp1 });
+      await userAuthService.verifyOtp({ phone, otp: otp1, acceptedTerms: true });
 
       // Second login
       const otp2 = '222222';
@@ -285,7 +304,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const phone = '+919876543270';
       const otp1 = '111111';
       await userOtpRepository.saveOtp(phone, hashOtp(otp1));
-      const res = await userAuthService.verifyOtp({ phone, otp: otp1 });
+      const res = await userAuthService.verifyOtp({ phone, otp: otp1, acceptedTerms: true });
 
       // Deactivate user in repository
       await usersRepository.update(res.user.id, { isActive: false });
@@ -324,6 +343,20 @@ describe('User OTP & Referral Auth Test Suite', () => {
       expect(res.body.error.code).toBe('VALIDATION_ERROR');
     });
 
+    it('POST /api/user/auth/verify-otp - returns 400 if acceptedTerms is missing on new user registration', async () => {
+      const phone = '+919876543399';
+      await request(app).post('/api/user/auth/send-otp').send({ phone });
+      const otp = mockSmsProvider.getLastMessageFor(phone)!.message.match(/\b\d{6}\b/)![0];
+
+      const res = await request(app)
+        .post('/api/user/auth/verify-otp')
+        .send({ phone, otp });
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error.message).toMatch(/Terms and conditions must be accepted/);
+    });
+
     it('POST /api/user/auth/verify-otp - happy path registers user and returns tokens', async () => {
       const phone = '+919876543302';
       // First send OTP
@@ -337,7 +370,9 @@ describe('User OTP & Referral Auth Test Suite', () => {
       expect(otpMatch).toBeDefined();
       const otp = otpMatch![0];
 
-      const verifyRes = await request(app).post('/api/user/auth/verify-otp').send({ phone, otp });
+      const verifyRes = await request(app)
+        .post('/api/user/auth/verify-otp')
+        .send({ phone, otp, acceptedTerms: true });
 
       expect(verifyRes.status).toBe(200);
       expect(verifyRes.body.success).toBe(true);
@@ -352,7 +387,7 @@ describe('User OTP & Referral Auth Test Suite', () => {
 
       const res = await request(app)
         .post('/api/user/auth/verify-otp')
-        .send({ phone, otp: '000000' });
+        .send({ phone, otp: '000000', acceptedTerms: true });
 
       expect(res.status).toBe(400);
       expect(res.body.success).toBe(false);
@@ -372,7 +407,9 @@ describe('User OTP & Referral Auth Test Suite', () => {
       const phone = '+919876543305';
       await request(app).post('/api/user/auth/send-otp').send({ phone });
       const otp = mockSmsProvider.getLastMessageFor(phone)!.message.match(/\b\d{6}\b/)![0];
-      const verifyRes = await request(app).post('/api/user/auth/verify-otp').send({ phone, otp });
+      const verifyRes = await request(app)
+        .post('/api/user/auth/verify-otp')
+        .send({ phone, otp, acceptedTerms: true });
 
       const refreshToken = verifyRes.body.data.tokens.refreshToken;
 

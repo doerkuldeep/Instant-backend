@@ -60,6 +60,7 @@ model User {
   referrals      User[]          @relation("UserReferrals")
   partnerProfile PartnerProfile?
   refreshTokens  RefreshToken[]
+  consents       UserConsent[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
@@ -67,6 +68,22 @@ model User {
   @@index([phone])
   @@index([role])
   @@index([referralCode])
+}
+
+model UserConsent {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documentSlug String
+  version      String
+  acceptedAt   DateTime  @default(now())
+  ip           String?
+  userAgent    String?
+  createdAt    DateTime  @default(now())
+
+  @@index([userId])
+  @@index([documentSlug])
+  @@index([userId, documentSlug])
 }
 
 model PartnerProfile {

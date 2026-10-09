@@ -9,6 +9,16 @@
     "grievanceOfficer": "Ananya Sharma",
     "grievanceEmail": "grievance@equipshare.com"
   },
+  "userCompany": {
+    "name": "EquipShare Rentals",
+    "legalEntity": "EquipShare Technologies Private Limited",
+    "supportEmail": "support@equipshare.com",
+    "supportPhone": "+91 1800 572 8800",
+    "workingHours": "Monday to Sunday, 8:00 AM – 8:00 PM IST",
+    "address": "4th Floor, Tech Innovation Park, Outer Ring Road, Bangalore, Karnataka 560103, India",
+    "grievanceOfficer": "Ananya Sharma",
+    "grievanceEmail": "grievance@equipshare.com"
+  },
   "documents": [
     {
       "slug": "terms-and-conditions",
@@ -129,6 +139,128 @@
       "mandatoryForSignup": false,
       "category": "help",
       "summary": "Our mission, technology platform overview, and how the industrial equipment partnership model functions."
+    }
+  ],
+  "userDocuments": [
+    {
+      "slug": "terms-and-conditions",
+      "title": "Customer Terms of Service",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": true,
+      "category": "legal",
+      "summary": "User terms of service governing heavy equipment search, leasing, and account usage."
+    },
+    {
+      "slug": "privacy-policy",
+      "title": "Customer Privacy Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": true,
+      "category": "legal",
+      "summary": "Customer data privacy policy explaining information collection, billing security, and user rights."
+    },
+    {
+      "slug": "refund-policy",
+      "title": "Customer Refund Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Guidelines and timelines regarding customer security deposit returns and order fee refunds."
+    },
+    {
+      "slug": "cancellation-policy",
+      "title": "Customer Cancellation Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Terms, windows, and fee structures for cancelling equipment bookings before or after mobilization."
+    },
+    {
+      "slug": "user-agreement",
+      "title": "Equipment Rental Agreement",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Comprehensive rental terms, duty of care, site obligations, and equipment custody provisions."
+    },
+    {
+      "slug": "rental-and-deposit-policy",
+      "title": "Rental & Security Deposit Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Policies detailing advance deposits, hourly/daily billing rules, fuel policies, and settlement."
+    },
+    {
+      "slug": "safety-guidelines",
+      "title": "Equipment Safety Guidelines",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Job-site safety protocols, hazard mitigation, and operator qualifications."
+    },
+    {
+      "slug": "grievance-redressal",
+      "title": "Customer Grievance Redressal Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Escalation pathways and contact points for customer complaints, service disputes, and billing queries."
+    },
+    {
+      "slug": "data-deletion-policy",
+      "title": "Customer Data Deletion Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Protocol for customer account deletion requests, personal data erasure, and legal retention."
+    },
+    {
+      "slug": "faqs",
+      "title": "Customer Frequently Asked Questions",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en", "hi"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Curated answers for customers grouped by Account, Bookings, Payments, Security Deposit, and Support."
+    },
+    {
+      "slug": "contact-and-support",
+      "title": "Customer Contact & Support",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Customer service hotlines, breakdown dispatch, email contacts, and support hours."
+    },
+    {
+      "slug": "about-us",
+      "title": "About EquipShare Rentals",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Our equipment rental marketplace, infrastructure solutions, and contractor benefits."
     }
   ]
 }

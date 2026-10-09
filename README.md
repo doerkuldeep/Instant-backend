@@ -29,14 +29,14 @@ my-app/
 │   │
 │   ├── modules/
 │   │   ├── users/
-│   │   │   ├── controllers/         # user-auth.controller.ts, user-profile.controller.ts
-│   │   │   ├── services/            # user-auth.service.ts, user-profile.service.ts
-│   │   │   ├── routes/              # user-auth.routes.ts, user-profile.routes.ts, users.routes.ts
-│   │   │   ├── repositories/        # users.repository.ts
-│   │   │   ├── schemas/             # user-auth.schema.ts, user-profile.schema.ts
+│   │   │   ├── controllers/         # user-auth, user-profile, user-legal
+│   │   │   ├── services/            # user-auth, user-profile, user-legal
+│   │   │   ├── routes/              # user-auth, user-profile, user-legal, users.routes.ts
+│   │   │   ├── repositories/        # users.repository, user-otp, user-consent
+│   │   │   ├── schemas/             # user-auth, user-profile, user-legal schemas
 │   │   │   ├── middlewares/         # user.middleware.ts
-│   │   │   ├── types/               # user.types.ts
-│   │   │   └── tests/               # users.test.ts
+│   │   │   ├── types/               # user, user-auth, user-legal types
+│   │   │   └── tests/               # users.test, user-otp.test, user-legal.test
 │   │   │
 │   │   ├── admin/
 │   │   │   ├── controllers/         # admin-auth, admin-users, admin-partners, admin-stats
@@ -49,14 +49,14 @@ my-app/
 │   │   │   └── tests/               # admin.test.ts
 │   │   │
 │   │   └── partners/
-│   │       ├── controllers/         # partner-auth.controller.ts, partner-profile.controller.ts
-│   │       ├── services/            # partner-auth.service.ts, partner-profile.service.ts
-│   │       ├── routes/              # partner-auth.routes.ts, partner-profile.routes.ts, partners.routes.ts
-│   │       ├── repositories/        # partners.repository.ts
-│   │       ├── schemas/             # partner-auth.schema.ts, partner-profile.schema.ts
+│   │       ├── controllers/         # partner-auth, partner-profile, partner-legal, partner-onboard, partner-machines
+│   │       ├── services/            # partner-auth, partner-profile, partner-legal, partner-onboard, partner-machines
+│   │       ├── routes/              # partner-auth, partner-profile, partner-legal, partner-onboard, partner-machines
+│   │       ├── repositories/        # partners.repository, partner-otp, partner-consent, partner-machines
+│   │       ├── schemas/             # partner-auth, partner-profile, partner-legal schemas
 │   │       ├── middlewares/         # partner-guard.middleware.ts
-│   │       ├── types/               # partner.types.ts
-│   │       └── tests/               # partners.test.ts
+│   │       ├── types/               # partner, partner-auth, partner-legal types
+│   │       └── tests/               # partners.test, partner-otp.test, partner-legal.test
 │   │
 │   ├── shared/
 │   │   ├── errors/
@@ -69,11 +69,16 @@ my-app/
 │   │   │   ├── authenticate.ts      # JWT authentication & authorize(Role...) RBAC
 │   │   │   ├── rate-limit.ts        # Express rate limiter configuration
 │   │   │   └── request-id.ts        # Request ID tracing (x-request-id)
+│   │   ├── services/
+│   │   │   ├── pdf/                 # Reusable PDF generator (PDFKit / Puppeteer providers, caching)
+│   │   │   └── sms/                 # SMS dispatch service & mock provider
 │   │   ├── utils/
+│   │   │   ├── send-pdf.ts          # Reusable streaming PDF helper with ETag & attachment support
 │   │   │   ├── pagination.ts        # Pagination parser and metadata helper
 │   │   │   ├── hash.ts              # Bcrypt password hashing
 │   │   │   └── async-handler.ts     # Async route wrapper for Express
 │   │   ├── constants/
+│   │   │   ├── content/legal/       # Versioned Markdown legal docs & meta.json catalog
 │   │   │   └── roles.ts             # System roles & partner statuses
 │   │   └── types/
 │   │       └── express.d.ts         # Declaration merging for Express.Request (req.user)
@@ -196,20 +201,30 @@ All module routes are mounted under `/api/v1`.
 ### Health Check
 - `GET /health` - Database connectivity & service health status
 
-### 👤 Users Domain (`/api/v1/users`)
-- `POST /api/v1/users/auth/register` - Register standard end-user account
-- `POST /api/v1/users/auth/login` - Authenticate end-user and issue JWT tokens
-- `POST /api/v1/users/auth/refresh` - Rotate refresh token
-- `POST /api/v1/users/auth/logout` - Revoke user session
+### 👤 Users Domain (`/api/v1/users` & `/api/user`)
+- `POST /api/user/auth/send-otp` - Dispatch secure 6-digit OTP via SMS (Rate limited: 3 / 10 min)
+- `POST /api/user/auth/verify-otp` - Verify OTP, handle user registration with mandatory terms acceptance & referral tracking
+- `POST /api/user/auth/resend-otp` - Invalidate & dispatch fresh OTP
+- `POST /api/user/auth/refresh` - Rotate user JWT tokens
+- `POST /api/user/auth/logout` - Revoke user session
+- `GET /api/user/legal` - List catalog of 12 customer legal documents and policies
+- `GET /api/user/legal/faqs` - Categorized customer FAQs PDF with Table of Contents on page 1
+- `GET /api/user/legal/:slug` - Stream branded document PDF (supports `?lang=`, `?download=true`, and 304 ETag caching)
+- `POST /api/user/legal/consent` - Record customer re-acceptance for document version *(Bearer Auth: `USER`)*
 - `GET /api/v1/users/me` - Get current user profile *(Bearer Auth)*
 - `PATCH /api/v1/users/me` - Update personal profile (`firstName`, `lastName`) *(Bearer Auth)*
 - `GET /api/v1/users/:id` - Lookup user profile *(Bearer Auth)*
 
-### 🏢 Partners Domain (`/api/v1/partners`)
-- `POST /api/v1/partners/auth/register` - Register partner with company & registration details (status: `PENDING`)
-- `POST /api/v1/partners/auth/login` - Authenticate partner (verifies `PARTNER` role)
-- `POST /api/v1/partners/auth/refresh` - Rotate partner refresh token
-- `POST /api/v1/partners/auth/logout` - Revoke partner session
+### 🏢 Partners Domain (`/api/v1/partners` & `/api/partner`)
+- `POST /api/partner/auth/send-otp` - Dispatch secure 6-digit OTP via SMS (Rate limited: 3 / 10 min)
+- `POST /api/partner/auth/verify-otp` - Verify OTP, handle partner onboarding with mandatory terms acceptance & referral tracking
+- `POST /api/partner/auth/resend-otp` - Invalidate & dispatch fresh OTP
+- `POST /api/partner/auth/refresh` - Rotate partner JWT tokens
+- `POST /api/partner/auth/logout` - Revoke partner session
+- `GET /api/partner/legal` - List catalog of 12 partner legal documents and agreements
+- `GET /api/partner/legal/faqs` - Categorized partner FAQs PDF with Table of Contents on page 1
+- `GET /api/partner/legal/:slug` - Stream branded document PDF (supports `?lang=`, `?download=true`, and 304 ETag caching)
+- `POST /api/partner/legal/consent` - Record partner re-acceptance for document version *(Bearer Auth: `PARTNER`)*
 - `GET /api/v1/partners/profile` - Get business partner profile *(Bearer Auth: `PARTNER`)*
 - `PATCH /api/v1/partners/profile` - Update company details *(Bearer Auth: `PARTNER`)*
 - `GET /api/v1/partners/status` - Check partner approval status *(Bearer Auth: `PARTNER`)*

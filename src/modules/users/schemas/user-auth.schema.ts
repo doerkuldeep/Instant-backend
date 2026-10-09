@@ -47,6 +47,7 @@ export const userVerifyOtpSchema = z.object({
     .trim()
     .regex(/^[a-zA-Z0-9]{6,8}$/, 'Referral code must be 6-8 alphanumeric characters')
     .optional(),
+  acceptedTerms: z.boolean().optional(),
 });
 
 export const userResendOtpSchema = z.object({

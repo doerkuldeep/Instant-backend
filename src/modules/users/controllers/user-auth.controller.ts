@@ -28,7 +28,13 @@ export async function sendOtp(req: Request, res: Response): Promise<void> {
  */
 export async function verifyOtp(req: Request, res: Response): Promise<void> {
   const input = req.body as UserVerifyOtpInput;
-  const result = await userAuthService.verifyOtp(input);
+  const clientIp = req.ip || (req.headers['x-forwarded-for'] as string);
+  const userAgent = req.headers['user-agent'];
+  const result = await userAuthService.verifyOtp({
+    ...input,
+    ip: clientIp,
+    userAgent,
+  });
 
   res.status(200).json({
     success: true,

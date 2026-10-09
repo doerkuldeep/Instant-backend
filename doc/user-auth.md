@@ -137,7 +137,8 @@ Validates the OTP using constant-time hash comparison:
 {
   "phone": "+919876543210",
   "otp": "482915",
-  "referralCode": "REF1234"
+  "referralCode": "REF1234",
+  "acceptedTerms": true
 }
 ```
 
@@ -146,6 +147,7 @@ Validates the OTP using constant-time hash comparison:
 | `phone` | `string` | **Yes** | Phone number in E.164 format. |
 | `otp` | `string` | **Yes** | Exactly 6 digits (e.g., `"482915"`). |
 | `referralCode` | `string` | No | Optional referral code applied at first signup. |
+| `acceptedTerms` | `boolean` | **Yes (Signup)** | Must be `true` when signing up as a new user. Initial consent is automatically recorded for mandatory documents. |
 
 ---
 
@@ -177,7 +179,8 @@ Validates the OTP using constant-time hash comparison:
       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
       "expiresIn": "15m"
     },
-    "isNewUser": true
+    "isNewUser": true,
+    "requiresReconsent": []
   }
 }
 ```
@@ -208,7 +211,13 @@ Validates the OTP using constant-time hash comparison:
       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
       "expiresIn": "15m"
     },
-    "isNewUser": false
+    "isNewUser": false,
+    "requiresReconsent": [
+      {
+        "slug": "terms-and-conditions",
+        "version": "1.0.0"
+      }
+    ]
   }
 }
 ```
@@ -217,7 +226,21 @@ Validates the OTP using constant-time hash comparison:
 
 ### Worst Cases & Errors
 
-#### Case 1: Expired OTP (400 Bad Request)
+#### Case 1: Terms Not Accepted on Signup (400 Bad Request)
+* **Trigger:** New user registration attempted with `acceptedTerms` omitted or set to `false`.
+```json
+{
+  "success": false,
+  "error": {
+    "code": "BAD_REQUEST",
+    "message": "Terms and conditions must be accepted to register as a user",
+    "details": null,
+    "requestId": "req-9b882f00"
+  }
+}
+```
+
+#### Case 2: Expired OTP (400 Bad Request)
 * **Trigger:** Verification attempted more than 5 minutes after OTP was generated.
 ```json
 {

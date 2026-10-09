@@ -12,6 +12,8 @@ import {
   UserVerifyOtpInput,
   UserResendOtpInput,
 } from '../schemas/user-auth.schema';
+import { userLegalService } from './user-legal.service';
+import { userConsentRepository } from '../repositories/user-consent.repository';
 import { UserAuthResult, SendOtpResult } from '../types/user-auth.types';
 import { hashPassword, comparePassword } from '../../../shared/utils/hash';
 import { generateSecureOtp, hashOtp, verifyOtpHash, generateReferralCode } from '../utils/otp.util';
@@ -81,7 +83,9 @@ export async function resendOtp(input: UserResendOtpInput): Promise<SendOtpResul
 /**
  * Verify OTP, handle user creation / login, and referral code linking.
  */
-export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResult> {
+export async function verifyOtp(
+  input: UserVerifyOtpInput & { ip?: string; userAgent?: string },
+): Promise<UserAuthResult> {
   const storedOtp = await userOtpRepository.getOtp(input.phone);
   if (!storedOtp) {
     throw new BadRequestError('Invalid or expired OTP');
@@ -115,6 +119,11 @@ export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResu
 
   if (!user) {
     // New User Signup Flow
+    // On first signup, acceptedTerms must be true, otherwise return 400
+    if (input.acceptedTerms !== true) {
+      throw new BadRequestError('Terms and conditions must be accepted to register as a user');
+    }
+
     isNewUser = true;
     let referrerUserId: string | null = null;
 
@@ -170,6 +179,19 @@ export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResu
       referralCode: newReferralCode,
       referredById: referrerUserId,
     } as any);
+
+    // Record consent for mandatory legal documents (terms-and-conditions and privacy-policy) at signup
+    const mandatoryDocs = userLegalService.getMandatoryDocuments();
+    for (const doc of mandatoryDocs) {
+      await userConsentRepository.recordConsent({
+        userId: user.id,
+        documentSlug: doc.slug,
+        version: doc.version,
+        ip: input.ip,
+        userAgent: input.userAgent,
+        acceptedAt: new Date(),
+      });
+    }
   } else {
     // Existing User Login Flow
     if (input.referralCode) {
@@ -196,10 +218,16 @@ export async function verifyOtp(input: UserVerifyOtpInput): Promise<UserAuthResu
 
   await saveRefreshToken(user.id, tokens.refreshToken);
 
+  let requiresReconsent: Array<{ slug: string; version: string }> = [];
+  if (!isNewUser) {
+    requiresReconsent = await userLegalService.checkRequiresReconsent(user.id);
+  }
+
   return {
     user: UsersMapper.toDto(user),
     tokens,
     isNewUser,
+    requiresReconsent,
   };
 }
 
@@ -282,9 +310,12 @@ export async function login(input: UserLoginInput): Promise<UserAuthResult> {
 
   await saveRefreshToken(user.id, tokens.refreshToken);
 
+  const requiresReconsent = await userLegalService.checkRequiresReconsent(user.id);
+
   return {
     user: UsersMapper.toDto(user),
     tokens,
+    requiresReconsent,
   };
 }
 
