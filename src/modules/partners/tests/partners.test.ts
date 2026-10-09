@@ -43,4 +43,12 @@ describe('Partners Module - Schema Validation', () => {
     const parsed = updatePartnerProfileSchema.safeParse(valid);
     expect(parsed.success).toBe(true);
   });
+
+  it('should reject companyName with less than 2 characters', () => {
+    const invalid = {
+      companyName: 'A',
+    };
+    const parsed = updatePartnerProfileSchema.safeParse(invalid);
+    expect(parsed.success).toBe(false);
+  });
 });

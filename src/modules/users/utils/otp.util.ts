@@ -1,6 +1,1 @@
-export {
-  generateSecureOtp,
-  hashOtp,
-  verifyOtpHash,
-  generateReferralCode,
-} from '../../partners/utils/otp.util';
+export * from '../../../shared/utils/otp.util';

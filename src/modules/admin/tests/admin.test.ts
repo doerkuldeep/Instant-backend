@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { adminLoginSchema } from '../schemas/admin-auth.schema';
-import { adminListUsersQuerySchema } from '../schemas/admin-users.schema';
+import { adminListUsersQuerySchema, adminUpdateUserSchema } from '../schemas/admin-users.schema';
 import { adminUpdatePartnerStatusSchema } from '../schemas/admin-partners.schema';
-import { PartnerStatus } from '@prisma/client';
+import { Role, PartnerStatus } from '@prisma/client';
 
 describe('Admin Module - Schema Validation', () => {
   it('should validate valid admin login payload', () => {
@@ -29,6 +29,15 @@ describe('Admin Module - Schema Validation', () => {
     }
   });
 
+  it('should validate valid admin user update', () => {
+    const valid = {
+      role: Role.PARTNER,
+      isActive: true,
+    };
+    const parsed = adminUpdateUserSchema.safeParse(valid);
+    expect(parsed.success).toBe(true);
+  });
+
   it('should validate partner approval and commission update', () => {
     const valid = {
       status: PartnerStatus.APPROVED,
@@ -37,4 +46,13 @@ describe('Admin Module - Schema Validation', () => {
     const parsed = adminUpdatePartnerStatusSchema.safeParse(valid);
     expect(parsed.success).toBe(true);
   });
+
+  it('should reject invalid partner status', () => {
+    const invalid = {
+      status: 'INVALID_STATUS',
+    };
+    const parsed = adminUpdatePartnerStatusSchema.safeParse(invalid);
+    expect(parsed.success).toBe(false);
+  });
 });
+

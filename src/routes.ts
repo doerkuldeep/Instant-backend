@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authRoutes } from './modules/auth/auth.routes';
-import { usersRoutes } from './modules/users/users.routes';
-import { adminRoutes } from './modules/admin/admin.routes';
-import { partnersRoutes } from './modules/partners/partners.routes';
+import { usersRoutes } from './modules/users';
+import { adminRoutes } from './modules/admin';
+import { partnersRoutes } from './modules/partners';
 import { categoriesRouter, machinesRouter } from './modules/machines/routes/machines.routes';
 import { prisma } from './database/prisma';
 

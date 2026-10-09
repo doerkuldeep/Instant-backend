@@ -73,7 +73,8 @@ my-app/
 │   │   │   ├── pdf/                 # Reusable PDF generator (PDFKit / Puppeteer providers, caching)
 │   │   │   └── sms/                 # SMS dispatch service & mock provider
 │   │   ├── utils/
-│   │   │   ├── send-pdf.ts          # Reusable streaming PDF helper with ETag & attachment support
+│   │   │   ├── sendPdf.ts           # Reusable streaming PDF helper with ETag & attachment support
+│   │   │   ├── otp.util.ts          # Cryptographic OTP & referral code generation and hashing
 │   │   │   ├── pagination.ts        # Pagination parser and metadata helper
 │   │   │   ├── hash.ts              # Bcrypt password hashing
 │   │   │   └── async-handler.ts     # Async route wrapper for Express
