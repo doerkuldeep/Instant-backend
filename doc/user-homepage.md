@@ -16,8 +16,10 @@ All customer homepage endpoints are mounted and accessible under both direct ali
 
 | Method | Endpoint | Auth | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/user/home` | Optional | **Unified Home Feed**: Returns complete aggregated homepage in a single round-trip call. |
+| `GET` | `/api/user/home` | Optional | **Unified Home Feed**: Returns complete aggregated homepage in a single round-trip call. Supports `?format=sdui` and `?format=html`. |
 | `GET` | `/api/user/home/feed` | Optional | Alias for unified homepage feed. |
+| `GET` | `/api/user/home/sdui` *(or `/layout`)* | Optional | **Server-Driven UI (SDUI)**: Dynamic screen layout, widget components, design tokens, and deep-link actions. |
+| `GET` | `/api/user/home/preview` | Optional | **Live Web UI Preview**: Responsive HTML web page rendered 100% by backend from SDUI layout. |
 | `GET` | `/api/user/home/banners` | Public | Promotional hero banners and carousel slides. |
 | `GET` | `/api/user/home/categories` | Public | Curated top categories with machine counts and popular tags (`?limit=`). |
 | `GET` | `/api/user/home/featured` | Public | Curated iconic & trending machines (`?segment=LIGHT\|HEAVY\|OTHER`, `?limit=`). |

@@ -444,4 +444,94 @@ describe('User Homepage APIs Test Suite', () => {
       expect(res.body.data).toContain('20 Ton Excavator');
     });
   });
+
+  describe('9. Server-Driven UI (SDUI) Dynamic Layout Contract', () => {
+    it('GET /api/user/home/sdui - should return complete screen layout schema driven by backend', async () => {
+      const res = await request(app).get('/api/user/home/sdui');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+
+      const screen = res.body.data;
+      expect(screen.screenId).toBe('USER_HOME');
+      expect(screen.title).toContain('EquipShare');
+      expect(screen.version).toBe('1.0');
+
+      // Theme design tokens
+      expect(screen.theme).toBeDefined();
+      expect(screen.theme.primaryColor).toBe('#2563EB');
+      expect(screen.theme.textColor).toBe('#0F172A');
+
+      // App Bar schema
+      expect(screen.appBar).toBeDefined();
+      expect(screen.appBar.brandTitle).toBe('EquipShare');
+      expect(screen.appBar.locationSelector.currentCity).toBe('Pan-India');
+      expect(screen.appBar.searchBar.placeholder).toContain('Search JCB');
+
+      // Component Widgets
+      expect(Array.isArray(screen.sections)).toBe(true);
+      expect(screen.sections.length).toBe(10);
+
+      const componentTypes = screen.sections.map((s: any) => s.type);
+      expect(componentTypes).toContain('HERO_CAROUSEL');
+      expect(componentTypes).toContain('QUICK_ACTIONS');
+      expect(componentTypes).toContain('SEARCH_SUGGESTIONS_TICKER');
+      expect(componentTypes).toContain('CATEGORY_GRID');
+      expect(componentTypes).toContain('SEGMENT_SHOWCASE');
+      expect(componentTypes).toContain('FEATURED_MACHINES_HORIZONTAL');
+      expect(componentTypes).toContain('PROMOTION_BANNER_STRIP');
+      expect(componentTypes).toContain('TRUST_MARKERS_GRID');
+      expect(componentTypes).toContain('TESTIMONIALS_CAROUSEL');
+      expect(componentTypes).toContain('CALL_TO_ACTION_BANNER');
+
+      // Check actions have type and target
+      const hero = screen.sections.find((s: any) => s.type === 'HERO_CAROUSEL');
+      expect(hero.data.banners[0].cta.action.type).toBe('NAVIGATE');
+      expect(hero.data.banners[0].cta.action.target).toBeDefined();
+
+      // Bottom Navigation items
+      expect(Array.isArray(screen.bottomNavigation)).toBe(true);
+      expect(screen.bottomNavigation.length).toBe(4);
+      expect(screen.bottomNavigation[0].label).toBe('Home');
+      expect(screen.bottomNavigation[0].isActive).toBe(true);
+    });
+
+    it('GET /api/user/home?format=sdui - should return SDUI format when query parameter is specified', async () => {
+      const res = await request(app).get('/api/user/home?format=sdui');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.screenId).toBe('USER_HOME');
+      expect(res.body.data.sections).toBeDefined();
+    });
+  });
+
+  describe('10. Live Server-Rendered HTML Web App Preview', () => {
+    it('GET /api/user/home/preview - should return responsive HTML web page rendered by backend', async () => {
+      const res = await request(app).get('/api/user/home/preview');
+
+      expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toContain('text/html');
+      expect(res.text).toContain('<!DOCTYPE html>');
+      expect(res.text).toContain('<title>EquipShare - Construction Equipment Rentals</title>');
+      expect(res.text).toContain('Server-Driven UI (SDUI)');
+      expect(res.text).toContain('id="hero-banners"');
+      expect(res.text).toContain('id="quick-actions"');
+      expect(res.text).toContain('id="categories"');
+      expect(res.text).toContain('id="featured-equipment"');
+      expect(res.text).toContain('switchSegmentTab');
+    });
+
+    it('GET /api/user/home with Accept: text/html - should render HTML preview directly', async () => {
+      const res = await request(app)
+        .get('/api/user/home')
+        .set('Accept', 'text/html,application/xhtml+xml');
+
+      expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toContain('text/html');
+      expect(res.text).toContain('<!DOCTYPE html>');
+      expect(res.text).toContain('EquipShare');
+    });
+  });
 });
+

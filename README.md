@@ -211,7 +211,9 @@ All module routes are mounted under `/api/v1`.
 - `GET /api/user/legal/faqs` - Categorized customer FAQs PDF with Table of Contents on page 1
 - `GET /api/user/legal/:slug` - Stream branded document PDF (supports `?lang=`, `?download=true`, and 304 ETag caching)
 - `POST /api/user/legal/consent` - Record customer re-acceptance for document version *(Bearer Auth: `USER`)*
-- `GET /api/user/home` *(or `/feed`)* - Customer homepage aggregated feed (hero banners, categories, featured equipment, segments, promotions, trust badges, testimonials, search trends, optional auth user context)
+- `GET /api/user/home` *(or `/feed`)* - Customer homepage aggregated feed (supports `?format=sdui` and `?format=html`)
+- `GET /api/user/home/sdui` *(or `/layout`)* - Full Server-Driven UI (SDUI) dynamic screen layout, widget components, tokens & deep-link actions
+- `GET /api/user/home/preview` - Live interactive HTML web page rendered directly by the backend from SDUI layout
 - `GET /api/user/home/banners` - Active marketing hero banners
 - `GET /api/user/home/categories` - Equipment rental categories with machine counts
 - `GET /api/user/home/featured` - Featured & trending machines with segment filtering (`?segment=`, `?limit=`)

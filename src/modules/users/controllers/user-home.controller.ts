@@ -1,13 +1,35 @@
 import { Request, Response } from 'express';
 import { userHomeService } from '../services/user-home.service';
+import { renderUserHomeHtml } from '../services/user-home-html.renderer';
 
 /**
  * GET /api/user/home (or /api/user/home/feed)
- * Aggregated customer homepage feed. Supports optional Bearer JWT for personalized greeting & context.
+ * Aggregated customer homepage feed.
+ * Supports optional Bearer JWT for personalized greeting & context.
+ * Pass ?format=sdui or ?format=layout for Server-Driven UI JSON contract.
+ * Pass ?format=html or Accept: text/html for live rendered web page preview.
  */
 export async function getHomePageFeed(req: Request, res: Response): Promise<void> {
   const city = typeof req.query.city === 'string' ? req.query.city.trim() : undefined;
   const userId = req.user?.id;
+  const format = typeof req.query.format === 'string' ? req.query.format.toLowerCase() : undefined;
+  const acceptsHtml = req.headers.accept?.includes('text/html');
+
+  if (format === 'html' || (acceptsHtml && format !== 'json')) {
+    const layout = await userHomeService.getScreenLayout({ city, userId });
+    const html = renderUserHomeHtml(layout);
+    res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(html);
+    return;
+  }
+
+  if (format === 'sdui' || format === 'layout') {
+    const layout = await userHomeService.getScreenLayout({ city, userId });
+    res.status(200).json({
+      success: true,
+      data: layout,
+    });
+    return;
+  }
 
   const feed = await userHomeService.getHomePageFeed({ city, userId });
 
@@ -15,6 +37,37 @@ export async function getHomePageFeed(req: Request, res: Response): Promise<void
     success: true,
     data: feed,
   });
+}
+
+/**
+ * GET /api/user/home/sdui (or /api/user/home/layout)
+ * Full Server-Driven UI (SDUI) dynamic screen schema.
+ * Defines screen layout, ordered UI component widgets, design tokens, action deep-links, and responsive rules.
+ */
+export async function getScreenLayout(req: Request, res: Response): Promise<void> {
+  const city = typeof req.query.city === 'string' ? req.query.city.trim() : undefined;
+  const userId = req.user?.id;
+
+  const layout = await userHomeService.getScreenLayout({ city, userId });
+
+  res.status(200).json({
+    success: true,
+    data: layout,
+  });
+}
+
+/**
+ * GET /api/user/home/preview (or /api/user/home/render)
+ * Live rendered HTML preview of the Server-Driven UI homepage.
+ */
+export async function getHomePagePreview(req: Request, res: Response): Promise<void> {
+  const city = typeof req.query.city === 'string' ? req.query.city.trim() : undefined;
+  const userId = req.user?.id;
+
+  const layout = await userHomeService.getScreenLayout({ city, userId });
+  const html = renderUserHomeHtml(layout);
+
+  res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(html);
 }
 
 /**
@@ -136,6 +189,8 @@ export async function getTrendingSearches(_req: Request, res: Response): Promise
 
 export const userHomeController = {
   getHomePageFeed,
+  getScreenLayout,
+  getHomePagePreview,
   getBanners,
   getCategories,
   getFeaturedMachines,
@@ -147,3 +202,4 @@ export const userHomeController = {
 };
 
 export default userHomeController;
+

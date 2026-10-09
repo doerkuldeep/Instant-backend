@@ -115,3 +115,131 @@ export interface UserHomePageFeedDto {
   trendingSearches: string[];
   user: HomeUserContextDto | null;
 }
+
+// ============================================================================
+// Server-Driven UI (SDUI) - Layout & Dynamic Component Schemas
+// ============================================================================
+
+export type UiActionType =
+  | 'NAVIGATE'
+  | 'DEEP_LINK'
+  | 'MODAL'
+  | 'COPY_CLIPBOARD'
+  | 'PHONE_CALL'
+  | 'SEARCH_FILTER';
+
+export interface UiAction {
+  type: UiActionType;
+  target: string;
+  label?: string;
+  payload?: Record<string, unknown>;
+}
+
+export type UiComponentType =
+  | 'HERO_CAROUSEL'
+  | 'QUICK_ACTIONS'
+  | 'SEARCH_SUGGESTIONS_TICKER'
+  | 'CATEGORY_GRID'
+  | 'SEGMENT_SHOWCASE'
+  | 'FEATURED_MACHINES_HORIZONTAL'
+  | 'PROMOTION_BANNER_STRIP'
+  | 'TRUST_MARKERS_GRID'
+  | 'TESTIMONIALS_CAROUSEL'
+  | 'CALL_TO_ACTION_BANNER';
+
+export type UiLayoutType =
+  | 'CAROUSEL'
+  | 'GRID'
+  | 'HORIZONTAL_LIST'
+  | 'VERTICAL_LIST'
+  | 'TABS'
+  | 'BANNER'
+  | 'CHIP_WRAP';
+
+export interface UiLayoutConfig {
+  layoutType: UiLayoutType;
+  columns?: number;
+  itemSpacing?: number;
+  paddingHorizontal?: number;
+  paddingVertical?: number;
+  aspectRatio?: string;
+  backgroundColor?: string;
+  snapAlignment?: 'start' | 'center' | 'none';
+  autoScrollMs?: number;
+}
+
+export interface UiComponentHeader {
+  title: string;
+  subtitle?: string;
+  badge?: string;
+  action?: {
+    text: string;
+    action: UiAction;
+  };
+}
+
+export interface UiComponentDto<TData = unknown> {
+  id: string;
+  type: UiComponentType;
+  order: number;
+  header?: UiComponentHeader;
+  layout: UiLayoutConfig;
+  data: TData;
+  analytics?: {
+    sectionName: string;
+    impressionEvent: string;
+  };
+}
+
+export interface UiAppBarDto {
+  type: 'SEARCH_HEADER';
+  brandTitle: string;
+  brandTagline: string;
+  locationSelector: {
+    currentCity: string;
+    label: string;
+    action: UiAction;
+  };
+  searchBar: {
+    placeholder: string;
+    tickerSuggestions: string[];
+    action: UiAction;
+  };
+  notificationAction: {
+    badgeCount: number;
+    action: UiAction;
+  };
+  userAction: {
+    title: string;
+    avatarUrl?: string | null;
+    action: UiAction;
+  };
+}
+
+export interface UiBottomNavigationItemDto {
+  id: string;
+  label: string;
+  icon: string;
+  badge?: string;
+  isActive: boolean;
+  action: UiAction;
+}
+
+export interface UiScreenDto {
+  screenId: 'USER_HOME';
+  title: string;
+  version: string;
+  theme: {
+    primaryColor: string;
+    secondaryColor: string;
+    accentColor: string;
+    backgroundColor: string;
+    surfaceColor: string;
+    textColor: string;
+  };
+  appBar: UiAppBarDto;
+  sections: UiComponentDto[];
+  bottomNavigation: UiBottomNavigationItemDto[];
+  user: HomeUserContextDto | null;
+}
+

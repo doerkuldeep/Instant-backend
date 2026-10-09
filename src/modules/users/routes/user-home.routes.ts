@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import {
   getHomePageFeed,
+  getScreenLayout,
+  getHomePagePreview,
   getBanners,
   getCategories,
   getFeaturedMachines,
@@ -34,6 +36,30 @@ router.get(
   optionalAuthenticate,
   validate({ query: userHomeQuerySchema }),
   asyncHandler(getHomePageFeed),
+);
+
+// 2. Server-Driven UI (SDUI) Screen Layout & Schema
+// GET /api/user/home/sdui & GET /api/user/home/layout
+router.get(
+  '/sdui',
+  optionalAuthenticate,
+  validate({ query: userHomeQuerySchema }),
+  asyncHandler(getScreenLayout),
+);
+router.get(
+  '/layout',
+  optionalAuthenticate,
+  validate({ query: userHomeQuerySchema }),
+  asyncHandler(getScreenLayout),
+);
+
+// 3. Live Server-Rendered HTML Web App Preview
+// GET /api/user/home/preview
+router.get(
+  '/preview',
+  optionalAuthenticate,
+  validate({ query: userHomeQuerySchema }),
+  asyncHandler(getHomePagePreview),
 );
 
 // 2. Hero banners & promotional carousel
