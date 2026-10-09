@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const userHomeQuerySchema = z.object({
   city: z.string().trim().optional(),
   pincode: z.string().trim().regex(/^\d{6}$/, 'Pincode must be 6 digits').optional(),
-  format: z.enum(['json', 'sdui', 'layout', 'html']).optional(),
+  format: z.enum(['json', 'sdui', 'layout']).optional(),
+  platform: z.enum(['all', 'app', 'web']).optional(),
 });
 
 export const userHomeFeaturedQuerySchema = z.object({

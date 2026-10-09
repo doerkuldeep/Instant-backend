@@ -502,35 +502,36 @@ describe('User Homepage APIs Test Suite', () => {
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.screenId).toBe('USER_HOME');
+      expect(res.body.data.targetPlatform).toBe('all');
+      expect(res.body.data.mobileWebBehavior).toBe('NATIVE_APP_SHELL');
       expect(res.body.data.sections).toBeDefined();
-    });
-  });
 
-  describe('10. Live Server-Rendered HTML Web App Preview', () => {
-    it('GET /api/user/home/preview - should return responsive HTML web page rendered by backend', async () => {
-      const res = await request(app).get('/api/user/home/preview');
+      // Verify responsive directives for app & web
+      const hero = res.body.data.sections.find((s: any) => s.type === 'HERO_CAROUSEL');
+      expect(hero.layout.responsive?.mobile.layoutType).toBe('CAROUSEL');
+      expect(hero.layout.responsive?.desktop.layoutType).toBe('GRID');
 
-      expect(res.status).toBe(200);
-      expect(res.headers['content-type']).toContain('text/html');
-      expect(res.text).toContain('<!DOCTYPE html>');
-      expect(res.text).toContain('<title>EquipShare - Construction Equipment Rentals</title>');
-      expect(res.text).toContain('Server-Driven UI (SDUI)');
-      expect(res.text).toContain('id="section-hero"');
-      expect(res.text).toContain('id="section-quick-actions"');
-      expect(res.text).toContain('id="section-categories"');
-      expect(res.text).toContain('id="section-featured"');
-      expect(res.text).toContain('switchSegmentTab');
+      const feat = res.body.data.sections.find((s: any) => s.type === 'FEATURED_MACHINES_HORIZONTAL');
+      expect(feat.layout.responsive?.mobile.cardWidthPx).toBe(250);
+      expect(feat.layout.responsive?.desktop.columns).toBe(4);
     });
 
-    it('GET /api/user/home with Accept: text/html - should render HTML preview directly', async () => {
-      const res = await request(app)
-        .get('/api/user/home')
-        .set('Accept', 'text/html,application/xhtml+xml');
+    it('GET /api/user/home/sdui?platform=app - should tailor layout for native app platform', async () => {
+      const res = await request(app).get('/api/user/home/sdui?platform=app');
 
       expect(res.status).toBe(200);
-      expect(res.headers['content-type']).toContain('text/html');
-      expect(res.text).toContain('<!DOCTYPE html>');
-      expect(res.text).toContain('EquipShare');
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.targetPlatform).toBe('app');
+      expect(res.body.data.mobileWebBehavior).toBe('NATIVE_APP_SHELL');
+    });
+
+    it('GET /api/user/home/sdui?platform=web - should tailor layout for web platform with mobile app shell', async () => {
+      const res = await request(app).get('/api/user/home/sdui?platform=web');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.targetPlatform).toBe('web');
+      expect(res.body.data.mobileWebBehavior).toBe('NATIVE_APP_SHELL');
     });
   });
 });

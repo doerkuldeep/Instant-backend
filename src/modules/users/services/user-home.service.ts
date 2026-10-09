@@ -212,6 +212,7 @@ export class UserHomeService {
   public async getScreenLayout(options: {
     city?: string;
     userId?: string;
+    platform?: 'all' | 'app' | 'web';
   }): Promise<UiScreenDto> {
     const feed = await this.getHomePageFeed(options);
     const activeCity = options.city || 'Pan-India';
@@ -229,6 +230,16 @@ export class UserHomeService {
           snapAlignment: 'center',
           paddingHorizontal: 16,
           itemSpacing: 12,
+          responsive: {
+            mobile: {
+              layoutType: 'CAROUSEL',
+              snapAlignment: 'center',
+            },
+            desktop: {
+              layoutType: 'GRID',
+              columns: 2,
+            },
+          },
         },
         analytics: {
           sectionName: 'Hero Marketing Banners',
@@ -366,6 +377,16 @@ export class UserHomeService {
           columns: 4,
           itemSpacing: 12,
           paddingHorizontal: 16,
+          responsive: {
+            mobile: {
+              layoutType: 'GRID',
+              columns: 4,
+            },
+            desktop: {
+              layoutType: 'GRID',
+              columns: 6,
+            },
+          },
         },
         analytics: {
           sectionName: 'Category Browser',
@@ -445,6 +466,17 @@ export class UserHomeService {
           itemSpacing: 14,
           paddingHorizontal: 16,
           snapAlignment: 'start',
+          responsive: {
+            mobile: {
+              layoutType: 'HORIZONTAL_LIST',
+              snapAlignment: 'start',
+              cardWidthPx: 250,
+            },
+            desktop: {
+              layoutType: 'GRID',
+              columns: 4,
+            },
+          },
         },
         analytics: {
           sectionName: 'Featured Fleet',
@@ -600,6 +632,8 @@ export class UserHomeService {
       screenId: 'USER_HOME',
       title: 'EquipShare - Construction Equipment Rentals',
       version: '1.0',
+      targetPlatform: options.platform || 'all',
+      mobileWebBehavior: 'NATIVE_APP_SHELL',
       theme: {
         primaryColor: '#2563EB',
         secondaryColor: '#1E293B',

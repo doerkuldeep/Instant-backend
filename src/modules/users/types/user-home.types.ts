@@ -166,6 +166,18 @@ export interface UiLayoutConfig {
   backgroundColor?: string;
   snapAlignment?: 'start' | 'center' | 'none';
   autoScrollMs?: number;
+  responsive?: {
+    mobile: {
+      layoutType: UiLayoutType;
+      columns?: number;
+      snapAlignment?: 'start' | 'center' | 'none';
+      cardWidthPx?: number;
+    };
+    desktop: {
+      layoutType: UiLayoutType;
+      columns?: number;
+    };
+  };
 }
 
 export interface UiComponentHeader {
@@ -229,6 +241,8 @@ export interface UiScreenDto {
   screenId: 'USER_HOME';
   title: string;
   version: string;
+  targetPlatform: 'all' | 'app' | 'web';
+  mobileWebBehavior: 'NATIVE_APP_SHELL';
   theme: {
     primaryColor: string;
     secondaryColor: string;
