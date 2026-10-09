@@ -5,6 +5,7 @@ export interface PartnerAuthResult {
   partner: UserResponseDto;
   tokens: AuthTokens;
   isNewPartner?: boolean;
+  requiresReconsent?: Array<{ slug: string; version: string }>;
 }
 
 export interface SendOtpResult {

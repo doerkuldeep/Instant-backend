@@ -3,8 +3,12 @@ import { partnerAuthRoutes } from './partner-auth.routes';
 import { partnerProfileRoutes } from './partner-profile.routes';
 import { partnerOnboardRoutes } from './partner-onboard.routes';
 import { partnerMachinesRoutes } from './partner-machines.routes';
+import { partnerLegalRoutes } from './partner-legal.routes';
 
 const router = Router();
+
+// Partner legal & documentation endpoints (/api/v1/partners/legal/* & /api/partner/legal/*)
+router.use('/legal', partnerLegalRoutes);
 
 // Partner auth endpoints (/api/v1/partners/auth/*)
 router.use('/auth', partnerAuthRoutes);

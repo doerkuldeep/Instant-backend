@@ -12,6 +12,8 @@ import {
   PartnerVerifyOtpInput,
   PartnerResendOtpInput,
 } from '../schemas/partner-auth.schema';
+import { partnerLegalService } from './partner-legal.service';
+import { partnerConsentRepository as consentModel } from '../repositories/partner-consent.repository';
 import { PartnerAuthResult, SendOtpResult } from '../types/partner.types';
 import { hashPassword, comparePassword } from '../../../shared/utils/hash';
 import { generateSecureOtp, hashOtp, verifyOtpHash, generateReferralCode } from '../utils/otp.util';
@@ -80,7 +82,9 @@ export async function resendOtp(input: PartnerResendOtpInput): Promise<SendOtpRe
 /**
  * Verify OTP, handle partner creation / login, and referral code linking.
  */
-export async function verifyOtp(input: PartnerVerifyOtpInput): Promise<PartnerAuthResult> {
+export async function verifyOtp(
+  input: PartnerVerifyOtpInput & { ip?: string; userAgent?: string },
+): Promise<PartnerAuthResult> {
   const storedOtp = await partnerOtpRepository.getOtp(input.phone);
   if (!storedOtp) {
     throw new BadRequestError('Invalid or expired OTP');
@@ -114,6 +118,11 @@ export async function verifyOtp(input: PartnerVerifyOtpInput): Promise<PartnerAu
 
   if (!userWithProfile) {
     // New Partner Signup Flow
+    // On first signup, acceptedTerms must be true, otherwise return 400
+    if (input.acceptedTerms !== true) {
+      throw new BadRequestError('Terms and conditions must be accepted to register as a partner');
+    }
+
     isNewPartner = true;
     let referrerProfileId: string | null = null;
 
@@ -180,6 +189,19 @@ export async function verifyOtp(input: PartnerVerifyOtpInput): Promise<PartnerAu
         partnerProfile: profile,
       };
     });
+
+    // Record consent for mandatory legal documents (terms-and-conditions and privacy-policy) at signup
+    const mandatoryDocs = partnerLegalService.getMandatoryDocuments();
+    for (const doc of mandatoryDocs) {
+      await consentModel.recordConsent({
+        partnerId: userWithProfile.partnerProfile!.id,
+        documentSlug: doc.slug,
+        version: doc.version,
+        ip: (input as any).ip,
+        userAgent: (input as any).userAgent,
+        acceptedAt: new Date(),
+      });
+    }
   } else {
     // Existing Partner Login Flow
     // Delete OTP on success (single use)
@@ -204,10 +226,18 @@ export async function verifyOtp(input: PartnerVerifyOtpInput): Promise<PartnerAu
 
   await saveRefreshToken(userWithProfile.id, tokens.refreshToken);
 
+  let requiresReconsent: Array<{ slug: string; version: string }> = [];
+  if (!isNewPartner && userWithProfile.partnerProfile) {
+    requiresReconsent = await partnerLegalService.checkRequiresReconsent(
+      userWithProfile.partnerProfile.id,
+    );
+  }
+
   return {
     partner: UsersMapper.toDto(userWithProfile),
     tokens,
     isNewPartner,
+    requiresReconsent,
   };
 }
 
@@ -301,10 +331,15 @@ export async function login(input: PartnerLoginInput): Promise<PartnerAuthResult
 
   await saveRefreshToken(user.id, tokens.refreshToken);
 
+  const requiresReconsent = await partnerLegalService.checkRequiresReconsent(
+    user.partnerProfile.id,
+  );
+
   return {
     partner: UsersMapper.toDto(user),
     tokens,
     isNewPartner: false,
+    requiresReconsent,
   };
 }
 

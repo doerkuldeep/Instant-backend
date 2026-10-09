@@ -242,7 +242,7 @@ describe('Partner OTP & Referral Auth Test Suite', () => {
 
       // Attempt verification with invalid referral code
       await expect(
-        partnerAuthService.verifyOtp({ phone, otp, referralCode: 'NONEXIST' }),
+        partnerAuthService.verifyOtp({ phone, otp, referralCode: 'NONEXIST', acceptedTerms: true }),
       ).rejects.toThrow('Invalid referral code');
 
       // The OTP is still valid (user not blocked from signup)
@@ -275,7 +275,7 @@ describe('Partner OTP & Referral Auth Test Suite', () => {
       const otp = lastMsg?.message.match(/\b\d{6}\b/)![0]!;
 
       await expect(
-        partnerAuthService.verifyOtp({ phone, otp, referralCode: 'MYOWNREF' }),
+        partnerAuthService.verifyOtp({ phone, otp, referralCode: 'MYOWNREF', acceptedTerms: true }),
       ).rejects.toThrow('Self-referral is not allowed');
     });
 
@@ -345,7 +345,12 @@ describe('Partner OTP & Referral Auth Test Suite', () => {
       const lastMsg = mockSmsProvider.getLastMessageFor(phone);
       const otp = lastMsg?.message.match(/\b\d{6}\b/)![0]!;
 
-      const result = await partnerAuthService.verifyOtp({ phone, otp, referralCode: referrerCode });
+      const result = await partnerAuthService.verifyOtp({
+        phone,
+        otp,
+        referralCode: referrerCode,
+        acceptedTerms: true,
+      });
       expect(result.isNewPartner).toBe(true);
       expect(result.partner.phone).toBe(phone);
       expect(result.partner.partnerProfile?.referredById).toBe(referrerProfileId);

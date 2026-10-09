@@ -31,3 +31,18 @@ export const authRateLimiter = rateLimit({
 
 // Alias for authLimiter
 export const authLimiter = authRateLimiter;
+
+export const legalRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60, // 60 requests per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'test' && !req.headers['x-test-rate-limit'],
+  message: {
+    success: false,
+    message: 'Too many requests for legal documents, please try again later.',
+    data: null,
+  },
+});
+
+export const legalLimiter = legalRateLimiter;

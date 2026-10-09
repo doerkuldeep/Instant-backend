@@ -1,0 +1,134 @@
+{
+  "company": {
+    "name": "EquipShare Partner Network",
+    "legalEntity": "EquipShare Technologies Private Limited",
+    "supportEmail": "partners@equipshare.com",
+    "supportPhone": "+91 1800 572 8899",
+    "workingHours": "Monday to Saturday, 9:00 AM – 7:00 PM IST",
+    "address": "4th Floor, Tech Innovation Park, Outer Ring Road, Bangalore, Karnataka 560103, India",
+    "grievanceOfficer": "Ananya Sharma",
+    "grievanceEmail": "grievance@equipshare.com"
+  },
+  "documents": [
+    {
+      "slug": "terms-and-conditions",
+      "title": "Partner Terms and Conditions",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": true,
+      "category": "legal",
+      "summary": "Core contractual terms and legal obligations governing partner registration, machine rentals, and platform usage."
+    },
+    {
+      "slug": "privacy-policy",
+      "title": "Partner Privacy Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": true,
+      "category": "legal",
+      "summary": "Comprehensive privacy policy detailing data collection, processing, KYC storage, and partner rights under DPDP Act."
+    },
+    {
+      "slug": "refund-policy",
+      "title": "Partner Refund Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Rules and conditions governing refunds, deductions, security deposits, and settlement adjustments."
+    },
+    {
+      "slug": "cancellation-policy",
+      "title": "Partner Cancellation Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Timelines, cancellation windows, fee schedules, and equipment downtime cancellation terms."
+    },
+    {
+      "slug": "partner-agreement",
+      "title": "Master Partner Agreement",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Commercial agreement defining operational commitments, machine verification standards, insurance, and indemnities."
+    },
+    {
+      "slug": "commission-and-payout-policy",
+      "title": "Commission and Payout Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Tiered commission structure, payment disbursement schedules, TDS handling, and bank payout verification."
+    },
+    {
+      "slug": "code-of-conduct",
+      "title": "Partner Code of Conduct",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "policy",
+      "summary": "Standard operating ethics, machine maintenance guidelines, safety mandates, and anti-corruption requirements."
+    },
+    {
+      "slug": "grievance-redressal",
+      "title": "Grievance Redressal Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Escalation matrix, grievance officer contact, resolution timelines, and dispute mediation procedure."
+    },
+    {
+      "slug": "data-deletion-policy",
+      "title": "Partner Data Deletion Policy",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "legal",
+      "summary": "Protocol for data erasure requests, statutory record retention, and account deactivation procedures."
+    },
+    {
+      "slug": "faqs",
+      "title": "Partner Frequently Asked Questions",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en", "hi"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Curated answers to frequent queries grouped by Account, Orders, Payouts, Referral, and Support."
+    },
+    {
+      "slug": "contact-and-support",
+      "title": "Contact & Support Information",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Dedicated communication channels, emergency hotlines, email contacts, and operational office hours."
+    },
+    {
+      "slug": "about-us",
+      "title": "About Us & Partner Ecosystem",
+      "version": "1.0.0",
+      "effectiveDate": "2025-01-01",
+      "languages": ["en"],
+      "mandatoryForSignup": false,
+      "category": "help",
+      "summary": "Our mission, technology platform overview, and how the industrial equipment partnership model functions."
+    }
+  ]
+}

@@ -86,6 +86,7 @@ model PartnerProfile {
   verifiedAt        DateTime?
   onboarding        PartnerOnboarding?
   machines          PartnerMachine[]
+  consents          PartnerConsent[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
@@ -93,6 +94,22 @@ model PartnerProfile {
   @@index([status])
   @@index([phone])
   @@index([referralCode])
+}
+
+model PartnerConsent {
+  id           String         @id @default(uuid())
+  partnerId    String
+  partner      PartnerProfile @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  documentSlug String
+  version      String
+  acceptedAt   DateTime       @default(now())
+  ip           String?
+  userAgent    String?
+  createdAt    DateTime       @default(now())
+
+  @@index([partnerId])
+  @@index([documentSlug])
+  @@index([partnerId, documentSlug])
 }
 
 model PartnerOnboarding {
