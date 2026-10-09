@@ -29,14 +29,14 @@ my-app/
 │   │
 │   ├── modules/
 │   │   ├── users/
-│   │   │   ├── controllers/         # user-auth, user-profile, user-legal
-│   │   │   ├── services/            # user-auth, user-profile, user-legal
-│   │   │   ├── routes/              # user-auth, user-profile, user-legal, users.routes.ts
-│   │   │   ├── repositories/        # users.repository, user-otp, user-consent
-│   │   │   ├── schemas/             # user-auth, user-profile, user-legal schemas
+│   │   │   ├── controllers/         # user-auth, user-profile, user-legal, user-home
+│   │   │   ├── services/            # user-auth, user-profile, user-legal, user-home
+│   │   │   ├── routes/              # user-auth, user-profile, user-legal, user-home, users.routes.ts
+│   │   │   ├── repositories/        # users.repository, user-otp, user-consent, user-home
+│   │   │   ├── schemas/             # user-auth, user-profile, user-legal, user-home schemas
 │   │   │   ├── middlewares/         # user.middleware.ts
-│   │   │   ├── types/               # user, user-auth, user-legal types
-│   │   │   └── tests/               # users.test, user-otp.test, user-legal.test
+│   │   │   ├── types/               # user, user-auth, user-legal, user-home types
+│   │   │   └── tests/               # users.test, user-otp.test, user-legal.test, user-home.test
 │   │   │
 │   │   ├── admin/
 │   │   │   ├── controllers/         # admin-auth, admin-users, admin-partners, admin-stats
@@ -211,6 +211,15 @@ All module routes are mounted under `/api/v1`.
 - `GET /api/user/legal/faqs` - Categorized customer FAQs PDF with Table of Contents on page 1
 - `GET /api/user/legal/:slug` - Stream branded document PDF (supports `?lang=`, `?download=true`, and 304 ETag caching)
 - `POST /api/user/legal/consent` - Record customer re-acceptance for document version *(Bearer Auth: `USER`)*
+- `GET /api/user/home` *(or `/feed`)* - Customer homepage aggregated feed (hero banners, categories, featured equipment, segments, promotions, trust badges, testimonials, search trends, optional auth user context)
+- `GET /api/user/home/banners` - Active marketing hero banners
+- `GET /api/user/home/categories` - Equipment rental categories with machine counts
+- `GET /api/user/home/featured` - Featured & trending machines with segment filtering (`?segment=`, `?limit=`)
+- `GET /api/user/home/segments` - Industry segments overview (Earthmoving, Aerial, Compaction, Concrete...)
+- `GET /api/user/home/promotions` - Active seasonal rental discount vouchers & promotions
+- `GET /api/user/home/trust-markers` - Platform guarantees (verified operators, insurance, SLA, fast delivery)
+- `GET /api/user/home/testimonials` - Verified contractor reviews and ratings
+- `GET /api/user/home/search-trends` - Trending popular rental searches and tags
 - `GET /api/v1/users/me` - Get current user profile *(Bearer Auth)*
 - `PATCH /api/v1/users/me` - Update personal profile (`firstName`, `lastName`) *(Bearer Auth)*
 - `GET /api/v1/users/:id` - Lookup user profile *(Bearer Auth)*

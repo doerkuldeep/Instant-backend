@@ -208,7 +208,13 @@ export const machinesService = {
     };
   },
 
-  async listMachines(query: ListMachinesQuery): Promise<PaginatedResult<MachineSummaryDto>> {
+  async listMachines(
+    rawQuery: Partial<ListMachinesQuery> = {},
+  ): Promise<PaginatedResult<MachineSummaryDto>> {
+    const page = rawQuery.page ?? 1;
+    const limit = rawQuery.limit ?? 20;
+    const sort = rawQuery.sortBy ?? 'displayOrder';
+    const query = { ...rawQuery, page, limit, sortBy: sort };
     const rawMachines = await machinesRepository.findActiveMachines(query.category);
     let items = rawMachines.map((m) => mapMachineToSummaryDto(m as RawMachineEntity));
 
@@ -426,7 +432,10 @@ export const machinesService = {
     return machines.slice(0, 8);
   },
 
-  async getSearchSuggestions(query: SearchSuggestionsQuery): Promise<SearchSuggestionDto[]> {
+  async getSearchSuggestions(query: {
+    q: string;
+    limit?: number;
+  }): Promise<SearchSuggestionDto[]> {
     const q = query.q.toLowerCase().trim();
     const limit = query.limit || 8;
     const suggestions: SearchSuggestionDto[] = [];

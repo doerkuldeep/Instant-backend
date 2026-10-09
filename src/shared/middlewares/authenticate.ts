@@ -55,3 +55,28 @@ export const authorize = (...allowedRoles: Role[]) => {
     next();
   };
 };
+
+export const optionalAuthenticate = (req: Request, _res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET) as TokenPayload;
+    req.user = {
+      id: decoded.sub,
+      email: decoded.email,
+      role: decoded.role,
+      partnerProfileId: decoded.partnerProfileId,
+    };
+  } catch {
+    // Gracefully ignore invalid or expired tokens for optional auth
+  }
+
+  next();
+};
+

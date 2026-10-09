@@ -24,6 +24,19 @@ Welcome to the API documentation for the project.
   * Multi-language support (`en`, `hi`)
   * Automated signup consent & `requiresReconsent` lifecycle
 
+* [Customer Homepage & Discovery Feed API](user-homepage.md)
+  * Endpoints:
+    * `GET /api/user/home` & `/feed` (Unified single-call homepage feed, optional Bearer auth)
+    * `GET /api/user/home/banners` (Hero promotional banners & carousel slides)
+    * `GET /api/user/home/categories` (Curated top categories with counts & popularity)
+    * `GET /api/user/home/featured` (Curated iconic & trending machines across segments)
+    * `GET /api/user/home/segments` (LIGHT, HEAVY, OTHER segments with starting daily rates)
+    * `GET /api/user/home/promotions` (Active platform coupons & discount offers)
+    * `GET /api/user/home/trust-markers` (Platform safety standards & certifications)
+    * `GET /api/user/home/testimonials` (Verified contractor reviews & stories)
+    * `GET /api/user/home/search-trends` (Trending machinery search suggestions)
+
+
 * [Partner Authentication & Referral API](partner-auth.md)
   * Endpoints:
     * `POST /api/partner/auth/send-otp`
