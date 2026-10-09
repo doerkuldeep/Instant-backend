@@ -2,10 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app } from '../../../app';
 import { machinesRepository } from '../repositories/machines.repository';
-import {
-  machinesService,
-  parseMachineSpecifications,
-} from '../services/machines.service';
+import { machinesService, parseMachineSpecifications } from '../services/machines.service';
 
 const mockCategory = {
   id: 'c1111111-1111-1111-1111-111111111111',
@@ -144,9 +141,7 @@ describe('Machines & Catalog Module', () => {
 
   describe('Service Business Logic', () => {
     it('should list categories with machines count', async () => {
-      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([
-        mockCategory as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([mockCategory as any]);
 
       const categories = await machinesService.listCategories({});
       expect(categories).toHaveLength(1);
@@ -242,9 +237,7 @@ describe('Machines & Catalog Module', () => {
     });
 
     it('should provide search suggestions for autocomplete', async () => {
-      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([
-        mockCategory as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([mockCategory as any]);
       vi.spyOn(machinesRepository, 'findActiveMachines').mockResolvedValue([
         mockMachine1 as any,
         mockMachine2 as any,
@@ -258,9 +251,7 @@ describe('Machines & Catalog Module', () => {
 
   describe('HTTP API Endpoints', () => {
     it('GET /api/v1/categories - should return active categories list', async () => {
-      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([
-        mockCategory as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([mockCategory as any]);
 
       const res = await request(app).get('/api/v1/categories');
 
@@ -271,9 +262,7 @@ describe('Machines & Catalog Module', () => {
     });
 
     it('GET /api/categories - alias should work', async () => {
-      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([
-        mockCategory as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([mockCategory as any]);
 
       const res = await request(app).get('/api/categories');
 
@@ -323,9 +312,7 @@ describe('Machines & Catalog Module', () => {
     });
 
     it('GET /api/machines - alias should work', async () => {
-      vi.spyOn(machinesRepository, 'findActiveMachines').mockResolvedValue([
-        mockMachine1 as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveMachines').mockResolvedValue([mockMachine1 as any]);
 
       const res = await request(app).get('/api/machines');
 
@@ -361,12 +348,8 @@ describe('Machines & Catalog Module', () => {
     });
 
     it('GET /api/v1/machines/search/suggestions - should return search suggestions', async () => {
-      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([
-        mockCategory as any,
-      ]);
-      vi.spyOn(machinesRepository, 'findActiveMachines').mockResolvedValue([
-        mockMachine1 as any,
-      ]);
+      vi.spyOn(machinesRepository, 'findActiveCategories').mockResolvedValue([mockCategory as any]);
+      vi.spyOn(machinesRepository, 'findActiveMachines').mockResolvedValue([mockMachine1 as any]);
 
       const res = await request(app).get('/api/v1/machines/search/suggestions?q=jcb');
 

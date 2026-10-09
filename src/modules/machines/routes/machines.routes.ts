@@ -17,6 +17,7 @@ import {
 } from '../schemas/machines.schema';
 import { validate } from '../../../shared/middlewares/validate';
 import { asyncHandler } from '../../../shared/utils/async-handler';
+import { getMachinePartnerOffers } from '../../partners/controllers/partner-machines.controller';
 
 // ==========================================
 // 1. Categories Router (/categories)
@@ -40,11 +41,7 @@ categoriesRouter.get(
 // ==========================================
 export const machinesRouter = Router();
 
-machinesRouter.get(
-  '/',
-  validate({ query: listMachinesQuerySchema }),
-  asyncHandler(listMachines),
-);
+machinesRouter.get('/', validate({ query: listMachinesQuerySchema }), asyncHandler(listMachines));
 
 machinesRouter.get('/featured', asyncHandler(getFeaturedMachines));
 
@@ -60,4 +57,16 @@ machinesRouter.get(
   '/:idOrSlug',
   validate({ params: machineParamSchema }),
   asyncHandler(getMachineByIdOrSlug),
+);
+
+machinesRouter.get(
+  '/:idOrSlug/partners',
+  validate({ params: machineParamSchema }),
+  asyncHandler(getMachinePartnerOffers),
+);
+
+machinesRouter.get(
+  '/:idOrSlug/rates',
+  validate({ params: machineParamSchema }),
+  asyncHandler(getMachinePartnerOffers),
 );

@@ -65,13 +65,10 @@ interface RawCategoryEntity {
 
 export function parseMachineSpecifications(rawSpecs: unknown) {
   const specsObj =
-    typeof rawSpecs === 'object' && rawSpecs !== null
-      ? (rawSpecs as Record<string, unknown>)
-      : {};
+    typeof rawSpecs === 'object' && rawSpecs !== null ? (rawSpecs as Record<string, unknown>) : {};
 
   const segment = (
-    typeof specsObj.segment === 'string' &&
-    ['LIGHT', 'HEAVY', 'OTHER'].includes(specsObj.segment)
+    typeof specsObj.segment === 'string' && ['LIGHT', 'HEAVY', 'OTHER'].includes(specsObj.segment)
       ? specsObj.segment
       : null
   ) as MachineSegment | null;
@@ -107,17 +104,11 @@ export function parseMachineSpecifications(rawSpecs: unknown) {
           ? rawRental.fuelPolicy
           : 'NA') as MachineRentalDto['fuelPolicy'],
         securityDepositInr:
-          typeof rawRental.securityDepositInr === 'number'
-            ? rawRental.securityDepositInr
-            : 0,
+          typeof rawRental.securityDepositInr === 'number' ? rawRental.securityDepositInr : 0,
         deliveryAvailable:
-          typeof rawRental.deliveryAvailable === 'boolean'
-            ? rawRental.deliveryAvailable
-            : true,
+          typeof rawRental.deliveryAvailable === 'boolean' ? rawRental.deliveryAvailable : true,
         mobilisationNote:
-          typeof rawRental.mobilisationNote === 'string'
-            ? rawRental.mobilisationNote
-            : undefined,
+          typeof rawRental.mobilisationNote === 'string' ? rawRental.mobilisationNote : undefined,
       }
     : null;
 
@@ -257,31 +248,25 @@ export const machinesService = {
 
     // 4. Operator Included filter
     if (query.operatorIncluded !== undefined) {
-      items = items.filter(
-        (item) => item.rental?.operatorIncluded === query.operatorIncluded,
-      );
+      items = items.filter((item) => item.rental?.operatorIncluded === query.operatorIncluded);
     }
 
     // 5. Delivery Available filter
     if (query.deliveryAvailable !== undefined) {
-      items = items.filter(
-        (item) => item.rental?.deliveryAvailable === query.deliveryAvailable,
-      );
+      items = items.filter((item) => item.rental?.deliveryAvailable === query.deliveryAvailable);
     }
 
     // 6. Rental Rate Range filters
     if (typeof query.minDailyRate === 'number') {
       items = items.filter(
         (item) =>
-          typeof item.rental?.dailyInr === 'number' &&
-          item.rental.dailyInr >= query.minDailyRate!,
+          typeof item.rental?.dailyInr === 'number' && item.rental.dailyInr >= query.minDailyRate!,
       );
     }
     if (typeof query.maxDailyRate === 'number') {
       items = items.filter(
         (item) =>
-          typeof item.rental?.dailyInr === 'number' &&
-          item.rental.dailyInr <= query.maxDailyRate!,
+          typeof item.rental?.dailyInr === 'number' && item.rental.dailyInr <= query.maxDailyRate!,
       );
     }
     if (typeof query.minHourlyRate === 'number') {
@@ -310,9 +295,7 @@ export const machinesService = {
     // 8. UseCase filter
     if (query.useCase) {
       const u = query.useCase.toLowerCase().trim();
-      items = items.filter((item) =>
-        item.useCases.some((uc) => uc.toLowerCase().includes(u)),
-      );
+      items = items.filter((item) => item.useCases.some((uc) => uc.toLowerCase().includes(u)));
     }
 
     // 9. Sorting
@@ -372,10 +355,7 @@ export const machinesService = {
     const rawMachines = await machinesRepository.findActiveMachines();
     const machines = rawMachines.map((m) => mapMachineToSummaryDto(m as RawMachineEntity));
 
-    const segmentConfig: Record<
-      MachineSegment,
-      { title: string; description: string }
-    > = {
+    const segmentConfig: Record<MachineSegment, { title: string; description: string }> = {
       LIGHT: {
         title: 'Home & Light Construction Tools',
         description:

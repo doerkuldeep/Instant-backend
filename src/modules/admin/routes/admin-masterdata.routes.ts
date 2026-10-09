@@ -72,11 +72,7 @@ machineRouter.get(
   asyncHandler(listMachines),
 );
 
-machineRouter.post(
-  '/',
-  validate({ body: adminCreateMachineSchema }),
-  asyncHandler(createMachine),
-);
+machineRouter.post('/', validate({ body: adminCreateMachineSchema }), asyncHandler(createMachine));
 
 machineRouter.get(
   '/:id',
@@ -110,4 +106,3 @@ masterDataRouter.use('/machines', machineRouter);
 
 export { categoryRouter as adminCategoryRoutes, machineRouter as adminMachineRoutes };
 export const adminMasterDataRoutes = masterDataRouter;
-

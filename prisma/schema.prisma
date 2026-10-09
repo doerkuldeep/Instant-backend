@@ -85,6 +85,7 @@ model PartnerProfile {
   referrals         PartnerProfile[]   @relation("PartnerReferrals")
   verifiedAt        DateTime?
   onboarding        PartnerOnboarding?
+  machines          PartnerMachine[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
@@ -243,12 +244,44 @@ model Machine {
   webImageUrl    String?
   specifications Json?
   isActive       Boolean   @default(true)
-  displayOrder   Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  displayOrder   Int              @default(0)
+  partnerMachines PartnerMachine[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   @@index([categoryId])
   @@index([slug])
+  @@index([isActive])
+}
+
+model PartnerMachine {
+  id               String         @id @default(uuid())
+  partnerProfileId String
+  partnerProfile   PartnerProfile @relation(fields: [partnerProfileId], references: [id], onDelete: Cascade)
+  machineId        String
+  machine          Machine        @relation(fields: [machineId], references: [id], onDelete: Cascade)
+
+  // Pricing in INR
+  hourlyPrice      Float?
+  dailyPrice       Float?
+  weeklyPrice      Float?
+  monthlyPrice     Float?
+
+  // Additional rental policies & operational settings
+  minBookingPeriod String?
+  operatorIncluded Boolean        @default(false)
+  fuelPolicy       String?        // WET, DRY, ELECTRIC, NA
+  securityDeposit  Float?
+  quantity         Int            @default(1)
+  isActive         Boolean        @default(true)
+  notes            String?
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([partnerProfileId, machineId])
+  @@index([partnerProfileId])
+  @@index([machineId])
   @@index([isActive])
 }
 

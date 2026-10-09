@@ -22,7 +22,6 @@ import { NotFoundError, ConflictError, BadRequestError } from '../../../shared/e
 type CategoryUpdateInput = CategoryUpdateData;
 type MachineUpdateInput = MachineUpdateData;
 
-
 export function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -125,13 +124,17 @@ export async function listCategories(query: AdminListCategoriesQuery) {
   };
 }
 
-export async function getCategoryById(idOrSlug: string): Promise<CategoryDto & { machines?: MachineDto[] }> {
+export async function getCategoryById(
+  idOrSlug: string,
+): Promise<CategoryDto & { machines?: MachineDto[] }> {
   const category = await adminMasterDataRepository.findCategoryByIdOrSlug(idOrSlug);
   if (!category) {
     throw new NotFoundError(`Category with identifier '${idOrSlug}' not found`);
   }
 
-  const dto: CategoryDto & { machines?: MachineDto[] } = mapCategoryToDto(category as CategoryRecord);
+  const dto: CategoryDto & { machines?: MachineDto[] } = mapCategoryToDto(
+    category as CategoryRecord,
+  );
   if ('machines' in category && Array.isArray(category.machines)) {
     dto.machines = category.machines.map((m) => mapMachineToDto(m as MachineRecord));
   }
