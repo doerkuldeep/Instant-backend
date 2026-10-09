@@ -1,4 +1,4 @@
-import { PartnerMachine, Prisma } from '@prisma/client';
+import { PartnerMachine } from '../types/partner-machines.types';
 import { prisma } from '../../../database/prisma';
 
 export interface PartnerMachineEntity extends PartnerMachine {
@@ -31,6 +31,7 @@ export interface PartnerMachineEntity extends PartnerMachine {
   };
 }
 
+const prismaClient = prisma as any;
 const inMemoryPartnerMachines = new Map<string, PartnerMachineEntity>();
 
 export function clearPartnerMachinesInMemory(): void {
@@ -61,7 +62,7 @@ export const partnerMachinesRepository = {
     }
 
     try {
-      const result = await prisma.partnerMachine.findUnique({
+      const result = await prismaClient.partnerMachine.findUnique({
         where: {
           partnerProfileId_machineId: {
             partnerProfileId,
@@ -93,7 +94,7 @@ export const partnerMachinesRepository = {
     }
 
     try {
-      const result = await prisma.partnerMachine.findUnique({
+      const result = await prismaClient.partnerMachine.findUnique({
         where: { id },
         include: {
           machine: {
@@ -174,7 +175,7 @@ export const partnerMachinesRepository = {
     }
 
     try {
-      const where: Prisma.PartnerMachineWhereInput = {
+      const where: Record<string, any> = {
         partnerProfileId,
       };
 
@@ -202,7 +203,7 @@ export const partnerMachinesRepository = {
         ];
       }
 
-      const orderBy: Prisma.PartnerMachineOrderByWithRelationInput = {};
+      const orderBy: Record<string, any> = {};
       if (options.sortBy === 'dailyPrice') {
         orderBy.dailyPrice = options.sortOrder || 'desc';
       } else if (options.sortBy === 'hourlyPrice') {
@@ -212,7 +213,7 @@ export const partnerMachinesRepository = {
       }
 
       const [items, total] = await Promise.all([
-        prisma.partnerMachine.findMany({
+        prismaClient.partnerMachine.findMany({
           where,
           include: {
             machine: {
@@ -226,7 +227,7 @@ export const partnerMachinesRepository = {
           skip: options.skip,
           take: options.take,
         }),
-        prisma.partnerMachine.count({ where }),
+        prismaClient.partnerMachine.count({ where }),
       ]);
 
       return { items: items as unknown as PartnerMachineEntity[], total };
@@ -298,7 +299,7 @@ export const partnerMachinesRepository = {
     inMemoryPartnerMachines.set(fallbackRecord.id, fallbackRecord);
 
     try {
-      const upserted = await prisma.partnerMachine.upsert({
+      const upserted = await prismaClient.partnerMachine.upsert({
         where: {
           partnerProfileId_machineId: {
             partnerProfileId,
@@ -366,7 +367,7 @@ export const partnerMachinesRepository = {
     }
 
     try {
-      const updated = await prisma.partnerMachine.update({
+      const updated = await prismaClient.partnerMachine.update({
         where: { id },
         data,
         include: {
@@ -390,7 +391,7 @@ export const partnerMachinesRepository = {
     inMemoryPartnerMachines.delete(id);
 
     try {
-      await prisma.partnerMachine.delete({
+      await prismaClient.partnerMachine.delete({
         where: { id },
       });
       return true;
@@ -419,10 +420,10 @@ export const partnerMachinesRepository = {
 
     try {
       const [total, active, inactive, sum] = await Promise.all([
-        prisma.partnerMachine.count({ where: { partnerProfileId } }),
-        prisma.partnerMachine.count({ where: { partnerProfileId, isActive: true } }),
-        prisma.partnerMachine.count({ where: { partnerProfileId, isActive: false } }),
-        prisma.partnerMachine.aggregate({
+        prismaClient.partnerMachine.count({ where: { partnerProfileId } }),
+        prismaClient.partnerMachine.count({ where: { partnerProfileId, isActive: true } }),
+        prismaClient.partnerMachine.count({ where: { partnerProfileId, isActive: false } }),
+        prismaClient.partnerMachine.aggregate({
           where: { partnerProfileId },
           _sum: { quantity: true },
         }),
@@ -449,7 +450,7 @@ export const partnerMachinesRepository = {
     }
 
     try {
-      const items = await prisma.partnerMachine.findMany({
+      const items = await prismaClient.partnerMachine.findMany({
         where: {
           machineId,
           isActive: true,

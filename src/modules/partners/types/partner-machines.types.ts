@@ -1,5 +1,24 @@
 import { MachineRentalDto, MachineSummaryDto } from '../../machines/types/machines.types';
 
+export interface PartnerMachine {
+  id: string;
+  partnerProfileId: string;
+  machineId: string;
+  hourlyPrice: number | null;
+  dailyPrice: number | null;
+  weeklyPrice: number | null;
+  monthlyPrice: number | null;
+  minBookingPeriod: string | null;
+  operatorIncluded: boolean;
+  fuelPolicy: string | null;
+  securityDeposit: number | null;
+  quantity: number;
+  isActive: boolean;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PartnerMachineDto {
   id: string;
   partnerProfileId: string;
