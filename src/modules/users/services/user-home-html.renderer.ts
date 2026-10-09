@@ -2,13 +2,19 @@ import { UiScreenDto } from '../types/user-home.types';
 
 /**
  * Server-Side HTML Renderer for the Server-Driven UI (SDUI) Homepage.
- * Renders the exact UI Screen Contract served by the backend into a stunning, responsive,
- * production-grade web application view using modern Vanilla CSS.
+ *
+ * Provides a responsive hybrid experience:
+ * - Desktop Web (>= 768px): Sleek, expansive desktop portal with rich grid layouts.
+ * - Mobile Web (< 768px): Authentically mirrors a native mobile app (like Swiggy / Blinkit / Uber),
+ *   featuring a native status bar, location dropdown, sticky pill search bar, horizontal snap carousels,
+ *   circular quick actions, segmented control pills, ticket-style coupon cards, and a fixed bottom tab bar
+ *   with safe-area padding and active touch press feedback.
+ * - Includes an interactive "Device View" switch on desktop so reviewers can test the mobile app UI live!
  */
 export function renderUserHomeHtml(screen: UiScreenDto): string {
-  const { title, theme, appBar, sections, bottomNavigation, user } = screen;
+  const { title, theme, appBar, sections, bottomNavigation } = screen;
 
-  // Find components by type
+  // Extract sections by type
   const heroSection = sections.find((s) => s.type === 'HERO_CAROUSEL');
   const quickActionsSection = sections.find((s) => s.type === 'QUICK_ACTIONS');
   const searchChipsSection = sections.find((s) => s.type === 'SEARCH_SUGGESTIONS_TICKER');
@@ -24,12 +30,17 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="Rent certified heavy and light construction machinery online with doorstep delivery, certified operators, and zero hidden charges across India.">
+  <meta name="theme-color" content="${escapeHtml(theme.primaryColor)}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: ${theme.primaryColor};
@@ -39,17 +50,20 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       --accent: ${theme.accentColor};
       --accent-hover: #D97706;
       --bg: #F8FAFC;
-      --surface: ${theme.surfaceColor};
+      --surface: #FFFFFF;
       --text: ${theme.textColor};
       --text-muted: #64748B;
       --border: #E2E8F0;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --border-subtle: #F1F5F9;
       --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
       --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -58,6 +72,7 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -67,42 +82,85 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      padding-bottom: 70px;
+      padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* Top Notice Bar / Server-Driven Indicator */
-    .sdui-badge-bar {
-      background: linear-gradient(90deg, #1E293B 0%, #0F172A 100%);
-      color: #94A3B8;
-      font-size: 0.75rem;
-      padding: 6px 16px;
+    /* Device Simulator Shell for desktop preview */
+    .viewport-container {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0 auto;
+      transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body.simulator-mobile .viewport-container {
+      max-width: 414px;
+      margin: 24px auto;
+      border-radius: 40px;
+      box-shadow: 0 0 0 12px #1E293B, 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      background: #FFFFFF;
+      overflow: hidden;
+      position: relative;
+    }
+    body.simulator-mobile .bottom-nav {
+      max-width: 414px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 0 0 28px 28px;
+    }
+
+    /* Desktop View Switcher Tool Bar (visible on desktop only) */
+    .dev-control-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: #0F172A;
+      color: #94A3B8;
+      font-size: 0.75rem;
+      padding: 8px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .sdui-badge-bar .badge {
-      background: rgba(37, 99, 235, 0.2);
-      color: #60A5FA;
-      padding: 2px 8px;
-      border-radius: 999px;
+    .dev-control-bar strong {
+      color: #FFFFFF;
+    }
+    .dev-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .view-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      padding: 4px 12px;
+      font-size: 0.72rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(96, 165, 250, 0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .view-toggle-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
     }
 
-    /* Header & Navigation */
+    /* App Header / Navigation */
     header.app-header {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       box-shadow: var(--shadow-sm);
     }
-    .header-container {
-      max-width: 1240px;
+
+    /* Desktop Header Layout */
+    .header-desktop-row {
+      max-width: 1200px;
       margin: 0 auto;
       padding: 12px 20px;
       display: flex;
@@ -113,13 +171,13 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
     }
     .brand-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary) 0%, #1D4ED8 100%);
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary) 0%, #1E40AF 100%);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
@@ -127,158 +185,246 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       color: white;
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.3rem;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      font-size: 1.25rem;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.28);
     }
     .brand-info h1 {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: var(--secondary);
       line-height: 1.1;
       letter-spacing: -0.5px;
     }
     .brand-info p {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       font-weight: 500;
     }
-
-    .location-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .location-pill:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .location-dot {
-      width: 8px;
-      height: 8px;
-      background: #10B981;
-      border-radius: 50%;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-
-    .search-wrapper {
+    .desktop-search-wrapper {
       flex: 1;
-      max-width: 520px;
+      max-width: 480px;
       position: relative;
     }
-    .search-input {
+    .desktop-search-input {
       width: 100%;
-      background: var(--surface);
+      background: var(--bg);
       border: 1.5px solid var(--border);
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       padding: 10px 18px 10px 42px;
-      font-size: 0.875rem;
-      font-family: var(--font-sans);
-      color: var(--text);
+      font-size: 0.88rem;
       outline: none;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
-    .search-input:focus {
+    .desktop-search-input:focus {
       border-color: var(--primary);
       background: white;
       box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     }
-    .search-icon {
+    .search-icon-svg {
       position: absolute;
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
+      width: 18px;
+      height: 18px;
     }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .btn-user-action {
+    .btn-header-cta {
       background: var(--primary);
       color: white;
       border: none;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       padding: 8px 18px;
       font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
+      font-weight: 700;
       text-decoration: none;
-      transition: all 0.2s ease;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      transition: all 0.2s;
     }
-    .btn-user-action:hover {
+    .btn-header-cta:hover {
       background: var(--primary-dark);
       transform: translateY(-1px);
     }
 
-    /* Main Container */
-    main.page-content {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 24px 20px;
+    /* ========================================================================
+       📱 Mobile Native App Header Shell
+       ======================================================================== */
+    .mobile-app-shell-header {
+      display: none;
+      padding: 12px 16px 14px;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .mobile-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-location-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .mobile-pin-circle {
+      width: 34px;
+      height: 34px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    .mobile-location-texts {
       display: flex;
       flex-direction: column;
-      gap: 36px;
+    }
+    .mobile-location-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mobile-location-city {
+      font-family: var(--font-display);
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mobile-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mobile-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      position: relative;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .mobile-notif-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: #EF4444;
+      border-radius: 50%;
+      border: 2px solid white;
     }
 
-    /* Typography & Headers */
+    /* Mobile Sticky Pill Search Bar (Native App Style) */
+    .mobile-search-pill {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: var(--radius-full);
+      padding: 10px 16px;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+    }
+    .mobile-search-pill:active {
+      transform: scale(0.98);
+      background: var(--bg);
+    }
+    .mobile-search-placeholder {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mobile-search-mic-icon {
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    /* Main Page Content Container */
+    main.page-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Section Headers */
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .section-title {
       font-family: var(--font-display);
-      font-size: 1.45rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--secondary);
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
     }
     .section-subtitle {
-      font-size: 0.875rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
     .section-link {
       color: var(--primary);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: gap 0.2s;
-    }
-    .section-link:hover {
-      gap: 8px;
-      color: var(--primary-dark);
     }
 
-    /* Hero Carousel */
-    .hero-slider {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* ========================================================================
+       1. Hero Banner Carousel (Native Touch Snap & Full Aspect Ratio)
+       ======================================================================== */
+    .hero-slider-wrap {
+      display: flex;
       gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+    .hero-slider-wrap::-webkit-scrollbar {
+      display: none;
     }
     .hero-banner-card {
+      flex: 0 0 100%;
+      scroll-snap-align: center;
       position: relative;
       border-radius: var(--radius-xl);
       overflow: hidden;
-      min-height: 230px;
+      min-height: 220px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -287,16 +433,21 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       background-size: cover;
       background-position: center;
       box-shadow: var(--shadow-md);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.2s ease;
     }
-    .hero-banner-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-xl);
+    @media (min-width: 768px) {
+      .hero-banner-card {
+        flex: 0 0 calc(50% - 8px);
+        min-height: 250px;
+      }
+    }
+    .hero-banner-card:active {
+      transform: scale(0.99);
     }
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(15,23,42,0.1) 0%, rgba(15,23,42,0.88) 100%);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
       z-index: 1;
     }
     .hero-content {
@@ -307,427 +458,420 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       display: inline-block;
       background: var(--accent);
       color: #78350F;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 999px;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
     }
     .hero-title {
       font-family: var(--font-display);
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 6px;
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
     .hero-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       opacity: 0.9;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       max-width: 90%;
     }
     .hero-cta-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: white;
+      background: #FFFFFF;
       color: #0F172A;
       font-weight: 700;
-      font-size: 0.82rem;
-      padding: 8px 16px;
-      border-radius: 999px;
+      font-size: 0.8rem;
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
       text-decoration: none;
-      transition: all 0.2s;
-    }
-    .hero-cta-btn:hover {
-      background: #F1F5F9;
-      transform: translateX(3px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    /* Quick Actions */
+    /* Carousel Pagination Dots (App Style) */
+    .carousel-dots-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .carousel-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-full);
+      background: #CBD5E1;
+      transition: all 0.25s;
+    }
+    .carousel-dot.active {
+      width: 22px;
+      background: var(--primary);
+    }
+
+    /* ========================================================================
+       2. Quick Action App Icons (Circle App Grid)
+       ======================================================================== */
     .quick-actions-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
-    .quick-action-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px 12px;
+    .quick-action-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       text-decoration: none;
       color: var(--text);
-      transition: all 0.2s ease;
       position: relative;
     }
-    .quick-action-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+    .quick-action-item:active .quick-action-circle {
+      transform: scale(0.92);
     }
-    .quick-action-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--primary-light);
-      color: var(--primary);
+    .quick-action-circle {
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      margin-bottom: 8px;
+      font-size: 1.35rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 6px;
+      transition: all 0.15s ease;
     }
     .quick-action-label {
-      font-size: 0.82rem;
+      font-size: 0.72rem;
       font-weight: 700;
+      color: var(--secondary);
+      line-height: 1.2;
     }
     .quick-action-badge {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: -2px;
+      right: 12px;
       background: #EF4444;
       color: white;
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 999px;
+      padding: 2px 5px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid white;
     }
 
-    /* Search Pills / Chips */
-    .search-chips-wrap {
+    /* ========================================================================
+       3. Trending Search Chips
+       ======================================================================== */
+    .chips-horizontal-scroll {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
-      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
     }
-    .search-chip {
+    .chips-horizontal-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .app-search-chip {
       background: white;
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       padding: 6px 14px;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       text-decoration: none;
+      white-space: nowrap;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       transition: all 0.15s;
     }
-    .search-chip:hover {
-      border-color: var(--primary);
-      color: var(--primary);
+    .app-search-chip:active {
+      transform: scale(0.95);
       background: var(--primary-light);
+      border-color: var(--primary);
     }
 
-    /* Category Grid */
-    .categories-grid {
+    /* ========================================================================
+       4. Categories (App-like Squircle Grid)
+       ======================================================================== */
+    .categories-app-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
-    .category-card {
+    @media (min-width: 768px) {
+      .categories-app-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 16px;
+      }
+    }
+    .category-app-card {
       background: white;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 16px 12px;
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       text-decoration: none;
       color: var(--text);
-      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
     }
-    .category-card:hover {
+    .category-app-card:active {
+      transform: scale(0.95);
       border-color: var(--primary);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
     }
-    .category-thumb {
-      width: 58px;
-      height: 58px;
+    .category-squircle-img {
+      width: 52px;
+      height: 52px;
       border-radius: var(--radius-md);
       object-fit: cover;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       background: #F1F5F9;
     }
-    .category-name {
-      font-size: 0.82rem;
+    .category-app-title {
+      font-size: 0.76rem;
       font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: 4px;
+      line-height: 1.2;
+      color: var(--secondary);
+      margin-bottom: 2px;
     }
-    .category-count {
-      font-size: 0.7rem;
+    .category-app-count {
+      font-size: 0.66rem;
       color: var(--text-muted);
       font-weight: 500;
     }
 
-    /* Segment Showcase (Tabs) */
-    .segments-container {
+    /* ========================================================================
+       5. Segmented Control Tabs (iOS/Android Native App Style)
+       ======================================================================== */
+    .segmented-control-bar {
+      display: flex;
+      background: #E2E8F0;
+      padding: 4px;
+      border-radius: var(--radius-full);
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .segment-tab-pill {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-full);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .segment-tab-pill.active {
+      background: white;
+      color: var(--secondary);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .segment-app-card {
+      display: none;
       background: white;
       border: 1px solid var(--border);
       border-radius: var(--radius-xl);
-      padding: 24px;
+      padding: 18px;
       box-shadow: var(--shadow-sm);
     }
-    .segment-tab-buttons {
+    .segment-app-card.active {
       display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-      overflow-x: auto;
+      flex-direction: column;
+      gap: 12px;
     }
-    .segment-tab-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 8px 18px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-    .segment-tab-btn.active {
-      background: var(--secondary);
-      color: white;
-      border-color: var(--secondary);
-    }
-    .segment-panel {
-      display: none;
-    }
-    .segment-panel.active {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: center;
-    }
-    .segment-info h3 {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-      color: var(--secondary);
-    }
-    .segment-badge {
+    .segment-badge-app {
       display: inline-block;
+      align-self: flex-start;
       background: #FEF3C7;
       color: #92400E;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 800;
       padding: 3px 8px;
-      border-radius: 6px;
-      margin-bottom: 10px;
+      border-radius: var(--radius-sm);
     }
-    .segment-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .features-list {
+    .segment-features-ul {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 6px;
     }
-    .features-list li {
-      font-size: 0.84rem;
+    .segment-features-ul li {
+      font-size: 0.82rem;
       display: flex;
       align-items: center;
       gap: 8px;
+      color: #334155;
     }
-    .features-list li::before {
+    .segment-features-ul li::before {
       content: "✓";
       color: #10B981;
       font-weight: 800;
     }
-    .segment-rate-pill {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
-      font-size: 0.88rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
 
-    /* Featured Machines Carousel / Cards */
-    .featured-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 18px;
+    /* ========================================================================
+       6. Featured Machines (Horizontal Snap Carousel on Mobile)
+       ======================================================================== */
+    .featured-machines-snap-row {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
     }
-    .machine-card {
+    .featured-machines-snap-row::-webkit-scrollbar {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .featured-machines-snap-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        overflow-x: visible;
+      }
+    }
+    .machine-app-card {
+      flex: 0 0 250px;
+      scroll-snap-align: start;
       background: white;
       border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: all 0.25s ease;
       box-shadow: var(--shadow-sm);
+      transition: transform 0.15s;
     }
-    .machine-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-      border-color: #CBD5E1;
+    .machine-app-card:active {
+      transform: scale(0.97);
     }
-    .machine-thumb-wrapper {
+    .machine-app-img-wrap {
       position: relative;
-      height: 160px;
+      height: 140px;
       background: #F1F5F9;
     }
-    .machine-thumb {
+    .machine-app-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    .machine-badge-tag {
+    .machine-pill-badge {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(15, 23, 42, 0.8);
+      top: 8px;
+      left: 8px;
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(4px);
       color: white;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
     }
-    .machine-rating-pill {
+    .machine-rating-bubble {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
+      bottom: 8px;
+      right: 8px;
       background: white;
       color: #0F172A;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
       box-shadow: var(--shadow-sm);
     }
-    .machine-body {
-      padding: 16px;
+    .machine-app-content {
+      padding: 12px;
       display: flex;
       flex-direction: column;
       flex: 1;
     }
-    .machine-category-tag {
-      font-size: 0.72rem;
+    .machine-app-cat {
+      font-size: 0.68rem;
       color: var(--primary);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
     }
-    .machine-name {
+    .machine-app-name {
       font-family: var(--font-display);
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       font-weight: 800;
-      line-height: 1.25;
       color: var(--secondary);
-      margin-bottom: 8px;
+      line-height: 1.2;
+      margin-bottom: 6px;
     }
-    .machine-specs-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-    .spec-tag {
-      background: var(--surface);
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
-    }
-    .machine-footer {
+    .machine-app-footer {
       margin-top: auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
     }
-    .machine-price-val {
+    .machine-price-big {
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--secondary);
     }
-    .machine-price-unit {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .btn-rent-machine {
+    .btn-app-rent {
       background: var(--primary);
       color: white;
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       padding: 6px 14px;
-      border-radius: 999px;
-      transition: background 0.15s;
-    }
-    .btn-rent-machine:hover {
-      background: var(--primary-dark);
+      border-radius: var(--radius-full);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
     }
 
-    /* Promotions */
-    .promos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
+    /* ========================================================================
+       7. Promotions (Ticket Notch Card Style)
+       ======================================================================== */
+    .promos-snap-row {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
     }
-    .promo-card {
+    .promos-snap-row::-webkit-scrollbar {
+      display: none;
+    }
+    .ticket-promo-card {
+      flex: 0 0 260px;
+      scroll-snap-align: start;
       background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
       border: 1.5px dashed #93C5FD;
       border-radius: var(--radius-lg);
-      padding: 16px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      position: relative;
     }
-    .promo-badge-tag {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      font-size: 0.65rem;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 999px;
-      align-self: flex-start;
+    .ticket-promo-card:active {
+      transform: scale(0.98);
     }
-    .promo-title {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #1E3A8A;
-      margin-top: 4px;
-    }
-    .promo-desc {
-      font-size: 0.8rem;
-      color: #3B82F6;
-      margin-top: 2px;
-    }
-    .promo-code-bar {
+    .ticket-code-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -735,643 +879,767 @@ export function renderUserHomeHtml(screen: UiScreenDto): string {
       border-radius: var(--radius-sm);
       padding: 6px 10px;
     }
-    .coupon-code {
+    .ticket-coupon {
       font-family: monospace;
       font-weight: 800;
-      font-size: 0.95rem;
-      color: #1E40AF;
-      letter-spacing: 1px;
+      font-size: 0.9rem;
+      color: #1D4ED8;
+      letter-spacing: 0.8px;
     }
-    .btn-copy-code {
+    .ticket-copy-btn {
       background: transparent;
       border: none;
       color: var(--primary);
       font-weight: 700;
       font-size: 0.75rem;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
-      transition: background 0.15s;
-    }
-    .btn-copy-code:hover {
-      background: #EFF6FF;
     }
 
-    /* Trust Markers */
-    .trust-grid {
+    /* ========================================================================
+       8. Trust Markers (Compact App Row)
+       ======================================================================== */
+    .trust-app-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
-    .trust-card {
+    @media (min-width: 768px) {
+      .trust-app-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+    }
+    .trust-app-box {
       background: white;
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px;
+      border-radius: var(--radius-md);
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
-    .trust-icon-box {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-md);
+    .trust-app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       background: #DCFCE7;
       color: #15803D;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       font-weight: 800;
     }
-    .trust-card-title {
+    .trust-app-title {
       font-family: var(--font-display);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 800;
       color: var(--secondary);
     }
-    .trust-card-desc {
-      font-size: 0.8rem;
+    .trust-app-desc {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.3;
     }
 
-    /* Testimonials */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
+    /* ========================================================================
+       9. Testimonials (Swipe Cards)
+       ======================================================================== */
+    .testimonials-snap-row {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
     }
-    .testimonial-card {
+    .testimonials-snap-row::-webkit-scrollbar {
+      display: none;
+    }
+    .testimonial-app-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
       background: white;
       border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 20px;
+      border-radius: var(--radius-lg);
+      padding: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      gap: 12px;
       box-shadow: var(--shadow-sm);
     }
-    .testimonial-quote {
-      font-size: 0.85rem;
-      color: #334155;
-      font-style: italic;
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-    .testimonial-author-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .author-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .author-name {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: var(--secondary);
-    }
-    .author-role {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
 
-    /* Partner Call-to-Action Banner */
-    .partner-banner {
+    /* ========================================================================
+       10. Partner CTA Card
+       ======================================================================== */
+    .partner-app-card {
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
       border-radius: var(--radius-xl);
-      padding: 36px 32px;
+      padding: 24px 20px;
       color: white;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .partner-banner-info h2 {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    .partner-banner-info p {
-      color: #94A3B8;
-      font-size: 0.9rem;
-      max-width: 580px;
-    }
-    .partner-cta-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn-partner-primary {
-      background: var(--accent);
-      color: #78350F;
-      font-weight: 800;
-      font-size: 0.88rem;
-      padding: 10px 22px;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-partner-primary:hover {
-      background: #FBBF24;
-      transform: translateY(-2px);
-    }
-    .btn-partner-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 10px 20px;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: background 0.2s;
-    }
-    .btn-partner-secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
+      flex-direction: column;
+      gap: 14px;
     }
 
-    /* Bottom Mobile Navigation */
+    /* ========================================================================
+       📱 Fixed Native Bottom Navigation Bar
+       ======================================================================== */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: white;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      align-items: center;
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
       z-index: 60;
-      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
     }
-    .nav-item {
+    .nav-tab-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      font-weight: 600;
+      color: #94A3B8;
+      font-size: 0.68rem;
+      font-weight: 700;
       gap: 3px;
+      transition: all 0.15s ease;
+      position: relative;
     }
-    .nav-item.active {
+    .nav-tab-item.active {
       color: var(--primary);
     }
+    .nav-tab-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .nav-tab-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin-top: 1px;
+    }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .header-container {
-        flex-direction: column;
-        align-items: stretch;
+    /* Interactive Native App Toast Alert */
+    .app-toast {
+      position: fixed;
+      bottom: calc(75px + env(safe-area-inset-bottom, 12px));
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.94);
+      color: white;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      z-index: 100;
+      box-shadow: var(--shadow-xl);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .app-toast.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ========================================================================
+       📱 Mobile View Breakpoint (< 768px): FULL NATIVE APP STYLING
+       ======================================================================== */
+    @media (max-width: 767px) {
+      body {
+        background: #F1F5F9;
       }
-      .quick-actions-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .dev-control-bar {
+        display: none; /* Hide dev bar on actual phones */
       }
-      .segment-panel.active {
-        grid-template-columns: 1fr;
+      .header-desktop-row {
+        display: none !important;
       }
-      .partner-banner {
-        flex-direction: column;
-        align-items: flex-start;
+      .mobile-app-shell-header {
+        display: flex !important;
+      }
+      main.page-content {
+        padding: 14px 14px 24px;
+        gap: 22px;
+      }
+      .hero-slider-wrap {
+        margin: 0 -14px;
+        padding: 0 14px 6px;
+      }
+      .hero-banner-card {
+        flex: 0 0 calc(100vw - 28px);
+        min-height: 195px;
+        padding: 16px;
+        border-radius: var(--radius-lg);
+      }
+      .hero-title {
+        font-size: 1.15rem;
+      }
+      .chips-horizontal-scroll {
+        margin: 0 -14px;
+        padding: 0 14px 4px;
+      }
+      .featured-machines-snap-row {
+        margin: 0 -14px;
+        padding: 0 14px 8px;
+      }
+      .promos-snap-row {
+        margin: 0 -14px;
+        padding: 0 14px 6px;
+      }
+      .testimonials-snap-row {
+        margin: 0 -14px;
+        padding: 0 14px 6px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Server-Driven UI Header Strip -->
-  <div class="sdui-badge-bar">
-    <div><strong>Server-Driven UI (SDUI)</strong>: Layout, components, & tokens powered 100% by backend</div>
-    <span class="badge">API Contract: ${escapeHtml(screen.screenId)} v${escapeHtml(screen.version)}</span>
+  <!-- Dev Control Bar (Visible on Desktop for Live Switch) -->
+  <div class="dev-control-bar">
+    <div>
+      <strong>Server-Driven UI (SDUI)</strong>: Backend drives layout &amp; design tokens for App &amp; Web
+    </div>
+    <div class="dev-controls-right">
+      <span>Screen: <code>${escapeHtml(screen.screenId)} v${escapeHtml(screen.version)}</code></span>
+      <button class="view-toggle-btn" onclick="toggleDeviceSimulator()" id="toggle-device-btn">
+        <span>📱 Test Mobile App View</span>
+      </button>
+      <a href="/api/user/home?format=sdui" class="view-toggle-btn" style="text-decoration: none;">
+        <span>⚡ SDUI JSON</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-container">
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <a href="/api/user/home/preview" class="brand-group">
-          <div class="brand-logo-icon">E</div>
-          <div class="brand-info">
-            <h1>${escapeHtml(appBar.brandTitle)}</h1>
-            <p>${escapeHtml(appBar.brandTagline)}</p>
-          </div>
-        </a>
+  <div class="viewport-container" id="app-viewport">
 
-        <div class="location-pill" title="Current location set by backend">
-          <span class="location-dot"></span>
-          <span>${escapeHtml(appBar.locationSelector.currentCity)}</span>
+    <!-- Header Component -->
+    <header class="app-header">
+      
+      <!-- 🖥️ Desktop Header (>= 768px) -->
+      <div class="header-desktop-row">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <a href="/api/user/home/preview" class="brand-group">
+            <div class="brand-logo-icon">E</div>
+            <div class="brand-info">
+              <h1>${escapeHtml(appBar.brandTitle)}</h1>
+              <p>${escapeHtml(appBar.brandTagline)}</p>
+            </div>
+          </a>
+
+          <div style="display: flex; align-items: center; gap: 6px; background: #F1F5F9; border: 1px solid var(--border); padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.8rem; cursor: pointer;" onclick="showToast('📍 Delivering to ' + '${escapeHtml(appBar.locationSelector.currentCity)}')">
+            <span style="color: #10B981;">●</span>
+            <strong>${escapeHtml(appBar.locationSelector.currentCity)}</strong>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">▾</span>
+          </div>
+        </div>
+
+        <div class="desktop-search-wrapper">
+          <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            class="desktop-search-input"
+            placeholder="${escapeHtml(appBar.searchBar.placeholder)}"
+            id="desktop-search-input"
+          >
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="#" class="btn-header-cta" onclick="showToast('Signed in as Guest'); return false;">
+            <span>${escapeHtml(appBar.userAction.title)}</span>
+          </a>
         </div>
       </div>
 
-      <div class="search-wrapper">
-        <span class="search-icon">🔍</span>
-        <input
-          type="text"
-          class="search-input"
-          placeholder="${escapeHtml(appBar.searchBar.placeholder)}"
-          id="global-search-input"
-        >
+      <!-- 📱 Mobile Native App Header Shell (< 768px or simulator mode) -->
+      <div class="mobile-app-shell-header">
+        <div class="mobile-top-bar">
+          <div class="mobile-location-box" onclick="showToast('📍 Change Delivery Location')">
+            <div class="mobile-pin-circle">📍</div>
+            <div class="mobile-location-texts">
+              <span class="mobile-location-label">${escapeHtml(appBar.locationSelector.label)}</span>
+              <span class="mobile-location-city">
+                ${escapeHtml(appBar.locationSelector.currentCity)}
+                <span style="font-size: 0.7rem;">▾</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="mobile-header-actions">
+            <a href="#" class="mobile-icon-btn" onclick="showToast('🔔 No new notifications'); return false;">
+              <span>🔔</span>
+              <span class="mobile-notif-dot"></span>
+            </a>
+            <a href="#" class="mobile-icon-btn" style="background: var(--primary); color: white; border: none;" onclick="showToast('👤 Account Profile'); return false;">
+              <span>👤</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Sticky Mobile Search Pill (Native Blinkit/Swiggy style) -->
+        <div class="mobile-search-pill" onclick="document.getElementById('mobile-search-prompt').focus()">
+          <span style="font-size: 1rem;">🔍</span>
+          <span class="mobile-search-placeholder" id="mobile-search-prompt">Search JCB, excavators, mixers...</span>
+          <span class="mobile-search-mic-icon">🎙️</span>
+        </div>
       </div>
+    </header>
 
-      <div class="header-actions">
-        <a href="/api/user/home?format=sdui" class="btn-user-action" style="background: #0F172A;">
-          <span>⚡ View JSON Schema</span>
-        </a>
-        <a href="#" class="btn-user-action">
-          <span>${escapeHtml(appBar.userAction.title)}</span>
-        </a>
-      </div>
-    </div>
-  </header>
+    <!-- Page Content -->
+    <main class="page-content">
 
-  <!-- Page Content -->
-  <main class="page-content">
+      <!-- 1. Hero Banners Carousel -->
+      ${
+        heroSection && heroSection.data && (heroSection.data as any).banners
+          ? `
+        <section id="section-hero">
+          <div class="hero-slider-wrap" id="hero-slider">
+            ${(heroSection.data as any).banners
+              .map(
+                (b: any) => `
+              <div class="hero-banner-card" style="background-image: url('${escapeHtml(b.imageUrl)}'); background-color: ${b.backgroundColor || '#1E3A8A'};">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                  <span class="hero-tag">${escapeHtml(b.tag)}</span>
+                  <h2 class="hero-title">${escapeHtml(b.title)}</h2>
+                  <p class="hero-subtitle">${escapeHtml(b.subtitle)}</p>
+                  <a href="${escapeHtml(b.cta.action.target)}" class="hero-cta-btn" onclick="showToast('Navigating to ' + '${escapeHtml(b.cta.text)}');">
+                    ${escapeHtml(b.cta.text)} →
+                  </a>
+                </div>
+              </div>
+            `,
+              )
+              .join('')}
+          </div>
+          <div class="carousel-dots-row">
+            <span class="carousel-dot active"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+          </div>
+        </section>
+      `
+          : ''
+      }
 
-    <!-- 1. Hero Banners -->
-    ${
-      heroSection && heroSection.data && (heroSection.data as any).banners
-        ? `
-      <section id="hero-banners">
-        <div class="hero-slider">
-          ${(heroSection.data as any).banners
+      <!-- 2. Quick Action Circular Grid (Native App Style) -->
+      ${
+        quickActionsSection && quickActionsSection.data && (quickActionsSection.data as any).actions
+          ? `
+        <section id="section-quick-actions">
+          <div class="quick-actions-grid">
+            ${(quickActionsSection.data as any).actions
+              .map(
+                (qa: any, idx: number) => {
+                  const icons = ['🚜', '👷', '🛠️', '🏢'];
+                  return `
+                <a href="${escapeHtml(qa.action.target)}" class="quick-action-item" onclick="showToast('Selected: ' + '${escapeHtml(qa.label)}'); return false;">
+                  ${qa.badge ? `<span class="quick-action-badge">${escapeHtml(qa.badge)}</span>` : ''}
+                  <div class="quick-action-circle">${icons[idx % icons.length]}</div>
+                  <span class="quick-action-label">${escapeHtml(qa.label)}</span>
+                </a>
+              `;
+                },
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+          : ''
+      }
+
+      <!-- 3. Trending Search Chips (Horizontal Pill Scroll) -->
+      ${
+        searchChipsSection && searchChipsSection.data && (searchChipsSection.data as any).chips
+          ? `
+        <section id="section-search-chips">
+          <div class="chips-horizontal-scroll">
+            ${(searchChipsSection.data as any).chips
+              .map(
+                (chip: any) => `
+              <a href="${escapeHtml(chip.action.target)}" class="app-search-chip" onclick="showToast('Filtering: ' + '${escapeHtml(chip.text)}'); return false;">
+                <span>🔥</span>
+                <span>${escapeHtml(chip.text)}</span>
+              </a>
+            `,
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+          : ''
+      }
+
+      <!-- 4. Category Grid (Squircle App Icons) -->
+      ${
+        categoriesSection && categoriesSection.data && (categoriesSection.data as any).categories
+          ? `
+        <section id="section-categories">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(categoriesSection.header?.title || 'Categories')}</h2>
+              <p class="section-subtitle">${escapeHtml(categoriesSection.header?.subtitle || 'Verified machinery fleets')}</p>
+            </div>
+            <a href="/categories" class="section-link">${escapeHtml(categoriesSection.header?.action?.text || 'See All')} →</a>
+          </div>
+          <div class="categories-app-grid">
+            ${(categoriesSection.data as any).categories
+              .map(
+                (cat: any) => `
+              <a href="${escapeHtml(cat.action.target)}" class="category-app-card" onclick="showToast('Category: ' + '${escapeHtml(cat.name)}'); return false;">
+                <img src="${escapeHtml(cat.imageUrl || cat.iconUrl || 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=150&q=80')}" alt="${escapeHtml(cat.name)}" class="category-squircle-img">
+                <span class="category-app-title">${escapeHtml(cat.name)}</span>
+                <span class="category-app-count">${escapeHtml(String(cat.machinesCount || 0))} machines</span>
+              </a>
+            `,
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+          : ''
+      }
+
+      <!-- 5. Segmented Control Tabs (iOS/Android Native Style) -->
+      ${
+        segmentsSection && segmentsSection.data && (segmentsSection.data as any).segments
+          ? `
+        <section id="section-segments">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(segmentsSection.header?.title || 'Project Scale')}</h2>
+              <p class="section-subtitle">${escapeHtml(segmentsSection.header?.subtitle || 'Select equipment scale')}</p>
+            </div>
+          </div>
+          
+          <div class="segmented-control-bar">
+            ${(segmentsSection.data as any).segments
+              .map(
+                (seg: any, idx: number) => `
+              <button class="segment-tab-pill ${idx === 0 ? 'active' : ''}" onclick="switchSegmentTab('${escapeHtml(seg.segment)}')">
+                ${escapeHtml(seg.segment === 'LIGHT' ? 'Home & DIY' : seg.segment === 'HEAVY' ? 'Commercial' : 'Support')}
+              </button>
+            `,
+              )
+              .join('')}
+          </div>
+
+          ${(segmentsSection.data as any).segments
             .map(
-              (b: any) => `
-            <div class="hero-banner-card" style="background-image: url('${escapeHtml(b.imageUrl)}'); background-color: ${b.backgroundColor || '#1E3A8A'};">
-              <div class="hero-overlay"></div>
-              <div class="hero-content">
-                <span class="hero-tag">${escapeHtml(b.tag)}</span>
-                <h2 class="hero-title">${escapeHtml(b.title)}</h2>
-                <p class="hero-subtitle">${escapeHtml(b.subtitle)}</p>
-                <a href="${escapeHtml(b.cta.action.target)}" class="hero-cta-btn">
-                  ${escapeHtml(b.cta.text)} →
+              (seg: any, idx: number) => `
+            <div class="segment-app-card ${idx === 0 ? 'active' : ''}" id="segment-panel-${escapeHtml(seg.segment)}">
+              <span class="segment-badge-app">${escapeHtml(seg.badge)}</span>
+              <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; color: var(--secondary);">${escapeHtml(seg.title)}</h3>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">${escapeHtml(seg.description)}</p>
+              
+              <ul class="segment-features-ul">
+                ${(seg.keyFeatures || []).map((f: string) => `<li>${escapeHtml(f)}</li>`).join('')}
+              </ul>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border);">
+                <div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">STARTING RATE</div>
+                  <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--secondary);">
+                    ${seg.startingDailyRateInr ? `₹${escapeHtml(String(seg.startingDailyRateInr))}/day` : 'On Request'}
+                  </div>
+                </div>
+                <a href="${escapeHtml(seg.action.target)}" class="btn-app-rent">
+                  Explore Fleet →
                 </a>
               </div>
             </div>
           `,
             )
             .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
+        </section>
+      `
+          : ''
+      }
 
-    <!-- 2. Quick Actions -->
-    ${
-      quickActionsSection && quickActionsSection.data && (quickActionsSection.data as any).actions
-        ? `
-      <section id="quick-actions">
-        <div class="quick-actions-grid">
-          ${(quickActionsSection.data as any).actions
-            .map(
-              (qa: any) => `
-            <a href="${escapeHtml(qa.action.target)}" class="quick-action-card">
-              ${qa.badge ? `<span class="quick-action-badge">${escapeHtml(qa.badge)}</span>` : ''}
-              <div class="quick-action-icon">⚙️</div>
-              <span class="quick-action-label">${escapeHtml(qa.label)}</span>
-            </a>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 3. Trending Search Chips -->
-    ${
-      searchChipsSection && searchChipsSection.data && (searchChipsSection.data as any).chips
-        ? `
-      <section id="trending-searches">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(searchChipsSection.header?.title || 'Trending Searches')}</h2>
-            <p class="section-subtitle">${escapeHtml(searchChipsSection.header?.subtitle || '')}</p>
+      <!-- 6. Featured Equipment (Horizontal Snap Carousel on Mobile) -->
+      ${
+        featuredSection && featuredSection.data && (featuredSection.data as any).machines
+          ? `
+        <section id="section-featured">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(featuredSection.header?.title || 'Featured Equipment')}</h2>
+              <p class="section-subtitle">${escapeHtml(featuredSection.header?.subtitle || 'Pre-inspected machines ready to mobilize')}</p>
+            </div>
+            <a href="/machines" class="section-link">${escapeHtml(featuredSection.header?.action?.text || 'All')} →</a>
           </div>
-        </div>
-        <div class="search-chips-wrap">
-          ${(searchChipsSection.data as any).chips
-            .map(
-              (chip: any) => `
-            <a href="${escapeHtml(chip.action.target)}" class="search-chip">
-              <span>🔥</span>
-              <span>${escapeHtml(chip.text)}</span>
-            </a>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 4. Categories -->
-    ${
-      categoriesSection && categoriesSection.data && (categoriesSection.data as any).categories
-        ? `
-      <section id="categories">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(categoriesSection.header?.title || 'Machinery Categories')}</h2>
-            <p class="section-subtitle">${escapeHtml(categoriesSection.header?.subtitle || '')}</p>
-          </div>
-          <a href="/categories" class="section-link">${escapeHtml(categoriesSection.header?.action?.text || 'View All')} →</a>
-        </div>
-        <div class="categories-grid">
-          ${(categoriesSection.data as any).categories
-            .map(
-              (cat: any) => `
-            <a href="${escapeHtml(cat.action.target)}" class="category-card">
-              <img src="${escapeHtml(cat.imageUrl || cat.iconUrl || 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=150&q=80')}" alt="${escapeHtml(cat.name)}" class="category-thumb">
-              <span class="category-name">${escapeHtml(cat.name)}</span>
-              <span class="category-count">${escapeHtml(String(cat.machinesCount || 0))} machines</span>
-            </a>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 5. Specialized Segment Tabs -->
-    ${
-      segmentsSection && segmentsSection.data && (segmentsSection.data as any).segments
-        ? `
-      <section id="segments">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(segmentsSection.header?.title || 'Project Segments')}</h2>
-            <p class="section-subtitle">${escapeHtml(segmentsSection.header?.subtitle || '')}</p>
-          </div>
-        </div>
-        <div class="segments-container">
-          <div class="segment-tab-buttons" id="segment-tabs">
-            ${(segmentsSection.data as any).segments
+          
+          <div class="featured-machines-snap-row">
+            ${(featuredSection.data as any).machines
               .map(
-                (seg: any, idx: number) => `
-              <button class="segment-tab-btn ${idx === 0 ? 'active' : ''}" onclick="switchSegmentTab('${escapeHtml(seg.segment)}')">
-                ${escapeHtml(seg.title)}
-              </button>
+                (m: any) => `
+              <div class="machine-app-card">
+                <div class="machine-app-img-wrap">
+                  <img src="${escapeHtml(m.imageUrl || 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=400&q=80')}" alt="${escapeHtml(m.name)}" class="machine-app-img">
+                  <span class="machine-pill-badge">${escapeHtml(m.tag)}</span>
+                  <span class="machine-rating-bubble">⭐ ${escapeHtml(String(m.rating))}</span>
+                </div>
+                <div class="machine-app-content">
+                  <span class="machine-app-cat">${escapeHtml(m.categoryName)}</span>
+                  <h3 class="machine-app-name">${escapeHtml(m.name)}</h3>
+                  <div class="machine-app-footer">
+                    <div>
+                      <span class="machine-price-big">₹${escapeHtml(String(m.startingDailyRateInr || m.startingHourlyRateInr || 0))}</span>
+                      <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600;">${m.startingDailyRateInr ? '/day' : '/hr'}</span>
+                    </div>
+                    <a href="${escapeHtml(m.action.target)}" class="btn-app-rent" onclick="showToast('⚡ Booked ' + '${escapeHtml(m.name)}'); return false;">
+                      + Rent
+                    </a>
+                  </div>
+                </div>
+              </div>
             `,
               )
               .join('')}
           </div>
-          ${(segmentsSection.data as any).segments
-            .map(
-              (seg: any, idx: number) => `
-            <div class="segment-panel ${idx === 0 ? 'active' : ''}" id="segment-panel-${escapeHtml(seg.segment)}">
-              <div class="segment-info">
-                <span class="segment-badge">${escapeHtml(seg.badge)}</span>
-                <h3>${escapeHtml(seg.title)}</h3>
-                <p class="segment-desc">${escapeHtml(seg.description)}</p>
-                <ul class="features-list">
-                  ${(seg.keyFeatures || []).map((f: string) => `<li>${escapeHtml(f)}</li>`).join('')}
-                </ul>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                  ${
-                    seg.startingDailyRateInr
-                      ? `<div class="segment-rate-pill">Starting from ₹${escapeHtml(String(seg.startingDailyRateInr))}/day</div>`
-                      : ''
-                  }
-                  <a href="${escapeHtml(seg.action.target)}" class="btn-user-action">
-                    Browse Segment →
-                  </a>
-                </div>
-              </div>
-              <div style="background: #F8FAFC; border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border);">
-                <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">POPULAR IN THIS SEGMENT</div>
-                ${(seg.popularMachines || [])
-                  .map(
-                    (pm: any) => `
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #E2E8F0;">
-                    <span style="font-size: 0.85rem; font-weight: 700;">${escapeHtml(pm.name)}</span>
-                    <span style="font-size: 0.82rem; color: var(--primary); font-weight: 800;">₹${escapeHtml(String(pm.dailyInr || ''))}/day</span>
-                  </div>
-                `,
-                  )
-                  .join('')}
-              </div>
-            </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
+        </section>
+      `
+          : ''
+      }
 
-    <!-- 6. Featured Equipment -->
-    ${
-      featuredSection && featuredSection.data && (featuredSection.data as any).machines
-        ? `
-      <section id="featured-equipment">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(featuredSection.header?.title || 'Featured Equipment')}</h2>
-            <p class="section-subtitle">${escapeHtml(featuredSection.header?.subtitle || '')}</p>
-          </div>
-          <a href="/machines" class="section-link">${escapeHtml(featuredSection.header?.action?.text || 'Explore All')} →</a>
-        </div>
-        <div class="featured-grid">
-          ${(featuredSection.data as any).machines
-            .map(
-              (m: any) => `
-            <div class="machine-card">
-              <div class="machine-thumb-wrapper">
-                <img src="${escapeHtml(m.imageUrl || 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=400&q=80')}" alt="${escapeHtml(m.name)}" class="machine-thumb">
-                <span class="machine-badge-tag">${escapeHtml(m.tag)}</span>
-                <span class="machine-rating-pill">⭐ ${escapeHtml(String(m.rating))} (${escapeHtml(String(m.reviewsCount))})</span>
-              </div>
-              <div class="machine-body">
-                <span class="machine-category-tag">${escapeHtml(m.categoryName)}</span>
-                <h3 class="machine-name">${escapeHtml(m.name)}</h3>
-                <div class="machine-specs-row">
-                  ${(m.popularBrands || []).map((b: string) => `<span class="spec-tag">${escapeHtml(b)}</span>`).join('')}
-                  <span class="spec-tag">${escapeHtml(m.minBooking || '1 day')}</span>
-                </div>
-                <div class="machine-footer">
-                  <div>
-                    <span class="machine-price-val">₹${escapeHtml(String(m.startingDailyRateInr || m.startingHourlyRateInr || 0))}</span>
-                    <span class="machine-price-unit">${m.startingDailyRateInr ? '/day' : '/hr'}</span>
-                  </div>
-                  <a href="${escapeHtml(m.action.target)}" class="btn-rent-machine">Rent Now</a>
-                </div>
-              </div>
+      <!-- 7. Active Promotions (Ticket Notch Card Style) -->
+      ${
+        promoSection && promoSection.data && (promoSection.data as any).promotions
+          ? `
+        <section id="section-promos">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(promoSection.header?.title || 'Rental Coupons')}</h2>
+              <p class="section-subtitle">${escapeHtml(promoSection.header?.subtitle || 'Instant discounts applied at checkout')}</p>
             </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 7. Active Promotions -->
-    ${
-      promoSection && promoSection.data && (promoSection.data as any).promotions
-        ? `
-      <section id="promotions">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(promoSection.header?.title || 'Active Rental Offers')}</h2>
-            <p class="section-subtitle">${escapeHtml(promoSection.header?.subtitle || '')}</p>
           </div>
-        </div>
-        <div class="promos-grid">
-          ${(promoSection.data as any).promotions
-            .map(
-              (p: any) => `
-            <div class="promo-card">
-              <div>
-                ${p.badge ? `<span class="promo-badge-tag">${escapeHtml(p.badge)}</span>` : ''}
-                <h3 class="promo-title">${escapeHtml(p.title)}</h3>
-                <p class="promo-desc">${escapeHtml(p.description)}</p>
-              </div>
-              <div class="promo-code-bar">
-                <span class="coupon-code">${escapeHtml(p.code)}</span>
-                <button class="btn-copy-code" onclick="navigator.clipboard.writeText('${escapeHtml(p.code)}'); this.innerText='COPIED!'">
-                  ${escapeHtml(p.copyAction.label)}
-                </button>
-              </div>
-            </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 8. Trust Markers -->
-    ${
-      trustSection && trustSection.data && (trustSection.data as any).markers
-        ? `
-      <section id="trust-markers">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(trustSection.header?.title || 'Why Rent with Us?')}</h2>
-            <p class="section-subtitle">${escapeHtml(trustSection.header?.subtitle || '')}</p>
-          </div>
-        </div>
-        <div class="trust-grid">
-          ${(trustSection.data as any).markers
-            .map(
-              (t: any) => `
-            <div class="trust-card">
-              <div class="trust-icon-box">✓</div>
-              <h4 class="trust-card-title">${escapeHtml(t.title)}</h4>
-              <p class="trust-card-desc">${escapeHtml(t.description)}</p>
-            </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 9. Testimonials -->
-    ${
-      testimonialsSection && testimonialsSection.data && (testimonialsSection.data as any).testimonials
-        ? `
-      <section id="testimonials">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">${escapeHtml(testimonialsSection.header?.title || 'Contractor Reviews')}</h2>
-            <p class="section-subtitle">${escapeHtml(testimonialsSection.header?.subtitle || '')}</p>
-          </div>
-        </div>
-        <div class="testimonials-grid">
-          ${(testimonialsSection.data as any).testimonials
-            .map(
-              (tm: any) => `
-            <div class="testimonial-card">
-              <p class="testimonial-quote">“${escapeHtml(tm.content)}”</p>
-              <div class="testimonial-author-row">
-                <img src="${escapeHtml(tm.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80')}" alt="${escapeHtml(tm.authorName)}" class="author-avatar">
+          <div class="promos-snap-row">
+            ${(promoSection.data as any).promotions
+              .map(
+                (p: any) => `
+              <div class="ticket-promo-card">
                 <div>
-                  <h4 class="author-name">${escapeHtml(tm.authorName)}</h4>
-                  <p class="author-role">${escapeHtml(tm.roleOrCompany)} • ${escapeHtml(tm.city)}</p>
+                  <span style="background: var(--primary); color: white; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: var(--radius-full); display: inline-block; margin-bottom: 4px;">
+                    ${escapeHtml(p.badge || 'PROMO')}
+                  </span>
+                  <h4 style="font-family: var(--font-display); font-size: 0.98rem; font-weight: 800; color: #1E3A8A; line-height: 1.2;">${escapeHtml(p.title)}</h4>
+                  <p style="font-size: 0.74rem; color: #2563EB; margin-top: 2px;">${escapeHtml(p.description)}</p>
+                </div>
+                <div class="ticket-code-row">
+                  <span class="ticket-coupon">${escapeHtml(p.code)}</span>
+                  <button class="ticket-copy-btn" onclick="copyCouponCode('${escapeHtml(p.code)}')">
+                    TAP TO COPY
+                  </button>
                 </div>
               </div>
+            `,
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+          : ''
+      }
+
+      <!-- 8. Platform Trust Indicators -->
+      ${
+        trustSection && trustSection.data && (trustSection.data as any).markers
+          ? `
+        <section id="section-trust">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(trustSection.header?.title || 'Why EquipShare?')}</h2>
+              <p class="section-subtitle">${escapeHtml(trustSection.header?.subtitle || 'Zero hassle equipment rentals')}</p>
             </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </section>
-    `
-        : ''
-    }
-
-    <!-- 10. Partner CTA Banner -->
-    ${
-      ctaSection && ctaSection.data
-        ? `
-      <section id="partner-cta">
-        <div class="partner-banner">
-          <div class="partner-banner-info">
-            <span style="background: rgba(245, 158, 11, 0.2); color: #FCD34D; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; display: inline-block;">
-              ${escapeHtml((ctaSection.data as any).badge || 'PARTNER WITH US')}
-            </span>
-            <h2>${escapeHtml((ctaSection.data as any).title)}</h2>
-            <p>${escapeHtml((ctaSection.data as any).subtitle)}</p>
           </div>
-          <div class="partner-cta-actions">
-            <a href="${escapeHtml((ctaSection.data as any).primaryAction.target)}" class="btn-partner-primary">
-              ${escapeHtml((ctaSection.data as any).primaryAction.label)} →
-            </a>
-            <a href="tel:${escapeHtml((ctaSection.data as any).secondaryAction.target)}" class="btn-partner-secondary">
-              ${escapeHtml((ctaSection.data as any).secondaryAction.label)}
-            </a>
+          <div class="trust-app-grid">
+            ${(trustSection.data as any).markers
+              .map(
+                (t: any) => `
+              <div class="trust-app-box">
+                <div class="trust-app-icon">✓</div>
+                <h4 class="trust-app-title">${escapeHtml(t.title)}</h4>
+                <p class="trust-app-desc">${escapeHtml(t.description)}</p>
+              </div>
+            `,
+              )
+              .join('')}
           </div>
-        </div>
-      </section>
-    `
-        : ''
-    }
+        </section>
+      `
+          : ''
+      }
 
-  </main>
+      <!-- 9. Testimonials (Swipe Cards) -->
+      ${
+        testimonialsSection && testimonialsSection.data && (testimonialsSection.data as any).testimonials
+          ? `
+        <section id="section-testimonials">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">${escapeHtml(testimonialsSection.header?.title || 'Contractor Reviews')}</h2>
+              <p class="section-subtitle">${escapeHtml(testimonialsSection.header?.subtitle || 'Verified feedback from site engineers')}</p>
+            </div>
+          </div>
+          <div class="testimonials-snap-row">
+            ${(testimonialsSection.data as any).testimonials
+              .map(
+                (tm: any) => `
+              <div class="testimonial-app-card">
+                <p style="font-size: 0.8rem; color: #334155; font-style: italic; line-height: 1.4;">“${escapeHtml(tm.content)}”</p>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <img src="${escapeHtml(tm.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80')}" alt="${escapeHtml(tm.authorName)}" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <h4 style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 800; color: var(--secondary);">${escapeHtml(tm.authorName)}</h4>
+                    <p style="font-size: 0.7rem; color: var(--text-muted);">${escapeHtml(tm.roleOrCompany)}</p>
+                  </div>
+                </div>
+              </div>
+            `,
+              )
+              .join('')}
+          </div>
+        </section>
+      `
+          : ''
+      }
 
-  <!-- Mobile Bottom Navigation -->
-  <nav class="bottom-nav">
-    ${bottomNavigation
-      .map(
-        (nav) => `
-      <a href="${escapeHtml(nav.action.target)}" class="nav-item ${nav.isActive ? 'active' : ''}">
-        <span style="font-size: 1.1rem;">📌</span>
-        <span>${escapeHtml(nav.label)}</span>
-      </a>
-    `,
-      )
-      .join('')}
-  </nav>
+      <!-- 10. Partner Onboarding Card -->
+      ${
+        ctaSection && ctaSection.data
+          ? `
+        <section id="section-partner">
+          <div class="partner-app-card">
+            <div>
+              <span style="background: rgba(245, 158, 11, 0.2); color: #FCD34D; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-full); display: inline-block; margin-bottom: 6px;">
+                ${escapeHtml((ctaSection.data as any).badge || 'EARN REVENUE')}
+              </span>
+              <h3 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;">${escapeHtml((ctaSection.data as any).title)}</h3>
+              <p style="color: #94A3B8; font-size: 0.82rem; margin-top: 4px;">${escapeHtml((ctaSection.data as any).subtitle)}</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="${escapeHtml((ctaSection.data as any).primaryAction.target)}" class="btn-header-cta" style="background: var(--accent); color: #78350F; font-size: 0.8rem; padding: 8px 16px;">
+                ${escapeHtml((ctaSection.data as any).primaryAction.label)} →
+              </a>
+              <a href="tel:${escapeHtml((ctaSection.data as any).secondaryAction.target)}" class="btn-header-cta" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.8rem; padding: 8px 16px;">
+                Call Partner Desk
+              </a>
+            </div>
+          </div>
+        </section>
+      `
+          : ''
+      }
+
+    </main>
+
+    <!-- 📱 Fixed Mobile Native App Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      ${bottomNavigation
+        .map(
+          (nav) => {
+            const icons: Record<string, string> = {
+              home: '🏠',
+              grid: '📂',
+              clock: '⏱️',
+              'help-circle': '💬',
+            };
+            const iconChar = icons[nav.icon] || '📌';
+            return `
+        <a href="${escapeHtml(nav.action.target)}" class="nav-tab-item ${nav.isActive ? 'active' : ''}" onclick="setActiveNav(this, '${escapeHtml(nav.label)}'); return false;">
+          <span class="nav-tab-icon">${iconChar}</span>
+          <span>${escapeHtml(nav.label)}</span>
+          ${nav.isActive ? '<span class="nav-tab-dot"></span>' : ''}
+        </a>
+      `;
+          },
+        )
+        .join('')}
+    </nav>
+
+  </div>
+
+  <!-- Native App Toast Notification (pops up on actions) -->
+  <div class="app-toast" id="app-toast-element">
+    <span id="toast-icon">✓</span>
+    <span id="toast-message">Action successful</span>
+  </div>
 
   <script>
+    // Tab switching for segment control
     function switchSegmentTab(segment) {
-      document.querySelectorAll('.segment-tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.segment-panel').forEach(panel => panel.classList.remove('active'));
+      document.querySelectorAll('.segment-tab-pill').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.segment-app-card').forEach(panel => panel.classList.remove('active'));
 
       event.target.classList.add('active');
       const targetPanel = document.getElementById('segment-panel-' + segment);
       if (targetPanel) {
         targetPanel.classList.add('active');
+      }
+    }
+
+    // Native App Bottom Nav Active State
+    function setActiveNav(element, label) {
+      document.querySelectorAll('.nav-tab-item').forEach(el => {
+        el.classList.remove('active');
+        const dot = el.querySelector('.nav-tab-dot');
+        if (dot) dot.remove();
+      });
+      element.classList.add('active');
+      const dot = document.createElement('span');
+      dot.className = 'nav-tab-dot';
+      element.appendChild(dot);
+      showToast('Navigating to ' + label);
+    }
+
+    // Copy coupon code with toast feedback
+    function copyCouponCode(code) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+      }
+      showToast('Coupon ' + code + ' copied to clipboard!');
+    }
+
+    // Native App Toast Display
+    let toastTimeout = null;
+    function showToast(message, icon) {
+      const toast = document.getElementById('app-toast-element');
+      const msgSpan = document.getElementById('toast-message');
+      const iconSpan = document.getElementById('toast-icon');
+      if (!toast) return;
+
+      msgSpan.innerText = message;
+      iconSpan.innerText = icon || '✓';
+      toast.classList.add('visible');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 2500);
+    }
+
+    // Toggle Mobile App Simulator frame on desktop
+    function toggleDeviceSimulator() {
+      const isMobile = document.body.classList.toggle('simulator-mobile');
+      const btn = document.getElementById('toggle-device-btn');
+      if (btn) {
+        btn.innerHTML = isMobile ? '<span>💻 Switch to Desktop View</span>' : '<span>📱 Test Mobile App View</span>';
       }
     }
   </script>

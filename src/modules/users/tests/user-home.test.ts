@@ -515,10 +515,10 @@ describe('User Homepage APIs Test Suite', () => {
       expect(res.text).toContain('<!DOCTYPE html>');
       expect(res.text).toContain('<title>EquipShare - Construction Equipment Rentals</title>');
       expect(res.text).toContain('Server-Driven UI (SDUI)');
-      expect(res.text).toContain('id="hero-banners"');
-      expect(res.text).toContain('id="quick-actions"');
-      expect(res.text).toContain('id="categories"');
-      expect(res.text).toContain('id="featured-equipment"');
+      expect(res.text).toContain('id="section-hero"');
+      expect(res.text).toContain('id="section-quick-actions"');
+      expect(res.text).toContain('id="section-categories"');
+      expect(res.text).toContain('id="section-featured"');
       expect(res.text).toContain('switchSegmentTab');
     });
 
